@@ -1742,3 +1742,263 @@ footer {
     grid-column: 2;
   }
 }
+
+/* ========== Mobile-first hardening ========== */
+/* Base: small screens first (phones). */
+header {
+  height: auto;
+  min-height: 60px;
+  padding: 10px 4%;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+nav {
+  width: 100%;
+  order: 2;
+}
+
+nav ul {
+  width: 100%;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.header-icons {
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  order: 3;
+}
+
+.header-tools {
+  width: 100%;
+  justify-content: center;
+}
+
+.hero {
+  grid-template-columns: 1fr;
+  min-height: auto;
+  background-size: cover;
+  background-position: center top;
+}
+
+.hero-image {
+  min-height: 220px;
+  order: -1;
+}
+
+.hero-texte {
+  margin: 16px 4%;
+  max-width: none;
+  padding: 18px 16px;
+}
+
+.hero-ctas {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.hero-ctas .btn-primary,
+.hero-ctas .btn-outline {
+  width: 100%;
+  justify-content: center;
+}
+
+.stats-band,
+.carousel,
+.actu-grid,
+.heros-grid,
+.catalogue-grid,
+.footer-grid {
+  grid-template-columns: 1fr;
+}
+
+.section-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.section-bestsellers,
+.section-coup-coeur,
+.section-actualites,
+.section-heros,
+.page-hero,
+.catalogue-layout,
+.cart-layout,
+.contact-layout,
+.page-placeholder {
+  padding-left: 4%;
+  padding-right: 4%;
+}
+
+.catalogue-layout,
+.cart-layout,
+.contact-layout,
+.coup-coeur-grid,
+.catalogue-detail-layout {
+  grid-template-columns: 1fr;
+}
+
+.catalogue-detail-modal {
+  padding: 10px;
+}
+
+.catalogue-detail-dialog {
+  padding: 14px;
+}
+
+.catalogue-detail-reco-list {
+  grid-template-columns: 1fr;
+}
+
+.cart-item {
+  grid-template-columns: 72px 1fr;
+  align-items: start;
+}
+
+.cart-item-price,
+.qty-control,
+.remove-item-btn {
+  grid-column: 2;
+}
+
+footer {
+  padding: 40px 4% 24px;
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  header {
+    padding: 0 5%;
+    min-height: 68px;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+
+  nav {
+    width: auto;
+    order: 0;
+  }
+
+  nav ul {
+    width: auto;
+    gap: 24px;
+    flex-wrap: nowrap;
+  }
+
+  .header-icons {
+    width: auto;
+    order: 0;
+  }
+
+  .header-tools {
+    width: auto;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-texte {
+    margin: 24px 5% 20px;
+    padding: 24px 22px;
+  }
+
+  .hero-ctas {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .hero-ctas .btn-primary,
+  .hero-ctas .btn-outline {
+    width: auto;
+  }
+
+  .stats-band {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .carousel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .actu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .heros-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-grid {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  .catalogue-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    min-height: 92vh;
+  }
+
+  .hero-image {
+    min-height: 0;
+    order: 0;
+  }
+
+  .hero-texte {
+    margin: clamp(26px, 4.6vw, 48px) 4% clamp(26px, 4.6vw, 48px) 3%;
+    max-width: 430px;
+    padding: clamp(24px, 3.5vw, 34px) clamp(20px, 4vw, 30px);
+  }
+
+  .stats-band {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .carousel {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .coup-coeur-grid {
+    grid-template-columns: minmax(280px, 1fr) minmax(0, 2fr);
+  }
+
+  .actu-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .heros-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  }
+
+  .catalogue-layout {
+    grid-template-columns: 260px 1fr;
+  }
+
+  .catalogue-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .cart-layout {
+    grid-template-columns: 1.6fr 1fr;
+  }
+
+  .contact-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+}
