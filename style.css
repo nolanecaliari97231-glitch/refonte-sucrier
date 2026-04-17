@@ -1747,10 +1747,14 @@ footer {
 /* Base: small screens first (phones). */
 header {
   height: auto;
-  min-height: 60px;
-  padding: 10px 4%;
+  min-height: 56px;
+  padding: 8px 4%;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(224, 212, 176, 0.9);
 }
 
 nav {
@@ -1761,39 +1765,80 @@ nav {
 nav ul {
   width: 100%;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   flex-wrap: wrap;
+}
+
+nav a {
+  font-size: 0.98rem;
+  font-weight: 500;
 }
 
 .header-icons {
   width: 100%;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
   order: 3;
 }
 
 .header-tools {
   width: 100%;
   justify-content: center;
+  gap: 6px;
+}
+
+.header-select {
+  min-height: 34px;
+  font-size: 0.82rem;
+}
+
+.icon-btn {
+  font-size: 0.82rem;
+  padding: 6px 8px;
+  white-space: nowrap;
 }
 
 .hero {
   grid-template-columns: 1fr;
-  min-height: auto;
+  min-height: calc(100svh - 56px);
+  background-image: linear-gradient(180deg, rgba(7, 33, 28, 0.24) 0%, rgba(7, 33, 28, 0.52) 100%), url('images/home-bg-mobile.png');
   background-size: cover;
-  background-position: center top;
+  background-position: center center;
+  align-items: end;
 }
 
 .hero-image {
-  min-height: 220px;
-  order: -1;
+  display: none;
 }
 
 .hero-texte {
-  margin: 16px 4%;
+  margin: 0 4% 18px;
   max-width: none;
-  padding: 18px 16px;
+  padding: 20px 16px;
+  background: rgba(253, 246, 227, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.hero-tag {
+  margin-bottom: 16px;
+  font-size: 0.7rem;
+  letter-spacing: 1.6px;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 10vw, 2.5rem);
+  margin-bottom: 12px;
+}
+
+.hero-desc {
+  font-size: 1.03rem;
+  line-height: 1.5;
+  color: #3d403b;
+  margin-bottom: 20px;
 }
 
 .hero-ctas {
@@ -1902,11 +1947,19 @@ footer {
 
   .hero {
     grid-template-columns: 1fr;
+    min-height: auto;
+    background-image: url('images/home-bg-editions-sucrier.png');
   }
 
   .hero-texte {
     margin: 24px 5% 20px;
     padding: 24px 22px;
+  }
+
+  .hero-image {
+    display: block;
+    min-height: 260px;
+    order: -1;
   }
 
   .hero-ctas {
@@ -1949,9 +2002,11 @@ footer {
   .hero {
     grid-template-columns: 1fr 1fr;
     min-height: 92vh;
+    background-image: url('images/home-bg-editions-sucrier.png');
   }
 
   .hero-image {
+    display: block;
     min-height: 0;
     order: 0;
   }
