@@ -1,0 +1,81 @@
+{
+  "home_page": {
+    "hero_tag": "Maison d'edition caribeenne",
+    "hero_title": "Decouvrez des albums jeunesse uniques",
+    "hero_intro": "Des histoires illustrees qui racontent la Caraibe aux petits et grands.",
+    "cta_primary_text": "Explorer les livres",
+    "cta_primary_link": "catalogue.php",
+    "cta_secondary_text": "A propos de nous",
+    "cta_secondary_link": "a-propos.php"
+  },
+  "about_page": {
+    "title": "A propos",
+    "intro": "Maison d'edition jeunesse en Martinique",
+    "paragraphe_1": "Nous publions des histoires jeunesse ancrees dans la Caraibe, avec des personnages proches du quotidien des familles.",
+    "paragraphe_2": "Notre objectif est de transmettre la culture, la langue et l'imaginaire local a travers des livres accessibles et soignes."
+  },
+  "catalogue_page": {
+    "title": "Catalogue",
+    "intro": "Albums jeunesse et collections des Editions du Sucrier"
+  },
+  "catalogue_books": [
+    {
+      "id": "nikou-champion",
+      "collection": "Nikou",
+      "title": "Nikou champion",
+      "authors": "L. Ramassamy · W. Deroche",
+      "price": "12,00 €",
+      "image": "images/nikou-champion.png",
+      "preview_images": "images/nikou-champion.png,images/bebe-nikou-dit-non.png,images/sous-le-quenettier-mamy-ayuda-t2.png"
+    },
+    {
+      "id": "circuit-ferme",
+      "collection": "Album jeunesse",
+      "title": "Circuit ferme",
+      "authors": "J.-F. Silva · O. J. F. Junior",
+      "price": "14,00 €",
+      "image": "images/circuit-ferme.png",
+      "preview_images": "images/circuit-ferme.png,images/salon-livre-martinique.png,images/tice-et-metice.png"
+    },
+    {
+      "id": "exocette",
+      "collection": "Les histoires du Sucrier",
+      "title": "Exocette",
+      "authors": "Renata · W. Deroche",
+      "price": "15,00 €",
+      "image": "images/exocette.png",
+      "preview_images": "images/exocette.png,images/nikou-musicien.png,images/circuit-ferme.png"
+    },
+    {
+      "id": "tice-et-metice",
+      "collection": "Plumes aventureuses",
+      "title": "Tice et Metice",
+      "authors": "K. Petevi · Gecko Dalch",
+      "price": "13,00 €",
+      "image": "images/tice-et-metice.png",
+      "preview_images": "images/tice-et-metice.png,images/exocette.png,images/nikou-champion.png"
+    }
+  ],
+    "contact_page": {
+        "title": "Contact",
+        "intro": "Une question sur nos livres ou une commande ?",
+        "bloc_titre": "Nous ecrire",
+        "bloc_texte": "Nous repondons en general sous 24 a 48 h.",
+        "adresse_label": "Adresse du siege :",
+        "adresse_texte": "Les Editions du Sucrier, Rue Jean-Baptiste Rouam Sim, 97200 Fort-de-France Martinique",
+        "telephone_label": "Telephone :",
+        "telephone": "05 96 93 27 58",
+        "retour_texte": "Retour a l'accueil"
+    },
+    "footer": {
+        "brand_name": "Les Editions du Sucrier",
+        "brand_tagline": "Maison d'edition jeunesse - Martinique",
+        "description": "Maison d'edition jeunesse martiniquaise fondee en 2018.",
+        "ville": "Fort-de-France, Martinique",
+        "telephone": "05 96 93 27 58",
+        "copyright": "© 2025 Les Editions du Sucrier",
+        "mentions_legales": "Mentions legales",
+        "confidentialite": "Politique de confidentialite",
+        "cgv": "CGV"
+    }
+}

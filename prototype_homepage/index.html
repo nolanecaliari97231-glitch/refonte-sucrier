@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.png" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+
+  <nav>
+    <ul>
+      <li><a href="catalogue.html">Catalogue</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="header-icons">
+    <div class="header-tools" aria-label="Préférences du site">
+      <label class="header-select-wrap" for="currency-select">
+        <span class="sr-only">Devise</span>
+        <select id="currency-select" class="header-select" aria-label="Choisir la devise">
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+      </label>
+      <label class="header-select-wrap" for="language-select">
+        <span class="sr-only">Langue</span>
+        <select id="language-select" class="header-select" aria-label="Choisir la langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
+    <a href="catalogue.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favoris
+    </a>
+    <a href="panier.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Panier
+      <span class="panier-badge">0</span>
+    </a>
+    <a href="contact.html" class="icon-btn" aria-label="Compte ou contact">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-texte">
+    <span class="hero-tag">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
+      Maison d'édition caribéenne
+    </span>
+    <h1>Découvrez des albums jeunesse <em>uniques</em></h1>
+    <p class="hero-desc">Des histoires illustrées qui racontent la Caraïbe aux petits et grands — dont de nombreux titres proposés en plusieurs langues selon les ouvrages.</p>
+    <div class="hero-ctas">
+      <a href="catalogue.html" class="btn-primary">
+        Explorer les livres
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="a-propos.html" class="btn-outline">À propos de nous</a>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <div class="hero-image-placeholder">
+      <div class="hero-deco-cercle"></div>
+      <div class="hero-deco-cercle2"></div>
+      <div class="hero-showcase">
+        <img src="images/nikou-gambadeur.png" alt="" class="hero-nikou" width="380" height="480" decoding="async" aria-hidden="true">
+        <figure class="hero-book">
+          <img src="images/nikou-champion.png" alt="Couverture — Nikou champion" class="hero-book-cover" width="600" height="800" decoding="async">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<div class="stats-band">
+  <div class="stat-item">
+    <span class="stat-nb">20+</span>
+    <span class="stat-label">Ouvrages publiés</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-nb">5</span>
+    <span class="stat-label">Collections</span>
+  </div>
+  <div class="stat-item stat-item--langs">
+    <span class="stat-nb stat-nb--langs">Variable</span>
+    <span class="stat-label">Langues indiquées sur chaque fiche livre</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-nb">2018</span>
+    <span class="stat-label">Fondée en Martinique</span>
+  </div>
+</div>
+
+<!-- ===== BEST SELLERS ===== -->
+<section class="section-bestsellers">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre">Best-sellers</h2>
+      <p class="section-sous-titre">Les coups de cœur de nos lecteurs</p>
+    </div>
+    <a href="catalogue.html" class="voir-tout">Voir le catalogue →</a>
+  </div>
+
+  <div class="carousel">
+
+    <div class="book-card" data-product-id="nikou-champion">
+      <div class="book-card-cover-wrap">
+        <img src="images/nikou-champion.png" alt="Couverture — Nikou champion" class="book-card-cover" width="400" height="520" decoding="async">
+      </div>
+      <button class="wishlist-btn" data-product-id="nikou-champion" aria-label="Ajouter Nikou champion aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Collection Nikou</p>
+        <h3 class="book-card-titre">Nikou champion</h3>
+        <p class="book-card-auteur">L. Ramassamy · W. Deroche</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">12,00 €</span>
+          <span class="book-card-age">Album jeunesse</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card" data-product-id="circuit-ferme">
+      <div class="book-card-cover-wrap">
+        <img src="images/circuit-ferme.png" alt="Couverture — Circuit fermé" class="book-card-cover" width="400" height="520" decoding="async">
+      </div>
+      <button class="wishlist-btn" data-product-id="circuit-ferme" aria-label="Ajouter Circuit fermé aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Album jeunesse</p>
+        <h3 class="book-card-titre">Circuit fermé</h3>
+        <p class="book-card-auteur">J.-F. Silva · O. J. F. Junior</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">14,00 €</span>
+          <span class="book-card-age">Dès 7 ans</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card" data-product-id="exocette">
+      <div class="book-card-cover-wrap">
+        <img src="images/exocette.png" alt="Couverture — Exocette" class="book-card-cover" width="400" height="520" decoding="async">
+      </div>
+      <button class="wishlist-btn" data-product-id="exocette" aria-label="Ajouter Exocette aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Les histoires du Sucrier</p>
+        <h3 class="book-card-titre">Exocette</h3>
+        <p class="book-card-auteur">Renata · W. Deroche</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">15,00 €</span>
+          <span class="book-card-age">Dès 6 ans</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card" data-product-id="tice-et-metice">
+      <div class="book-card-cover-wrap">
+        <img src="images/tice-et-metice.png" alt="Couverture — Tice et Métice" class="book-card-cover" width="400" height="520" decoding="async">
+      </div>
+      <button class="wishlist-btn" data-product-id="tice-et-metice" aria-label="Ajouter Tice et Métice aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Plumes aventureuses</p>
+        <h3 class="book-card-titre">Tice et Métice</h3>
+        <p class="book-card-auteur">K. Petevi · Gecko Dalch</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">13,00 €</span>
+          <span class="book-card-age">Plusieurs langues</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== COUP DE COEUR ===== -->
+<section class="section-coup-coeur">
+  <img src="images/nikou-musicien.png" alt="" class="coup-coeur-nikou-deco" width="200" height="280" decoding="async" aria-hidden="true">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre">Conseil de lecture</h2>
+      <p class="section-sous-titre">Notre sélection du moment</p>
+    </div>
+    <a href="catalogue.html" class="voir-tout">Toutes nos recommandations →</a>
+  </div>
+
+  <div class="coup-coeur-grid">
+
+    <div class="coup-coeur-principal">
+      <div class="coup-coeur-cover coup-coeur-cover--photo">
+        <img src="images/sous-le-quenettier-mamy-ayuda-t2.png" alt="Couverture — Sous le quenettier de Mamy Ayuda, tome 2, Sens cibles" class="coup-coeur-cover-img" width="600" height="760" decoding="async">
+      </div>
+      <div class="coup-coeur-info">
+        <p class="book-card-collection coup-coeur-label">Le coup de cœur de la semaine</p>
+        <h3 class="book-card-titre">Sous le quenettier de Mamy Ayuda — Sens cibles</h3>
+        <p class="coup-coeur-description"><strong>Résumé :</strong> Tome 2 d'une histoire chaleureuse sous le quenettier, entre transmission, musique et paysages tropicaux. Texte de Katy François, illustrations de Didier Duroc.</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix coup-coeur-prix">12,00 €</span>
+          <a href="catalogue.html" class="btn-primary coup-coeur-btn">Voir le détail</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="coup-coeur-secondaires-grid">
+      <div class="coup-coeur-secondaire">
+        <div class="coup-coeur-mini-cover coup-coeur-mini-cover--img">
+          <img src="images/bebe-nikou-dit-non.png" alt="" width="120" height="160" decoding="async" aria-hidden="true">
+        </div>
+        <div class="coup-coeur-mini-texte">
+          <p class="book-card-collection">Bébé Nikou</p>
+          <h4 class="book-card-titre">Bébé Nikou dit non</h4>
+          <p class="book-card-auteur">Renata · W. Deroche</p>
+          <span class="book-card-prix">10,50 €</span>
+        </div>
+      </div>
+
+      <div class="coup-coeur-secondaire">
+        <div class="coup-coeur-mini-cover coup-coeur-mini-cover--img">
+          <img src="images/exocette.png" alt="" width="120" height="160" decoding="async" aria-hidden="true">
+        </div>
+        <div class="coup-coeur-mini-texte">
+          <p class="book-card-collection">Les histoires du Sucrier</p>
+          <h4 class="book-card-titre">Exocette</h4>
+          <p class="book-card-auteur">Renata · W. Deroche</p>
+          <span class="book-card-prix">15,00 €</span>
+        </div>
+      </div>
+
+      <div class="coup-coeur-secondaire">
+        <div class="coup-coeur-mini-cover coup-coeur-mini-cover--img">
+          <img src="images/tice-et-metice.png" alt="" width="120" height="160" decoding="async" aria-hidden="true">
+        </div>
+        <div class="coup-coeur-mini-texte">
+          <p class="book-card-collection">Plumes aventureuses</p>
+          <h4 class="book-card-titre">Tice et Métice</h4>
+          <p class="book-card-auteur">K. Petevi · Gecko Dalch</p>
+          <span class="book-card-prix">13,00 €</span>
+        </div>
+      </div>
+
+      <div class="coup-coeur-secondaire">
+        <div class="coup-coeur-mini-cover coup-coeur-mini-cover--img">
+          <img src="images/circuit-ferme.png" alt="" width="120" height="160" decoding="async" aria-hidden="true">
+        </div>
+        <div class="coup-coeur-mini-texte">
+          <p class="book-card-collection">Album jeunesse</p>
+          <h4 class="book-card-titre">Circuit fermé</h4>
+          <p class="book-card-auteur">J.-F. Silva · O. J. F. Junior</p>
+          <span class="book-card-prix">14,00 €</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== ACTUALITÉS ===== -->
+<section class="section-actualites">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre">Actualités</h2>
+      <p class="section-sous-titre">Nouveaux livres, événements et publications</p>
+    </div>
+    <a href="actualites.html" class="voir-tout">Toutes les actualités →</a>
+  </div>
+
+  <div class="actu-grid">
+    <div class="actu-card">
+      <img src="images/bebe-nikou-dit-non.png" alt="Couverture — Bébé Nikou dit non" class="actu-cover actu-cover--book" width="400" height="220" decoding="async">
+      <div class="actu-body">
+        <span class="actu-tag nouveau">Nouveau livre</span>
+        <h4 class="actu-titre">Sortie de Bébé Nikou dit non — édition révisée</h4>
+        <p class="actu-date">Mars 2025</p>
+      </div>
+    </div>
+
+    <div class="actu-card">
+      <img src="images/salon-livre-martinique.png" alt="Salon du livre — stand et visiteurs" class="actu-cover actu-cover--event" width="800" height="450" decoding="async">
+      <div class="actu-body">
+        <span class="actu-tag evenement">Événement</span>
+        <h4 class="actu-titre">Les Éditions du Sucrier au Salon du livre de Martinique</h4>
+        <p class="actu-date">Avril 2025</p>
+      </div>
+    </div>
+
+    <div class="actu-card">
+      <img src="images/tice-et-metice.png" alt="" class="actu-cover actu-cover--book" width="400" height="220" decoding="async">
+      <div class="actu-body">
+        <span class="actu-tag publication">Publication</span>
+        <h4 class="actu-titre">Tice et Métice : album multilingue primé aux Antilles</h4>
+        <p class="actu-date">Février 2025</p>
+      </div>
+    </div>
+
+    <div class="actu-card">
+      <img src="images/nikou-champion.png" alt="" class="actu-cover actu-cover--book" width="400" height="220" decoding="async">
+      <div class="actu-body">
+        <span class="actu-tag nouveau">Annonce</span>
+        <h4 class="actu-titre">Nikou champion : l'album multilingue déjà culte</h4>
+        <p class="actu-date">Janvier 2025</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HÉROS ET HÉROÏNES ===== -->
+<section class="section-heros">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre">Héros et héroïnes</h2>
+      <p class="section-sous-titre">Des personnages qui ressemblent à nos enfants</p>
+    </div>
+  </div>
+
+  <div class="heros-grid">
+
+    <div class="heros-card heros-card--nikou">
+      <img src="images/nikou-surfeur.png" alt="" class="heros-card-bg-img" width="400" height="500" decoding="async" aria-hidden="true">
+      <div class="heros-infos">
+        <h3 class="heros-nom">Nikou</h3>
+        <p class="heros-desc">Petit manicou curieux · Collection phare</p>
+      </div>
+    </div>
+
+    <div class="heros-card heros-card--cover">
+      <img src="images/exocette.png" alt="" class="heros-card-bg-img heros-card-bg-img--cover" width="500" height="640" decoding="async" aria-hidden="true">
+      <div class="heros-infos">
+        <h3 class="heros-nom">Exocette</h3>
+        <p class="heros-desc">Poisson volant · Courage et différence</p>
+      </div>
+    </div>
+
+    <div class="heros-card heros-card--cover">
+      <img src="images/tice-et-metice.png" alt="" class="heros-card-bg-img heros-card-bg-img--cover" width="500" height="640" decoding="async" aria-hidden="true">
+      <div class="heros-infos">
+        <h3 class="heros-nom">Tice & Métice</h3>
+        <p class="heros-desc">Les jumeaux · Aventure et découverte</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+
+    <div>
+      <div class="footer-brand">
+        <img src="images/logo-footer-noir.png" alt="" class="footer-logo-img" width="120" height="120" decoding="async" aria-hidden="true">
+        <div class="footer-wordmark">
+          <span class="footer-brand-name">Les Éditions du Sucrier</span>
+          <span class="footer-brand-tagline">Maison d'édition jeunesse · Martinique</span>
+        </div>
+      </div>
+      <p class="footer-desc">Maison d'édition jeunesse martiniquaise fondée en 2018, dédiée à raconter la Caraïbe aux plus jeunes à travers des albums illustrés, dont certains en plusieurs langues.</p>
+      <div class="footer-social">
+        <button class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </button>
+        <button class="social-btn">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="catalogue.html">Catalogue</a></li>
+        <li><a href="a-propos.html">À propos</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="catalogue.html">Collection Nikou</a></li>
+        <li><a href="catalogue.html">Bébé Nikou</a></li>
+        <li><a href="catalogue.html">Plumes aventureuses</a></li>
+        <li><a href="catalogue.html">Bulles de Sucrier</a></li>
+        <li><a href="catalogue.html">Cahiers d'activités</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Fort-de-France, Martinique
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.59 5.59l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        05 96 93 27 58
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>© 2025 Les Éditions du Sucrier — Tous droits réservés</p>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGV</a>
+    </div>
+  </div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>
