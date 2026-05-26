@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page introuvable — Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.webp" type="image/png">
+<link rel="apple-touch-icon" href="images/logo-editions-sucrier.webp" sizes="180x180">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="site-enhancements.css?v=20260521">
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.webp" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+</header>
+
+<main id="main-content" class="page-404">
+  <img src="images/nikou-gambadeur.webp" alt="" class="page-404__hero" width="200" height="250" decoding="async" loading="lazy">
+  <h1 data-fr="Oups, cette page s'est envolée…" data-en="Oops, this page flew away…">Oups, cette page s'est envolée…</h1>
+  <p data-fr="Comme Nikou, elle a peut-être pris un mauvais tournant. Retrouvez nos albums jeunesse ci-dessous." data-en="Like Nikou, it may have taken a wrong turn. Find our children's books below.">Comme Nikou, elle a peut-être pris un mauvais tournant. Retrouvez nos albums jeunesse ci-dessous.</p>
+  <form class="page-404-search" action="catalogue.html" method="get" role="search">
+    <label class="sr-only" for="q404">Rechercher un livre</label>
+    <input type="search" id="q404" name="q" placeholder="Rechercher un titre…" autocomplete="off">
+    <button type="submit" class="btn-primary" aria-label="Rechercher">→</button>
+  </form>
+  <p><a href="index.html" class="btn-outline" data-fr="Retour à l'accueil" data-en="Back to home">Retour à l'accueil</a> · <a href="catalogue.html" class="voir-tout" data-fr="Voir le catalogue" data-en="Browse catalog">Voir le catalogue</a></p>
+</main>
+
+<script>
+  document.querySelector('form.page-404-search').addEventListener('submit', function (e) {
+    var q = document.getElementById('q404').value.trim();
+    if (q) {
+      e.preventDefault();
+      window.location.href = 'catalogue.html?q=' + encodeURIComponent(q);
+    }
+  });
+</script>
+<script src="app.js"></script>
+<script src="mobile-ux.js" defer></script>
+</body>
+</html>

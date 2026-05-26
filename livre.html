@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiche produit — Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.webp" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="api/content.php" as="fetch" crossorigin="use-credentials">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260526-qty-control">
+<link rel="stylesheet" href="mobile-ux.css?v=20260521-hero-tablet">
+<style>
+  /* Anti-FOUC : masquer le squelette vide tant que JS n'a pas inject les donnees */
+  .book-detail-page:not(.is-ready) .book-detail-layout {
+    visibility: hidden;
+    min-height: 60vh;
+    position: relative;
+  }
+  .book-detail-page:not(.is-ready) .book-detail-layout::before {
+    content: "";
+    visibility: visible;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    margin: -22px 0 0 -22px;
+    border-radius: 50%;
+    border: 3px solid rgba(45, 106, 79, 0.18);
+    border-top-color: var(--vert, #2D6A4F);
+    animation: book-spinner 0.8s linear infinite;
+  }
+  .book-detail-page:not(.is-ready) .page-hero h1 {
+    visibility: hidden;
+  }
+  .book-detail-page:not(.is-ready) .page-hero { min-height: 90px; }
+  @keyframes book-spinner { to { transform: rotate(360deg); } }
+  /* Apparition douce une fois pret */
+  .book-detail-page.is-ready .book-detail-layout {
+    animation: fade-in 0.25s ease-out both;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.webp" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true" fetchpriority="high">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="catalogue.html">Catalogue</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="header-icons">
+    <div class="header-tools" aria-label="Préférences du site">
+      <label class="header-select-wrap" for="currency-select">
+        <span class="sr-only">Devise</span>
+        <select id="currency-select" class="header-select" aria-label="Choisir la devise">
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+      </label>
+      <label class="header-select-wrap" for="language-select">
+        <span class="sr-only">Langue</span>
+        <select id="language-select" class="header-select" aria-label="Choisir la langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
+    <a href="favoris.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favoris
+    </a>
+    <a href="panier.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Panier
+      <span class="panier-badge">0</span>
+    </a>
+    <a href="compte.html" class="icon-btn" aria-label="Mon compte">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="page-shell book-detail-page">
+  <section class="page-hero">
+    <h1 data-fr="Fiche produit" data-en="Product details">Fiche produit</h1>
+    <p><a href="catalogue.html" class="btn-outline book-back-btn">Retour au catalogue</a></p>
+  </section>
+
+  <section class="book-detail-layout">
+    <div class="book-detail-media">
+      <div class="book-detail-main-frame">
+        <img src="" alt="" id="book-detail-main-image" class="book-detail-main-image" width="600" height="800" decoding="async" fetchpriority="high">
+      </div>
+      <div class="book-detail-thumb-list" id="book-detail-thumb-list"></div>
+    </div>
+    <div class="book-detail-content">
+      <p class="book-detail-collection" id="book-detail-collection"></p>
+      <h2 id="book-detail-title"></h2>
+      <p class="book-detail-contributors" id="book-detail-contributors"></p>
+      <p class="book-detail-price book-card-prix" id="book-detail-price" data-price-eur="0" data-book-price>0,00 €</p>
+      <div id="book-out-of-stock-banner" class="book-out-of-stock-banner" role="alert" hidden></div>
+      <div class="book-detail-actions">
+        <div class="book-detail-qty-row">
+          <label for="book-detail-qty" data-fr="Quantité" data-en="Quantity">Quantité</label>
+          <div class="qty-control">
+            <button type="button" class="qty-btn" id="book-detail-qty-minus" aria-label="Diminuer la quantité">−</button>
+            <input type="number" id="book-detail-qty" class="qty-input" min="1" max="99" value="1" inputmode="numeric" aria-label="Quantité">
+            <button type="button" class="qty-btn" id="book-detail-qty-plus" aria-label="Augmenter la quantité">+</button>
+          </div>
+        </div>
+        <div class="book-detail-cta-row">
+          <button type="button" class="book-detail-wishlist wishlist-btn" id="book-detail-wishlist" aria-label="Ajouter aux favoris">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </button>
+          <button type="button" class="btn-primary add-to-cart-btn" id="book-detail-add-to-cart" data-add-to-cart data-product-id="">Ajouter au panier</button>
+        </div>
+      </div>
+      <div class="book-detail-tabs" role="tablist" aria-label="Informations sur le produit" data-fr="Informations sur le produit" data-en="Product information">
+        <button type="button" class="book-detail-tab is-active" role="tab" aria-selected="true" data-book-tab="resume" data-fr="Résumé" data-en="Overview">Résumé</button>
+        <button type="button" class="book-detail-tab" role="tab" aria-selected="false" data-book-tab="pourqui" data-fr="Pour qui ?" data-en="Who is it for?">Pour qui ?</button>
+        <button type="button" class="book-detail-tab" role="tab" aria-selected="false" data-book-tab="avis" data-fr="Avis enseignants" data-en="Teacher reviews">Avis enseignants</button>
+      </div>
+      <div class="book-detail-tab-panel is-active" data-book-tab-panel="resume" role="tabpanel">
+        <p id="book-detail-description-tab"></p>
+      </div>
+      <div class="book-detail-tab-panel" data-book-tab-panel="pourqui" role="tabpanel" hidden>
+        <section class="book-detail-extra" aria-label="Informations pratiques du produit" data-fr="Informations pratiques du produit" data-en="Practical product information">
+          <article class="book-detail-info-card">
+            <h3 data-fr="Âge conseillé" data-en="Recommended age">Âge conseillé</h3>
+            <p id="book-detail-age">Dès 6 ans</p>
+          </article>
+          <article class="book-detail-info-card" id="book-detail-reading-level-card">
+            <h3 data-fr="Niveau de lecture" data-en="Reading level">Niveau de lecture</h3>
+            <p id="book-detail-reading-level">Album illustré · lecture accompagnée</p>
+          </article>
+          <article class="book-detail-info-card" id="book-detail-reading-time-card">
+            <h3 data-fr="Durée de lecture" data-en="Reading time">Durée de lecture</h3>
+            <p id="book-detail-reading-time"></p>
+          </article>
+          <article class="book-detail-info-card">
+            <h3 data-fr="Thème" data-en="Theme">Thème</h3>
+            <p id="book-detail-theme">Aventure</p>
+          </article>
+          <article class="book-detail-info-card">
+            <h3 data-fr="Langues disponibles" data-en="Available languages">Langues disponibles</h3>
+            <p id="book-detail-languages">Français</p>
+          </article>
+          <article class="book-detail-info-card">
+            <h3 data-fr="Disponibilité" data-en="Availability">Disponibilité</h3>
+            <p id="book-detail-availability">En stock · Expédition sous 48h</p>
+          </article>
+        </section>
+      </div>
+      <div class="book-detail-tab-panel" data-book-tab-panel="avis" role="tabpanel" hidden>
+        <div class="book-teacher-quotes">
+          <blockquote class="book-teacher-quote" data-fr="« Un support idéal pour travailler l'inclusion et le sport en maternelle, avec des illustrations très parlantes. »" data-en="« An ideal classroom resource for inclusion and physical activity in preschool, with very expressive illustrations. »">« Un support idéal pour travailler l'inclusion et le sport en maternelle, avec des illustrations très parlantes. »</blockquote>
+          <blockquote class="book-teacher-quote" data-fr="« Mes élèves demandent Nikou à chaque temps de lecture — le quadrilingue est un vrai plus en classe. »" data-en="« My pupils ask for Nikou at every story time — the multilingual aspect is a real asset in class. »">« Mes élèves demandent Nikou à chaque temps de lecture — le quadrilingue est un vrai plus en classe. »</blockquote>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="book-tech-panel">
+    <details open>
+      <summary>Fiche technique</summary>
+      <ul id="book-tech-list"></ul>
+    </details>
+  </section>
+
+  <div id="book-teacher-resources" class="book-teacher-resources-wrap" hidden></div>
+
+  <section class="related-books-section">
+    <h3 data-fr="Vous aimerez aussi" data-en="You may also like">Vous aimerez aussi</h3>
+    <div class="related-books-grid" id="related-books-grid"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <img src="images/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true">
+        <div class="footer-wordmark">
+          <span class="footer-brand-name">Les Éditions du Sucrier</span>
+          <span class="footer-brand-tagline">Maison d'édition jeunesse · Martinique</span>
+        </div>
+      </div>
+      <p class="footer-desc">Maison d'édition jeunesse martiniquaise fondée en 2018.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="catalogue.html">Catalogue</a></li>
+        <li><a href="a-propos.html">À propos</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="catalogue.html">Collection Nikou</a></li>
+        <li><a href="catalogue.html">Bébé Nikou</a></li>
+        <li><a href="catalogue.html">Plumes aventureuses</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Fort-de-France, Martinique
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.59 5.59l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        06 96 93 27 58
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Les Éditions du Sucrier</p>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGV</a>
+    </div>
+  </div>
+</footer>
+<script src="app.js?v=20260526-qty-editable"></script>
+<script src="mobile-ux.js?v=20260521-cart-toast" defer></script>
+</body>
+</html>

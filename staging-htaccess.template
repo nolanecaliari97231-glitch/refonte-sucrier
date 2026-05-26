@@ -1,0 +1,11 @@
+# Staging protection with HTTP Basic Auth
+# Copy this file to your staging web root as ".htaccess"
+# Then update AuthUserFile with the absolute server path to your .htpasswd file.
+
+AuthType Basic
+AuthName "Staging Access"
+AuthUserFile /home/username/.htpasswd-staging
+Require valid-user
+
+# Optional: disable indexing
+Options -Indexes

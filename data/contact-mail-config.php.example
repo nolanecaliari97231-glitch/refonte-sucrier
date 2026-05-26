@@ -1,0 +1,20 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Copiez ce fichier en contact-mail-config.php (non versionne) sur Hostinger
+ * si les variables d'environnement ne sont pas disponibles dans le panneau.
+ *
+ * Gmail : utilisez un mot de passe d'application (compte Google > Securite).
+ * SMTP : smtp.gmail.com, port 587, chiffrement tls.
+ */
+return [
+    'contact_to' => 'leseditionsdusucrier@gmail.com',
+    'contact_from' => 'leseditionsdusucrier@gmail.com',
+    'site_name' => 'Les Editions du Sucrier',
+    'smtp_host' => 'smtp.gmail.com',
+    'smtp_port' => '587',
+    'smtp_username' => 'leseditionsdusucrier@gmail.com',
+    'smtp_password' => 'VOTRE_MOT_DE_PASSE_APPLICATION',
+    'smtp_encryption' => 'tls',
+];

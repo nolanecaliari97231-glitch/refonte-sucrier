@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auteur — Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.webp" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260519-sticky-footer">
+<link rel="stylesheet" href="mobile-ux.css?v=20260521-hero-tablet">
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.webp" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true" fetchpriority="high">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="catalogue.html">Catalogue</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="header-icons">
+    <div class="header-tools" aria-label="Préférences du site">
+      <label class="header-select-wrap" for="currency-select">
+        <span class="sr-only">Devise</span>
+        <select id="currency-select" class="header-select" aria-label="Choisir la devise">
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+      </label>
+      <label class="header-select-wrap" for="language-select">
+        <span class="sr-only">Langue</span>
+        <select id="language-select" class="header-select" aria-label="Choisir la langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
+    <a href="favoris.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favoris
+    </a>
+    <a href="panier.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Panier
+      <span class="panier-badge">0</span>
+    </a>
+    <a href="compte.html" class="icon-btn" aria-label="Mon compte">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="page-shell author-detail-page">
+  <section class="page-hero author-detail-hero">
+    <div class="author-detail-hero-inner" data-author-detail-missing hidden>
+      <p class="about-entry-kicker" data-fr="Fiche introuvable" data-en="Profile not found">Fiche introuvable</p>
+      <h1 data-fr="Auteur inconnu" data-en="Unknown author">Auteur inconnu</h1>
+      <p class="author-detail-missing-msg" data-fr="Le lien est incomplet ou ce profil n’est pas encore en ligne." data-en="This link may be incomplete or the profile isn’t published yet.">Le lien est incomplet ou ce profil n’est pas encore en ligne.</p>
+      <p class="author-detail-hero-actions">
+        <a href="catalogue.html" class="btn-outline book-back-btn" data-fr="Retour au catalogue" data-en="Back to the catalog">Retour au catalogue</a>
+        <a href="a-propos-auteurs.html" class="voir-tout" data-fr="Voir les auteurs et illustrateurs →" data-en="Browse authors &amp; illustrators →">Voir les auteurs et illustrateurs →</a>
+      </p>
+    </div>
+
+    <div class="author-detail-hero-inner" data-author-detail-loaded hidden>
+      <p class="about-entry-kicker" id="author-detail-kicker">Fiche auteur</p>
+      <h1 id="author-detail-name"></h1>
+      <p class="author-detail-role" id="author-detail-role"></p>
+      <p class="author-detail-hero-actions">
+        <a href="catalogue.html" class="btn-outline book-back-btn" data-fr="Retour au catalogue" data-en="Back to the catalog">Retour au catalogue</a>
+        <a href="a-propos-auteurs.html" class="voir-tout" data-fr="Toutes les équipes créatives →" data-en="All creative teams →">Toutes les équipes créatives →</a>
+      </p>
+    </div>
+  </section>
+
+  <div data-author-detail-loaded hidden>
+    <section class="author-detail-layout">
+      <div class="author-detail-media">
+        <img src="" alt="" id="author-detail-photo" loading="lazy" width="440" height="587">
+      </div>
+      <div class="author-detail-body">
+        <div class="author-detail-bio prose-like" id="author-detail-bio"></div>
+        <section class="related-books-section author-books-section author-books-section--in-detail">
+          <h3 id="author-books-heading">Ouvrages au catalogue</h3>
+          <div class="related-books-grid" id="author-books-grid"></div>
+        </section>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <img src="images/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true">
+        <div class="footer-wordmark">
+          <span class="footer-brand-name">Les Éditions du Sucrier</span>
+          <span class="footer-brand-tagline">Maison d'édition jeunesse · Martinique</span>
+        </div>
+      </div>
+      <p class="footer-desc">Maison d'édition jeunesse martiniquaise fondée en 2018.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="catalogue.html">Catalogue</a></li>
+        <li><a href="a-propos.html">À propos</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="catalogue.html">Voir le catalogue</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Fort-de-France, Martinique
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.59 5.59l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        06 96 93 27 58
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Les Éditions du Sucrier</p>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGV</a>
+    </div>
+  </div>
+</footer>
+<script src="app.js?v=20260519-i18n-fix"></script>
+<script src="mobile-ux.js?v=20260519-perf" defer></script>
+</body>
+</html>

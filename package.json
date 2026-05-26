@@ -1,0 +1,28 @@
+{
+  "name": "refonte_sucrier",
+  "version": "1.0.0",
+  "description": "Refonte du site Les Editions du Sucrier (stage BUT informatique).",
+  "main": "app.js",
+  "scripts": {
+    "dev": "php -S localhost:8000 router.php",
+    "dev:mobile": "php -S 0.0.0.0:8000 router.php",
+    "dev:tunnel": "npx localtunnel --port 8000",
+    "dev:backoffice": "php -S localhost:8001 -t backoffice",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nolanecaliari97231-glitch/refonte-sucrier.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/nolanecaliari97231-glitch/refonte-sucrier/issues"
+  },
+  "homepage": "https://github.com/nolanecaliari97231-glitch/refonte-sucrier#readme",
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  }
+}

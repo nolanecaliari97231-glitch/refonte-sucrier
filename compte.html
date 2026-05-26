@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon compte — Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.webp" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260518-auth-alert">
+<link rel="stylesheet" href="mobile-ux.css?v=20260521-hero-tablet">
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.webp" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true" fetchpriority="high">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="catalogue.html">Catalogue</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="header-icons">
+    <div class="header-tools" aria-label="Préférences du site">
+      <label class="header-select-wrap" for="currency-select">
+        <span class="sr-only">Devise</span>
+        <select id="currency-select" class="header-select" aria-label="Choisir la devise">
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+      </label>
+      <label class="header-select-wrap" for="language-select">
+        <span class="sr-only">Langue</span>
+        <select id="language-select" class="header-select" aria-label="Choisir la langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
+    <a href="favoris.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Favoris
+    </a>
+    <a href="panier.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Panier
+      <span class="panier-badge">0</span>
+    </a>
+    <a href="compte.html" class="icon-btn" aria-label="Mon compte">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+  </div>
+</header>
+
+<main class="page-shell account-page">
+  <section class="page-hero">
+    <h1>Mon compte</h1>
+    <p data-account-hero-line>Choisissez votre profil pour une expérience adaptée.</p>
+  </section>
+
+  <div data-account-guest-root>
+  <section class="account-segmentation">
+    <div class="account-switch" role="tablist" aria-label="Segmentation des utilisateurs">
+      <button type="button" class="account-switch-btn is-active" data-segment-select="particulier" role="tab" aria-selected="true">Particulier</button>
+      <button type="button" class="account-switch-btn" data-segment-select="professionnel" role="tab" aria-selected="false">Professionnel</button>
+    </div>
+
+    <div class="account-segment-grid">
+      <article class="account-segment-card is-active" data-segment-card="particulier">
+        <h2>Espace particulier</h2>
+        <p>Pour les parents et lecteurs qui souhaitent acheter des livres et suivre leurs commandes.</p>
+        <ul>
+          <li>Historique de commandes</li>
+          <li>Adresses de livraison</li>
+          <li>Favoris et recommandations lecture</li>
+        </ul>
+        <div class="account-actions">
+          <button type="button" class="btn-primary" data-segment-select="particulier">Continuer en particulier</button>
+          <a href="catalogue.html?persona=parent" class="btn-outline">Trouver un livre</a>
+        </div>
+      </article>
+
+      <article class="account-segment-card" data-segment-card="professionnel">
+        <h2>Espace professionnel</h2>
+        <p>Pour enseignants, écoles et libraires avec accès à des contenus et ressources dédiés.</p>
+        <ul>
+          <li>Accès aux fiches pédagogiques</li>
+          <li>Demandes de devis et commandes groupées</li>
+          <li>Suivi des téléchargements ressources</li>
+        </ul>
+        <p class="account-segment-includes"><small>Accès complet à l’espace particulier (commandes, adresses, favoris).</small></p>
+        <div class="account-actions">
+          <button type="button" class="btn-primary" data-segment-select="professionnel">Continuer en professionnel</button>
+          <a href="catalogue.html" class="btn-outline">Voir le catalogue</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="account-auth-layout">
+      <section class="account-auth-box">
+        <h3>Connexion</h3>
+        <p data-segment-message>Vous êtes dans le parcours particulier.</p>
+        <form class="account-form">
+          <label>
+            Email
+            <input type="email" required>
+          </label>
+          <label>
+            Mot de passe
+            <input type="password" required>
+          </label>
+          <button type="submit" class="btn-primary">Se connecter</button>
+          <button type="button" class="btn-google" data-auth-provider="google">Continuer avec Google</button>
+        </form>
+        <div class="account-register-cta">
+          <p>Pas encore de compte ?</p>
+          <button type="button" class="btn-outline" data-action="create-account">Créer un compte</button>
+        </div>
+        <p class="account-auth-feedback" data-auth-feedback aria-live="polite"></p>
+      </section>
+      <aside class="account-brand-panel" aria-label="Identité Les Éditions du Sucrier">
+        <div class="account-brand-head">
+          <img src="images/logo-editions-sucrier.webp" alt="" width="96" height="96" class="account-brand-logo" decoding="async" loading="lazy" aria-hidden="true">
+          <div class="account-brand-wordmark">
+            <strong>Les Éditions du Sucrier</strong>
+            <span>Maison d'édition jeunesse · Martinique</span>
+          </div>
+        </div>
+        <img src="images/nikou-surfeur.webp" alt="" width="420" height="520" class="account-brand-nikou" decoding="async" loading="lazy" aria-hidden="true">
+      </aside>
+    </div>
+  </section>
+  </div>
+
+  <div data-account-connected-cta hidden>
+    <section class="account-connected-card account-access-banner" aria-labelledby="account-connected-heading">
+      <div class="account-access-banner__inner">
+        <div class="account-access-banner__text">
+          <p class="account-connected-eyebrow">Session ouverte</p>
+          <h2 id="account-connected-heading" class="account-connected-title">Votre espace</h2>
+          <p class="account-connected-desc">Vos commandes, adresses, favoris et ressources sont regroupés sur une page dédiée — plus lisible qu’un long fil sur cette page.</p>
+        </div>
+        <div class="account-access-banner__actions">
+          <a href="espace.html" class="btn-account-space">Votre espace</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">
+        <img src="images/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true">
+        <div class="footer-wordmark">
+          <span class="footer-brand-name">Les Éditions du Sucrier</span>
+          <span class="footer-brand-tagline">Maison d'édition jeunesse · Martinique</span>
+        </div>
+      </div>
+      <p class="footer-desc">Maison d'édition jeunesse martiniquaise fondée en 2018.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="catalogue.html">Catalogue</a></li>
+        <li><a href="a-propos.html">À propos</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Collections</h4>
+      <ul>
+        <li><a href="catalogue.html">Collection Nikou</a></li>
+        <li><a href="catalogue.html">Bébé Nikou</a></li>
+        <li><a href="catalogue.html">Plumes aventureuses</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Fort-de-France, Martinique
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.59 5.59l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        06 96 93 27 58
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Les Éditions du Sucrier</p>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="#">CGV</a>
+    </div>
+  </div>
+</footer>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="google-auth-config.js"></script>
+<script src="app.js?v=20260519-i18n-fix"></script>
+<script src="mobile-ux.js?v=20260519-perf" defer></script>
+</body>
+</html>

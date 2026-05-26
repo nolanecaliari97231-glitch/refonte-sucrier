@@ -1,0 +1,107 @@
+{
+  "sections": {
+    "institutional": {
+      "title_fr": "Partenaires institutionnels",
+      "title_en": "Institutional partners",
+      "intro_fr": "Collectivités et organismes publics qui soutiennent durablement nos projets éditoriaux.",
+      "intro_en": "Public bodies and institutions that sustainably support our publishing projects.",
+      "items": [
+        { "id": "prefecture-martinique", "name": "Préfet de la Martinique — Direction des Affaires Culturelles", "logo": "images/partners/prefecture-martinique.png", "url": "" },
+        { "id": "ctm", "name": "Collectivité territoriale de Martinique", "logo": "images/partners/ctm.png", "url": "" },
+        { "id": "ima", "name": "Initiative Martinique Active (IMA)", "logo": "images/partners/ima.png", "url": "" },
+        { "id": "cap-nord-martinique", "name": "CAP Nord Martinique", "logo": "images/partners/cap-nord-martinique.png", "url": "" },
+        { "id": "ofb", "name": "Office français de la biodiversité (OFB)", "logo": "images/partners/ofb.png", "url": "" },
+        { "id": "parc-naturel-marin", "name": "Parc naturel marin de Martinique", "logo": "images/partners/parc-naturel-marin.png", "url": "" }
+      ]
+    },
+    "labels": {
+      "title_fr": "Labels & distinctions reçus",
+      "title_en": "Labels & awards received",
+      "intro_fr": "Reconnaissances obtenues par la maison pour son engagement éditorial, social et territorial.",
+      "intro_en": "Recognitions awarded to the publisher for its editorial, social and territorial commitments.",
+      "items": [
+        { "id": "expertes-france", "name": "Label Expertes France", "logo": "images/partners/expertes-france.png", "url": "" },
+        { "id": "ambassadeurs-tfe", "name": "Ambassadeur Team France Export", "logo": "images/partners/ambassadeurs-tfe.png", "url": "" },
+        { "id": "label-initiative-remarquable", "name": "Label Initiative Remarquable", "logo": "images/partners/label-initiative-remarquable.png", "url": "" }
+      ]
+    },
+    "associations": {
+      "title_fr": "Associations & réseaux partenaires",
+      "title_en": "Associations & partner networks",
+      "intro_fr": "Acteurs culturels, sociaux et éducatifs avec lesquels nous menons projets, ateliers et événements.",
+      "intro_en": "Cultural, social and educational organisations with whom we run projects, workshops and events.",
+      "items": [
+        { "id": "alliance-editeurs-independants", "name": "Alliance internationale de l'édition indépendante", "logo": "images/partners/alliance-editeurs-independants.png", "url": "https://www.alliance-lab.org/" },
+        { "id": "la-baie-bleue", "name": "Association La Baie bleue — Martinique", "logo": "images/partners/la-baie-bleue.png", "url": "" },
+        { "id": "rezo-filibo", "name": "RÉZO Fil'bo — plateforme jeune public", "logo": "images/partners/filibo.png", "url": "" },
+        { "id": "handisport-martinique", "name": "Handi Sport — Comité régional Martinique", "logo": "images/partners/handisport-martinique.png", "url": "" },
+        { "id": "contact-entreprises", "name": "Contact Entreprises", "logo": "images/partners/contact-entreprises.png", "url": "" },
+        { "id": "mosaique-interculturelle", "name": "Mosaïque interculturelle", "logo": "images/partners/mosaique-interculturelle.png", "url": "" },
+        { "id": "reseau-initiative-france", "name": "Réseau Initiative France", "logo": "images/partners/reseau-initiative-france.png", "url": "" },
+        { "id": "labo-des-histoires", "name": "Le Labo des histoires — antenne Martinique", "logo": "images/partners/labo-des-histoires.png", "url": "" }
+      ]
+    },
+    "bookshops_panel": {
+      "title_fr": "Librairies, boutiques & diffuseurs partenaires",
+      "title_en": "Partner bookshops, stores & distributors",
+      "intro_fr": "Le réseau qui diffuse nos titres aux familles, écoles et lecteurs, ici et ailleurs.",
+      "intro_en": "The retail network bringing our titles to families, schools and readers, near and far."
+    },
+    "bookshops_martinique": {
+      "title_fr": "Martinique",
+      "title_en": "Martinique",
+      "code": "MQ",
+      "items": [
+        { "id": "lart-boutik", "name": "L'Art Boutik", "logo": "images/partners/lart-boutik.png", "url": "" },
+        { "id": "kemeh", "name": "Kémeh Concept", "logo": "images/partners/kemeh.png", "url": "" },
+        { "id": "cultura", "name": "Cultura Fort-de-France", "logo": "images/partners/cultura.png", "url": "" },
+        { "id": "anolivres", "name": "Anolivres — librairie jeunesse", "logo": "images/partners/anolivres.png", "url": "" },
+        { "id": "kazabul", "name": "Kazabul", "logo": "images/partners/kazabul.png", "url": "" },
+        { "id": "la-reserve-creole", "name": "La Réserve Créole — French Well Society", "logo": "images/partners/la-reserve-creole.png", "url": "" }
+      ]
+    },
+    "bookshops_guadeloupe": {
+      "title_fr": "Guadeloupe",
+      "title_en": "Guadeloupe",
+      "code": "GP",
+      "items": [
+        { "id": "librairie-la-ramure", "name": "Librairie La Ramure", "logo": "images/partners/librairie-la-ramure.png", "url": "" },
+        { "id": "point-lire", "name": "Point Lire", "logo": "images/partners/point-lire.png", "url": "" },
+        { "id": "une-voix-une-histoire", "name": "Une voix, une histoire", "logo": "images/partners/une-voix-une-histoire.png", "url": "" }
+      ]
+    },
+    "bookshops_france": {
+      "title_fr": "France",
+      "title_en": "France",
+      "code": "FR",
+      "items": [
+        { "id": "presence-africaine", "name": "Librairie Présence Africaine — Paris", "logo": "images/partners/presence-africaine.png", "url": "" }
+      ]
+    },
+    "bookshops_canada": {
+      "title_fr": "Canada",
+      "title_en": "Canada",
+      "code": "CA",
+      "items": [
+        { "id": "librairie-michel-fortin", "name": "Librairie Michel Fortin — Montréal", "logo": "images/partners/librairie-michel-fortin.png", "url": "" },
+        { "id": "librairie-monet", "name": "Librairie Monet — Montréal", "logo": "images/partners/librairie-monet.png", "url": "" }
+      ]
+    },
+    "bookshops_chypre": {
+      "title_fr": "Chypre",
+      "title_en": "Cyprus",
+      "code": "CY",
+      "items": [
+        { "id": "la-boite-a-lire", "name": "La Boîte à Lire", "logo": "images/partners/la-boite-a-lire.png", "url": "" }
+      ]
+    },
+    "bookshops_senegal": {
+      "title_fr": "Sénégal",
+      "title_en": "Senegal",
+      "code": "SN",
+      "items": [
+        { "id": "nena", "name": "NENA — Nouvelles Éditions Numériques Africaines · Dakar", "logo": "images/partners/nena.png", "url": "" }
+      ]
+    }
+  }
+}

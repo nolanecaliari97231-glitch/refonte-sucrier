@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Maison — Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.webp" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260519-chapter-number2">
+<link rel="stylesheet" href="mobile-ux.css?v=20260521-hero-tablet">
+</head>
+<body>
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.webp" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true" fetchpriority="high">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+  <nav>
+    <ul>
+      <li><a href="catalogue.html">Catalogue</a></li>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="header-icons">
+    <div class="header-tools" aria-label="Préférences du site">
+      <label class="header-select-wrap" for="currency-select">
+        <span class="sr-only">Devise</span>
+        <select id="currency-select" class="header-select" aria-label="Choisir la devise">
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+      </label>
+      <label class="header-select-wrap" for="language-select">
+        <span class="sr-only">Langue</span>
+        <select id="language-select" class="header-select" aria-label="Choisir la langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
+    <a href="favoris.html" class="icon-btn"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Favoris</a>
+    <a href="panier.html" class="icon-btn"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Panier <span class="panier-badge">0</span></a>
+    <a href="compte.html" class="icon-btn" aria-label="Mon compte"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+  </div>
+</header>
+
+<main class="page-shell about-maison-page">
+  <section class="about-chapter-hero" aria-labelledby="maison-chapter-title">
+    <div class="about-chapter-hero__card">
+      <span class="about-chapter-hero__number" aria-hidden="true">01</span>
+      <div class="about-chapter-hero__body">
+        <p class="about-chapter-hero__kicker" data-fr="Chapitre 1 · À propos" data-en="Chapter 1 · About">Chapitre 1 · À propos</p>
+        <h1 id="maison-chapter-title" class="about-chapter-hero__title" data-fr="La Maison d'édition" data-en="The Publishing House">La Maison d'édition</h1>
+        <p class="about-chapter-hero__lead" data-fr="Une maison martiniquaise indépendante qui fait rayonner les récits caribéens auprès des tout-petits, des enfants et des équipes éducatives — en Martinique, en métropole et au-delà." data-en="An independent Martinique-based house bringing Caribbean stories to toddlers, children, and educators — at home, in mainland France, and beyond.">Une maison martiniquaise indépendante qui fait rayonner les récits caribéens auprès des tout-petits, des enfants et des équipes éducatives — en Martinique, en métropole et au-delà.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="maison-hero" aria-labelledby="maison-hero-title">
+    <div class="maison-hero__card">
+      <div class="maison-hero__intro">
+        <h2 id="maison-hero-title" class="visually-hidden" data-fr="Présentation" data-en="Presentation">Présentation</h2>
+        <blockquote class="maison-hero__motto">
+          <p data-fr="Rêver, jouer, raconter la Caraïbe" data-en="Dream, play, tell the Caribbean">Rêver, jouer, raconter la Caraïbe</p>
+        </blockquote>
+        <p class="maison-hero__actions">
+          <a href="catalogue.html" class="btn-primary" data-fr="Explorer le catalogue" data-en="Browse the catalog">Explorer le catalogue</a>
+          <a href="index.html#heros" class="btn-outline" data-fr="Nos héros" data-en="Our heroes">Nos héros</a>
+        </p>
+      </div>
+      <figure class="maison-hero__banner">
+        <img
+          src="images/maison-edition-banner.png"
+          alt="Les Éditions du Sucrier — catalogue jeunesse et partenaires"
+          width="900"
+          height="460"
+          decoding="async"
+          loading="eager">
+      </figure>
+    </div>
+  </section>
+
+  <section class="maison-stats" aria-label="Chiffres clés">
+    <article class="maison-stat">
+      <strong>20+</strong>
+      <span data-fr="ouvrages et produits" data-en="titles and products">ouvrages et produits</span>
+    </article>
+    <article class="maison-stat">
+      <strong>5</strong>
+      <span data-fr="univers & collections" data-en="worlds & collections">univers & collections</span>
+    </article>
+    <article class="maison-stat">
+      <strong>2018</strong>
+      <span data-fr="année de création" data-en="year founded">année de création</span>
+    </article>
+    <article class="maison-stat">
+      <strong>800+</strong>
+      <span data-fr="éditeurs indépendants (Alliance)" data-en="indie publishers (Alliance)">éditeurs indépendants (Alliance)</span>
+    </article>
+  </section>
+
+  <section class="maison-story">
+    <div class="maison-story__grid">
+      <div class="maison-story__main">
+        <h2 data-fr="Notre histoire" data-en="Our story">Notre histoire</h2>
+        <p data-fr="Les Éditions du Sucrier naissent en 2018 à Fort-de-France, portées par Renée-Laure Zou — Renata — pour consacrer une maison entière à la littérature jeunesse ancrée dans la Caraïbe." data-en="Les Éditions du Sucrier was founded in 2018 in Fort-de-France by Renée-Laure Zou — Renata — to dedicate a full publishing house to children’s literature rooted in the Caribbean.">
+          Les Éditions du Sucrier naissent en 2018 à Fort-de-France, portées par Renée-Laure Zou — Renata — pour consacrer une maison entière à la littérature jeunesse ancrée dans la Caraïbe.
+        </p>
+        <p data-fr="Le parcours de la fondatrice nourrit chaque titre : enseignante à l'Éducation nationale, déléguée pédagogique pour Hachette Éducation, puis autrice-illustratrice dès 2011 avec Nikou le manicou (trois albums aux Éditions Orphie). Depuis 2022, l'illustrateur Wilfried Deroche donne une nouvelle vie graphique à l'univers Nikou, avec justesse et humour." data-en="The founder’s path shapes every book: classroom teacher, pedagogical delegate for Hachette Éducation, then author–illustrator from 2011 with Nikou the opossum (three albums with Éditions Orphie). Since 2022, illustrator Wilfried Deroche has brought fresh visual energy to the Nikou world.">
+          Le parcours de la fondatrice nourrit chaque titre : enseignante à l'Éducation nationale, déléguée pédagogique pour Hachette Éducation, puis autrice-illustratrice dès 2011 avec Nikou le manicou (trois albums aux Éditions Orphie). Depuis 2022, l'illustrateur Wilfried Deroche donne une nouvelle vie graphique à l'univers Nikou, avec justesse et humour.
+        </p>
+        <p data-fr="La maison accueille aussi des voix haïtiennes, chypriotes et caribéennes (Alice et Jacob, Tice et Métice, Exocette…) et collabore ponctuellement avec d'autres éditeurs en relecture, correction, traduction et création littéraire." data-en="We also welcome Haitian, Cypriot, and Caribbean voices (Alice and Jacob, Tice and Métice, Exocette…) and collaborate with other publishers on proofreading, copy-editing, translation, and writing when projects call for it.">
+          La maison accueille aussi des voix haïtiennes, chypriotes et caribéennes (Alice et Jacob, Tice et Métice, Exocette…) et collabore ponctuellement avec d'autres éditeurs en relecture, correction, traduction et création littéraire.
+        </p>
+      </div>
+      <aside class="maison-timeline" aria-label="Repères">
+        <div class="maison-timeline__item">
+          <span class="maison-timeline__year">2011</span>
+          <p data-fr="Naissance de Nikou — premiers albums chez Orphie" data-en="Nikou is born — first albums with Orphie">Naissance de Nikou — premiers albums chez Orphie</p>
+        </div>
+        <div class="maison-timeline__item">
+          <span class="maison-timeline__year">2018</span>
+          <p data-fr="Création des Éditions du Sucrier en Martinique" data-en="Les Éditions du Sucrier founded in Martinique">Création des Éditions du Sucrier en Martinique</p>
+        </div>
+        <div class="maison-timeline__item">
+          <span class="maison-timeline__year">2020</span>
+          <p data-fr="Exocette — album sur le handicap et la mer" data-en="Exocette — disability and the ocean">Exocette — album sur le handicap et la mer</p>
+        </div>
+        <div class="maison-timeline__item">
+          <span class="maison-timeline__year">2021+</span>
+          <p data-fr="Bébé Nikou, ouvrages quadrilingues, fiches pour l'école" data-en="Baby Nikou, quadrilingual books, classroom sheets">Bébé Nikou, ouvrages quadrilingues, fiches pour l'école</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="maison-pillars" aria-labelledby="maison-pillars-title">
+    <div class="maison-pillars__inner">
+      <header class="maison-section-head maison-section-head--stack">
+        <h2 id="maison-pillars-title" data-fr="Ce qui nous guide" data-en="What guides us">Ce qui nous guide</h2>
+        <p data-fr="Une ligne éditoriale exigeante, joyeuse et utile — à la maison comme à l'école." data-en="An editorial line that is demanding, joyful, and useful — at home and at school.">Une ligne éditoriale exigeante, joyeuse et utile — à la maison comme à l'école.</p>
+      </header>
+      <div class="maison-pillars__grid">
+      <article class="maison-pillar">
+        <span class="maison-pillar__mark" aria-hidden="true">01</span>
+        <h3 data-fr="Imaginaire caribéen" data-en="Caribbean imagination">Imaginaire caribéen</h3>
+        <p data-fr="Langues du quotidien (français, créole, espagnol, anglais selon les ouvrages), paysages antillais, transmission culturelle et fierté d'appartenance." data-en="Everyday languages (French, Creole, Spanish, English depending on the title), Antillean landscapes, cultural transmission, and a sense of belonging.">Langues du quotidien (français, créole, espagnol, anglais selon les ouvrages), paysages antillais, transmission culturelle et fierté d'appartenance.</p>
+      </article>
+      <article class="maison-pillar">
+        <span class="maison-pillar__mark" aria-hidden="true">02</span>
+        <h3 data-fr="Lecture plaisir & exigence" data-en="Joyful, thoughtful reading">Lecture plaisir & exigence</h3>
+        <p data-fr="Albums illustrés, cahiers d'activités, BD jeunesse et déclinaisons (posters, stickers, coloriages) — chaque projet soigne le texte comme l'image." data-en="Illustrated albums, activity books, graphic novels for young readers, and extensions (posters, stickers, colouring books) — every project cares for words and pictures alike.">Albums illustrés, cahiers d'activités, BD jeunesse et déclinaisons (posters, stickers, coloriages) — chaque projet soigne le texte comme l'image.</p>
+      </article>
+      <article class="maison-pillar">
+        <span class="maison-pillar__mark" aria-hidden="true">03</span>
+        <h3 data-fr="Engagements citoyens" data-en="Civic themes">Engagements citoyens</h3>
+        <p data-fr="Mer et biodiversité, handicap abordé avec tendresse, nutrition, sport, diversité culturelle — souvent en partenariat avec des institutions (OFB, Parc naturel marin, Handisport…)." data-en="Ocean and biodiversity, disability addressed with care, nutrition, sport, cultural diversity — often with institutional partners (OFB, marine park, Handisport…).">Mer et biodiversité, handicap abordé avec tendresse, nutrition, sport, diversité culturelle — souvent en partenariat avec des institutions (OFB, Parc naturel marin, Handisport…).</p>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="maison-univers" aria-labelledby="maison-univers-title">
+    <header class="maison-section-head maison-section-head--light">
+      <h2 id="maison-univers-title">
+        <span data-fr="Nos univers de lecture" data-en="Our reading worlds">Nos univers de lecture</span>
+        <span class="maison-univers__intro" data-fr="Des héros attachants pour grandir avec les enfants — découvrez leurs histoires sur le site." data-en="Beloved characters children grow up with — discover their stories on the site.">Des héros attachants pour grandir avec les enfants — découvrez leurs histoires sur le site.</span>
+      </h2>
+    </header>
+    <ul class="maison-univers__list">
+      <li><a href="heros.html?id=nikou"><strong>Nikou</strong> <span data-fr="· albums 3-6 ans, sport, musique, formes" data-en="· ages 3–6, sport, music, shapes">· albums 3-6 ans, sport, musique, formes</span></a></li>
+      <li><a href="heros.html?id=bebe-nikou"><strong>Bébé Nikou</strong> <span data-fr="· tout-carton dès 1 an" data-en="· board books from age 1">· tout-carton dès 1 an</span></a></li>
+      <li><a href="heros.html?id=exocette"><strong>Exocette</strong> <span data-fr="· mer, courage, handicap" data-en="· sea, courage, disability">· mer, courage, handicap</span></a></li>
+      <li><a href="heros.html?id=tice-et-metice"><strong>Tice et Métice</strong> <span data-fr="· découverte de l'autre" data-en="· discovering others">· découverte de l'autre</span></a></li>
+      <li><a href="heros.html?id=alice-et-jacob"><strong>Alice et Jacob</strong> <span data-fr="· BD 9-12 ans" data-en="· graphic novel ages 9–12">· BD 9-12 ans</span></a></li>
+    </ul>
+    <p class="maison-univers__cta">
+      <a href="index.html#heros" class="btn-outline" data-fr="Voir tous nos héros" data-en="Meet all our heroes">Voir tous nos héros</a>
+      <a href="catalogue.html" class="btn-primary" data-fr="Explorer le catalogue" data-en="Browse the catalog">Explorer le catalogue</a>
+    </p>
+  </section>
+
+  <section class="maison-audiences">
+    <div class="maison-audiences__grid">
+      <article>
+        <h3 data-fr="Familles" data-en="Families">Familles</h3>
+        <p data-fr="Des histoires à partager à la maison, en plusieurs langues sur de nombreux titres, pour le plaisir de lire ensemble." data-en="Stories to share at home — many titles in multiple languages — for the joy of reading together.">Des histoires à partager à la maison, en plusieurs langues sur de nombreux titres, pour le plaisir de lire ensemble.</p>
+      </article>
+      <article>
+        <h3 data-fr="Écoles & médiathèques" data-en="Schools & libraries">Écoles & médiathèques</h3>
+        <p data-fr="Fiches pédagogiques téléchargeables pour les comptes professionnels, ouvrages alignés sur les programmes de maternelle et cycle 2, interventions en classe sur demande." data-en="Downloadable teaching sheets for professional accounts, books aligned with early-years curricula, and classroom visits on request.">Fiches pédagogiques téléchargeables pour les comptes professionnels, ouvrages alignés sur les programmes de maternelle et cycle 2, interventions en classe sur demande.</p>
+        <a href="inscription.html?segment=professionnel" class="maison-audiences__link" data-fr="Créer un compte professionnel →" data-en="Create a professional account →">Créer un compte professionnel →</a>
+      </article>
+      <article>
+        <h3 data-fr="Partenaires" data-en="Partners">Partenaires</h3>
+        <p data-fr="Salons, librairies, collectivités : nous construisons des collaborations durables en Martinique et à l'international." data-en="Book fairs, bookshops, public bodies: we build lasting collaborations in Martinique and abroad.">Salons, librairies, collectivités : nous construisons des collaborations durables en Martinique et à l'international.</p>
+        <a href="a-propos-partenaires.html" class="maison-audiences__link" data-fr="Nos partenaires →" data-en="Our partners →">Nos partenaires →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="maison-recognition">
+    <h2 class="sr-only" data-fr="Reconnaissances" data-en="Recognition">Reconnaissances</h2>
+    <p data-fr="Titulaire du label Initiative Remarquable et membre de l'Alliance internationale des éditeurs indépendants (réseau de plus de 800 maisons dans 55 pays). Nos productions s'appuient sur des partenariats institutionnels en Martinique — Préfecture, Collectivité territoriale, Office français de la biodiversité, Parc naturel marin de Martinique." data-en="Holder of the Initiative Remarquable label and member of the International Alliance of Independent Publishers (a network of more than 800 publishing houses in 55 countries). Our titles are supported by institutional partnerships in Martinique — Prefecture, Territorial Collectivity, French Office for Biodiversity, Martinique Marine Natural Park.">
+      Titulaire du label Initiative Remarquable et membre de l'Alliance internationale des éditeurs indépendants (réseau de plus de 800 maisons dans 55 pays). Nos productions s'appuient sur des partenariats institutionnels en Martinique — Préfecture, Collectivité territoriale, Office français de la biodiversité, Parc naturel marin de Martinique.
+    </p>
+  </section>
+
+  <section class="maison-cta">
+    <a href="a-propos-auteurs.html" class="btn-outline" data-fr="Rencontrer les auteurs" data-en="Meet the authors">Rencontrer les auteurs</a>
+    <a href="contact.html" class="btn-primary" data-fr="Soumettre un manuscrit" data-en="Submit a manuscript">Soumettre un manuscrit</a>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div><div class="footer-brand"><img src="images/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true"><div class="footer-wordmark"><span class="footer-brand-name">Les Éditions du Sucrier</span><span class="footer-brand-tagline">Maison d'édition jeunesse · Martinique</span></div></div><p class="footer-desc">Maison d'édition jeunesse martiniquaise fondée en 2018.</p></div>
+    <div class="footer-col"><h4>Navigation</h4><ul><li><a href="index.html">Accueil</a></li><li><a href="catalogue.html">Catalogue</a></li><li><a href="a-propos.html">À propos</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+    <div class="footer-col"><h4>Collections</h4><ul><li><a href="catalogue.html">Voir le catalogue</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Fort-de-France, Martinique</div><div class="footer-contact-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.59 5.59l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>06 96 93 27 58</div></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Les Éditions du Sucrier</p><div class="footer-links"><a href="#">Mentions légales</a><a href="#">Politique de confidentialité</a><a href="#">CGV</a></div></div>
+</footer>
+<script src="app.js?v=20260519-i18n-fix"></script>
+<script src="mobile-ux.js?v=20260519-perf" defer></script>
+</body>
+</html>

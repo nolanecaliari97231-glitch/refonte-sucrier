@@ -1,0 +1,112 @@
+{
+    "page": {
+        "kicker_fr": "Chapitre 2 · À propos",
+        "kicker_en": "Chapter 2 · About",
+        "title_fr": "Auteurs / Illustrateurs",
+        "title_en": "Authors / Illustrators",
+        "lead_fr": "Les talents qui portent la voix visuelle et narrative de nos collections jeunesse caribéennes.",
+        "lead_en": "The talents behind the visual and narrative voice of our Caribbean children's collections."
+    },
+    "authors": [
+        {
+            "slug": "renata",
+            "photo": "images/renee-laure-zou.webp",
+            "roles": "author illustrator",
+            "name_fr": "Renée-Laure Zou (Renata)",
+            "name_en": "Renée-Laure Zou (Renata)",
+            "role_fr": "Auteure · illustratrice · éditrice jeunesse · Gérante",
+            "role_en": "Author · illustrator · children's publisher · Managing director",
+            "bio_fr": "Après avoir été enseignante à l'Éducation nationale puis déléguée pédagogique pour Hachette Éducation, Renata entame son parcours d'auteure-illustratrice en 2011 avec le manicou Nikou : les trois premiers albums sont publiés aux Éditions Orphie. En 2018, elle ouvre Les Éditions du Sucrier, entièrement tournées vers la littérature jeunesse, tout en poursuivant des collaborations externes en relecture, correction, traduction ou création littéraire.",
+            "bio_en": "After teaching in France's national school system and working as a pedagogical delegate for Hachette Éducation, Renata began her journey as author-illustrator in 2011 with Nikou; the first three albums were released by Éditions Orphie. In 2018 she founded Les Éditions du Sucrier, wholly dedicated to books for young readers, while continuing freelance work in proofreading, editing, translation, and writing."
+        },
+        {
+            "slug": "w-deroche",
+            "photo": "images/wilfried-deroche-illustrateur.webp",
+            "roles": "illustrator",
+            "name_fr": "Wilfried Deroche",
+            "name_en": "Wilfried Deroche",
+            "role_fr": "Illustrateur",
+            "role_en": "Illustrator",
+            "bio_fr": "Wilfried Deroche donne son trait graphique aux collections Nikou et « Les histoires du Sucrier », dont Exocette, et assure la direction artistique de l'univers visuel des ouvrages jeunesse du catalogue.",
+            "bio_en": "Wilfried Deroche shapes the graphic world of the Nikou line and Les histoires du Sucrier titles such as Exocette, steering the visual art direction across the publisher's youth catalogue."
+        },
+        {
+            "slug": "l-ramassamy",
+            "photo": "images/author-leane-ramassamy.webp",
+            "roles": "author",
+            "name_fr": "Léanne Ramassamy",
+            "name_en": "Léanne Ramassamy",
+            "role_fr": "Auteure · championne de boxe",
+            "role_en": "Author · boxing champion",
+            "bio_fr": "Co-auteure de Nikou champion avec Wilfried Deroche, Léanne Ramassamy — également championne de boxe — entraîne les enfants vers le sport et la découverte de soi. Elle participe aux rencontres scolaires et à la médiation autour des albums jeunesse des Éditions du Sucrier.",
+            "bio_en": "Co-author of Nikou champion with Wilfried Deroche, Léanne Ramassamy — also a boxing champion — encourages children to explore sport and self-confidence. She takes part in school visits and reading outreach for Les Éditions du Sucrier's youth titles."
+        },
+        {
+            "slug": "k-petevi",
+            "photo": "images/author-karine-petevi.webp",
+            "roles": "author",
+            "name_fr": "Karine Petevi",
+            "name_en": "Karine Petevi",
+            "role_fr": "Auteure · Tice et Métice",
+            "role_en": "Author · Tice et Métice",
+            "bio_fr": "Karine Petevi est de nationalité franco-chypriote. Enseignante et formatrice de français langue étrangère (FLE) à Chypre depuis une vingtaine d'années, elle relie voyages, cultures et nature dans son album Tice et Métice, illustré par Gecko Dalch et publié aux Éditions du Sucrier (janvier 2024).",
+            "bio_en": "Karine Petevi is French-Cypriot. For nearly twenty years she has taught and trained teachers in French as a foreign language (FLE) in Cyprus. She brings travel, cultures, and nature together in Tice et Métice, illustrated by Gecko Dalch and released by Les Éditions du Sucrier (January 2024)."
+        },
+        {
+            "slug": "rolyne-pam",
+            "photo": "images/author-rolyne-pam.webp",
+            "roles": "author",
+            "name_fr": "Rolyne Pam",
+            "name_en": "Rolyne Pam",
+            "role_fr": "Auteure · Les comptines de Karambole",
+            "role_en": "Author · Les comptines de Karambole",
+            "bio_fr": "Avec Les comptines de Karambole, Rolyne Pam fait ses premiers pas d'écrivaine. Elle s'inspire de ses souvenirs d'enfance en Guadeloupe et des histoires transmises par ses parents. Enseignante, elle utilise la littérature de jeunesse au quotidien pour faire décrire la Caraïbe aux plus jeunes.",
+            "bio_en": "With Les comptines de Karambole, Rolyne Pam steps into publishing as a writer. She draws on childhood memories in Guadeloupe and family storytelling. As a teacher, she uses children's literature every day to invite students to talk about the Caribbean."
+        },
+        {
+            "slug": "patrick-petito",
+            "photo": "images/patrick-petito-cultura.webp",
+            "roles": "author",
+            "name_fr": "Patrick Petito",
+            "name_en": "Patrick Petito",
+            "role_fr": "Auteur",
+            "role_en": "Author",
+            "bio_fr": "Spécialiste de la voile traditionnelle martiniquaise, Patrick Petito co-scénarise notamment Nikou patron. Il anime des séances de dédicace et des rencontres en librairie.",
+            "bio_en": "A specialist in traditional Martinican sailing, Patrick Petito co-writes titles such as Nikou patron. He hosts signings and in-store events."
+        },
+        {
+            "slug": "ojf-junior",
+            "photo": "images/jean-fritz-junior-odne.webp",
+            "roles": "author",
+            "name_fr": "Jean Fritz Junior ODNÉ",
+            "name_en": "Jean Fritz Junior ODNÉ",
+            "role_fr": "Auteur · artiste polyvalent · théâtre",
+            "role_en": "Author · multidisciplinary artist · theatre",
+            "bio_fr": "Jean Fritz Junior ODNÉ, Haïtien, né en 1986. C'est un artiste aux multiples talents : musicien, auteur, conteur, comédien, marionnettiste, metteur en scène, directeur artistique… Il coopère avec des troupes de théâtre en Haïti et à l'étranger.",
+            "bio_en": "Jean Fritz Junior ODNÉ is Haitian, born in 1986. His practice spans music, writing, storytelling, acting, puppetry, stage direction, and artistic direction, collaborating with theatre companies in Haiti and abroad."
+        },
+        {
+            "slug": "jf-silva",
+            "photo": "images/francisco-silva.webp",
+            "roles": "illustrator",
+            "name_fr": "Jean Francisco Silva",
+            "name_en": "Jean Francisco Silva",
+            "role_fr": "Illustrateur · caricaturiste · peintre",
+            "role_en": "Illustrator · caricaturist · painter",
+            "bio_fr": "Jean Francisco Silva, Haïtien, né en 1989. Peintre, caricaturiste et illustrateur, diplômé de l'École nationale des arts d'Haïti. Formé en caricature, bande dessinée et dessin de presse, son talent s'exprime dans des créations qui séduisent le public.",
+            "bio_en": "Jean Francisco Silva is Haitian, born in 1989. A painter, caricaturist, and illustration graduate of Haiti's École nationale des arts, trained in caricature, comics, and press drawing, his work speaks to and captivates audiences."
+        },
+        {
+            "slug": "collectif",
+            "photo": "images/logo-editions-sucrier.webp",
+            "roles": "author illustrator",
+            "name_fr": "Collectif",
+            "name_en": "Collective",
+            "role_fr": "Créations collectives (affiches, stickers, déclinaisons)",
+            "role_en": "Collective productions (posters, stickers, spin-offs)",
+            "bio_fr": "Les titres signés « Collectif » réunissent plusieurs intervenant·es autour du même projet : affiches, planches de stickers ou déclinaisons des univers Nikou et Lettres ou bêtes.",
+            "bio_en": "Titles credited to “Collectif” bring several contributors together on the same release: posters, sticker sheets, or spin-offs tied to Nikou and Lettres ou bêtes.",
+            "hidden": true
+        }
+    ]
+}

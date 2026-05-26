@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Éditions du Sucrier</title>
+<link rel="icon" href="images/logo-footer-noir.webp" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="images/home-bg-mobile.webp" media="(max-width: 768px)" fetchpriority="high">
+<link rel="preload" as="image" href="images/home-bg-editions-sucrier-4k.webp" media="(min-width: 769px)" fetchpriority="high">
+<link rel="preload" as="image" href="images/logo-editions-sucrier.webp">
+<link rel="preload" href="api/content.php" as="fetch" crossorigin="use-credentials">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=20260525-heros-safari">
+<link rel="stylesheet" href="mobile-ux.css?v=20260521-hero-tablet">
+<style>
+  /* Anti-FOUC home : sections dynamiques masquees jusqu'au chargement JS */
+  #home-reading-featured:empty,
+  #home-reading-secondary:empty,
+  .heros-grid:empty {
+    position: relative;
+    min-height: 280px;
+  }
+  #home-reading-featured:empty::before,
+  #home-reading-secondary:empty::before,
+  .heros-grid:empty::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border-radius: 50%;
+    border: 3px solid rgba(45, 106, 79, 0.15);
+    border-top-color: var(--vert, #2D6A4F);
+    animation: home-spinner 0.8s linear infinite;
+  }
+  @keyframes home-spinner { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <a href="index.html" class="logo" aria-label="Les Éditions du Sucrier — Accueil">
+    <span class="logo-mark">
+      <img src="images/logo-editions-sucrier.webp" alt="" class="logo-img" width="96" height="96" decoding="async" aria-hidden="true" fetchpriority="high">
+    </span>
+    <span class="logo-wordmark">
+      <span class="logo-title">Les Éditions du Sucrier</span>
+      <span class="logo-tagline" data-fr="Maison d'édition jeunesse · Martinique" data-en="Children's publishing house · Martinique">Maison d'édition jeunesse · Martinique</span>
+    </span>
+  </a>
+
+  <nav>
+    <ul>
+      <li><a href="catalogue.html" data-fr="Catalogue" data-en="Catalog">Catalogue</a></li>
+      <li><a href="a-propos.html" data-fr="À propos" data-en="About Us">À propos</a></li>
+      <li><a href="contact.html" data-fr="Contact" data-en="Contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="header-icons">
+    <div class="header-tools" aria-label="Préférences du site">
+      <label class="header-select-wrap" for="currency-select">
+        <span class="sr-only">Devise</span>
+        <select id="currency-select" class="header-select" aria-label="Choisir la devise">
+          <option value="EUR">EUR (€)</option>
+          <option value="CAD">CAD ($)</option>
+          <option value="USD">USD ($)</option>
+        </select>
+      </label>
+      <label class="header-select-wrap" for="language-select">
+        <span class="sr-only">Langue</span>
+        <select id="language-select" class="header-select" aria-label="Choisir la langue du site">
+          <option value="fr">Français</option>
+          <option value="en">English</option>
+        </select>
+      </label>
+    </div>
+    <a href="favoris.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      <span data-fr="Favoris" data-en="Favorites">Favoris</span>
+    </a>
+    <a href="panier.html" class="icon-btn">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span data-fr="Panier" data-en="Shopping Cart">Panier</span>
+      <span class="panier-badge">0</span>
+    </a>
+    <a href="compte.html" class="icon-btn" aria-label="Mon compte">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-texte">
+    <span class="hero-tag">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="4"/></svg>
+      <span data-fr="Maison d'édition caribéenne" data-en="Caribbean publishing house">Maison d'édition caribéenne</span>
+    </span>
+    <h1><span data-fr="Découvrez des albums jeunesse" data-en="Discover">Découvrez des albums jeunesse</span> <em data-fr="uniques" data-en="unique">uniques</em><span data-fr="" data-en=" children's books"></span></h1>
+    <p class="hero-desc" data-fr="Des histoires illustrées qui racontent la Caraïbe aux petits et grands — dont de nombreux titres proposés en plusieurs langues selon les ouvrages." data-en="Illustrated stories that bring the Caribbean to life for children and families, with many titles available in multiple languages.">Des histoires illustrées qui racontent la Caraïbe aux petits et grands — dont de nombreux titres proposés en plusieurs langues selon les ouvrages.</p>
+    <p class="hero-motto" data-fr="Notre devise : « Rêver, jouer, raconter la Caraïbe »." data-en="Our motto: “Dream, play, tell the Caribbean.”">Notre devise : « Rêver, jouer, raconter la Caraïbe ».</p>
+    <div class="hero-ctas">
+      <a href="catalogue.html?persona=parent" class="btn-primary">
+        <span data-fr="Trouver un livre pour mon enfant" data-en="Find a book for my child">Trouver un livre pour mon enfant</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="a-propos.html" class="btn-outline" data-fr="À propos de nous" data-en="About us">À propos de nous</a>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <div class="hero-image-placeholder">
+      <div class="hero-deco-cercle"></div>
+      <div class="hero-deco-cercle2"></div>
+      <div class="hero-showcase">
+        <img src="images/nikou-gambadeur.webp" alt="" class="hero-nikou" width="380" height="480" decoding="async" aria-hidden="true" fetchpriority="high">
+        <figure class="hero-book">
+          <img src="images/nikou-champion-cover.webp" alt="Couverture — Nikou champion" class="hero-book-cover" width="600" height="800" decoding="async" fetchpriority="high">
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="home-promo-banner" class="home-promo-banner" hidden aria-live="polite"></div>
+
+<!-- ===== STATS ===== -->
+<div class="stats-band">
+  <div class="stat-item">
+    <span class="stat-nb">20+</span>
+    <span class="stat-label" data-fr="Ouvrages publiés" data-en="Published titles">Ouvrages publiés</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-nb">5</span>
+    <span class="stat-label" data-fr="Collections" data-en="Collections">Collections</span>
+  </div>
+  <div class="stat-item stat-item--langs">
+    <span class="stat-nb stat-nb--langs" data-fr="Variable" data-en="Varies">Variable</span>
+    <span class="stat-label" data-fr="Langues indiquées sur chaque fiche produit" data-en="Languages listed on each product page">Langues indiquées sur chaque fiche produit</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-nb">2018</span>
+    <span class="stat-label" data-fr="Fondée en Martinique" data-en="Founded in Martinique">Fondée en Martinique</span>
+  </div>
+</div>
+
+<div id="home-recently-viewed" hidden></div>
+
+<!-- ===== BEST SELLERS ===== -->
+<section class="section-bestsellers">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre" data-fr="Best-sellers" data-en="Bestsellers">Best-sellers</h2>
+      <p class="section-sous-titre" data-fr="Les coups de cœur de nos lecteurs" data-en="Our readers' favorites">Les coups de cœur de nos lecteurs</p>
+    </div>
+    <a href="catalogue.html" class="voir-tout" data-fr="Voir le catalogue →" data-en="View catalog →">Voir le catalogue →</a>
+  </div>
+
+  <div class="carousel">
+
+    <div class="book-card" data-product-id="nikou-champion">
+      <div class="book-card-cover-wrap">
+        <img src="images/nikou-champion-cover.webp" alt="Couverture — Nikou champion" class="book-card-cover" width="400" height="520" decoding="async" loading="lazy">
+      </div>
+      <button class="wishlist-btn" data-product-id="nikou-champion" aria-label="Ajouter Nikou champion aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Collection Nikou</p>
+        <h3 class="book-card-titre">Nikou champion</h3>
+        <p class="book-card-auteur">Léanne Ramassamy · W. Deroche</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">10,00 €</span>
+          <span class="book-card-age">Album jeunesse</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card" data-product-id="circuit-ferme">
+      <div class="book-card-cover-wrap">
+        <img src="images/circuit-ferme-premiere-couverture.webp" alt="Couverture — Circuit fermé" class="book-card-cover" width="400" height="520" decoding="async" loading="lazy">
+      </div>
+      <button class="wishlist-btn" data-product-id="circuit-ferme" aria-label="Ajouter Circuit fermé aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Bulles de Sucrier</p>
+        <h3 class="book-card-titre">Circuit fermé</h3>
+        <p class="book-card-auteur">Jean Francisco Silva · Jean Fritz Junior ODNÉ</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">16,00 €</span>
+          <span class="book-card-age">9 ans et +</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card" data-product-id="exocette">
+      <div class="book-card-cover-wrap">
+        <img src="images/exocette.webp" alt="Couverture — Exocette" class="book-card-cover" width="400" height="520" decoding="async" loading="lazy">
+      </div>
+      <button class="wishlist-btn" data-product-id="exocette" aria-label="Ajouter Exocette aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Les histoires du Sucrier</p>
+        <h3 class="book-card-titre">Exocette</h3>
+        <p class="book-card-auteur">Renata · W. Deroche</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">14,00 €</span>
+          <span class="book-card-age">Dès 6 ans</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card" data-product-id="tice-et-metice">
+      <div class="book-card-cover-wrap">
+        <img src="images/tice-et-metice-premiere-couverture.webp" alt="Couverture — Tice et Métice" class="book-card-cover" width="400" height="520" decoding="async" loading="lazy">
+      </div>
+      <button class="wishlist-btn" data-product-id="tice-et-metice" aria-label="Ajouter Tice et Métice aux favoris"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+      <div class="book-card-body">
+        <p class="book-card-collection">Les histoires du Sucrier</p>
+        <h3 class="book-card-titre">Tice et Métice</h3>
+        <p class="book-card-auteur">Karine Petevi · Gecko Dalch</p>
+        <div class="book-card-footer">
+          <span class="book-card-prix">13,00 €</span>
+          <span class="book-card-age">6 à 8 ans</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== COUP DE COEUR ===== -->
+<section class="section-coup-coeur">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre" data-fr="Conseils de lecture" data-en="Reading recommendations">Conseils de lecture</h2>
+      <p class="section-sous-titre">Notre sélection du moment</p>
+    </div>
+    <a href="catalogue.html" class="voir-tout" data-fr="Toutes nos recommandations →" data-en="All recommendations →">Toutes nos recommandations →</a>
+  </div>
+
+  <div class="coup-coeur-grid">
+
+    <div class="coup-coeur-principal" id="home-reading-featured" data-i18n-dynamic="true"></div>
+    <div class="coup-coeur-secondaires-grid" id="home-reading-secondary" data-i18n-dynamic="true"></div>
+
+  </div>
+</section>
+
+<!-- ===== ACTUALITÉS ===== -->
+<section class="section-actualites">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre">Actualités</h2>
+      <p class="section-sous-titre">Nouveaux livres, événements et publications</p>
+    </div>
+    <a href="actualites.html" class="voir-tout" data-fr="Toutes les actualités →" data-en="All news →">Toutes les actualités →</a>
+  </div>
+
+  <div class="actu-grid" data-actu-grid>
+    <!-- Rempli par app.js (CMS) ; structure de secours alignée sur le rendu local -->
+    <a href="livre.html?id=bebe-nikou-dit-non" class="actu-card">
+      <div class="actu-cover-frame actu-cover-frame--book"><img src="images/bebe-nikou-dit-non.webp" alt="Sortie de Bébé Nikou dit non — édition révisée" class="actu-cover" width="480" height="300" decoding="async" loading="lazy"></div>
+      <div class="actu-body"><span class="actu-tag nouveau">Nouveau livre</span><h4 class="actu-titre">Sortie de Bébé Nikou dit non — édition révisée</h4><p class="actu-date">Mars 2025</p></div>
+    </a>
+    <div class="actu-card">
+      <div class="actu-cover-frame actu-cover-frame--event"><img src="images/laane-ramassamy-fljm2024.webp" alt="Les Éditions du Sucrier aux rencontres FLJM 2024" class="actu-cover" width="480" height="300" decoding="async" loading="lazy"></div>
+      <div class="actu-body"><span class="actu-tag evenement">Événement</span><h4 class="actu-titre">Les Éditions du Sucrier aux rencontres FLJM 2024</h4><p class="actu-date">Avril 2025</p></div>
+    </div>
+    <a href="livre.html?id=tice-et-metice" class="actu-card">
+      <div class="actu-cover-frame actu-cover-frame--book"><img src="images/tice-et-metice-premiere-couverture.webp" alt="Tice et Métice : album multilingue primé aux Antilles" class="actu-cover" width="480" height="300" decoding="async" loading="lazy"></div>
+      <div class="actu-body"><span class="actu-tag publication">Publication</span><h4 class="actu-titre">Tice et Métice : album multilingue primé aux Antilles</h4><p class="actu-date">Février 2025</p></div>
+    </a>
+    <a href="livre.html?id=nikou-champion" class="actu-card">
+      <div class="actu-cover-frame actu-cover-frame--book"><img src="images/nikou-champion-cover.webp" alt="Nikou champion : l'album multilingue déjà culte" class="actu-cover" width="480" height="300" decoding="async" loading="lazy"></div>
+      <div class="actu-body"><span class="actu-tag nouveau">Annonce</span><h4 class="actu-titre">Nikou champion : l'album multilingue déjà culte</h4><p class="actu-date">Janvier 2025</p></div>
+    </a>
+  </div>
+</section>
+
+<!-- ===== HÉROS ET HÉROÏNES ===== -->
+<section class="section-heros" id="heros">
+  <div class="section-header">
+    <div>
+      <h2 class="section-titre" data-fr="Nos héros" data-en="Our heroes">Nos héros</h2>
+      <p class="section-sous-titre" data-fr="Des personnages qui ressemblent à nos enfants" data-en="Characters children can see themselves in">Des personnages qui ressemblent à nos enfants</p>
+    </div>
+  </div>
+
+  <div class="heros-grid-panel">
+    <div class="heros-grid" data-heros-grid aria-label="Nos héros et héroïnes"></div>
+  </div>
+</section>
+
+<section class="home-newsletter-band" aria-labelledby="home-newsletter-title">
+  <div class="home-newsletter-band__inner">
+    <h2 id="home-newsletter-title" class="section-titre" data-fr="1 conseil de lecture par mois" data-en="1 reading tip per month">1 conseil de lecture par mois</h2>
+    <p data-fr="Pour vos enfants ou votre classe : albums jeunesse, idées d'activités et nouveautés Les Éditions du Sucrier." data-en="For your children or classroom: children's books, activity ideas, and news from Les Éditions du Sucrier.">Pour vos enfants ou votre classe : albums jeunesse, idées d'activités et nouveautés Les Éditions du Sucrier.</p>
+    <form class="home-newsletter-form" action="contact.html" method="get">
+      <label class="sr-only" for="home-newsletter-email">E-mail</label>
+      <input type="email" id="home-newsletter-email" name="email" required placeholder="Votre e-mail" autocomplete="email">
+      <input type="hidden" name="subject" value="newsletter">
+      <button type="submit" class="btn-primary" data-fr="Je m'inscris" data-en="Subscribe">Je m'inscris</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+
+    <div>
+      <div class="footer-brand">
+        <img src="images/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true">
+        <div class="footer-wordmark">
+          <span class="footer-brand-name">Les Éditions du Sucrier</span>
+          <span class="footer-brand-tagline" data-fr="Maison d'édition jeunesse · Martinique" data-en="Children's publishing house · Martinique">Maison d'édition jeunesse · Martinique</span>
+        </div>
+      </div>
+      <p class="footer-desc" data-fr="Maison d'édition jeunesse martiniquaise fondée en 2018, dédiée à raconter la Caraïbe aux plus jeunes à travers des albums illustrés, dont certains en plusieurs langues." data-en="Martinique-based children's publisher founded in 2018, dedicated to sharing Caribbean stories through illustrated books, including multilingual titles.">Maison d'édition jeunesse martiniquaise fondée en 2018, dédiée à raconter la Caraïbe aux plus jeunes à travers des albums illustrés, dont certains en plusieurs langues.</p>
+      <div class="footer-social">
+        <button class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </button>
+        <button class="social-btn">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-fr="Navigation" data-en="Navigation">Navigation</h4>
+      <ul>
+        <li><a href="index.html" data-fr="Accueil" data-en="Home">Accueil</a></li>
+        <li><a href="catalogue.html" data-fr="Catalogue" data-en="Catalog">Catalogue</a></li>
+        <li><a href="a-propos.html" data-fr="À propos" data-en="About Us">À propos</a></li>
+        <li><a href="contact.html" data-fr="Contact" data-en="Contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-fr="Collections" data-en="Collections">Collections</h4>
+      <ul>
+        <li><a href="catalogue.html" data-fr="Collection Nikou" data-en="Nikou collection">Collection Nikou</a></li>
+        <li><a href="catalogue.html" data-fr="Bébé Nikou" data-en="Baby Nikou">Bébé Nikou</a></li>
+        <li><a href="catalogue.html" data-fr="Plumes aventureuses" data-en="Adventurous Feathers">Plumes aventureuses</a></li>
+        <li><a href="catalogue.html" data-fr="Bulles de Sucrier" data-en="Sucrier Bubbles">Bulles de Sucrier</a></li>
+        <li><a href="catalogue.html" data-fr="Cahiers d'activités" data-en="Activity workbooks">Cahiers d'activités</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-fr="Contact" data-en="Contact">Contact</h4>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Fort-de-France, Martinique
+      </div>
+      <div class="footer-contact-item">
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.18 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 5.59 5.59l.96-.96a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        06 96 93 27 58
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p data-fr="© 2025 Les Éditions du Sucrier — Tous droits réservés" data-en="© 2025 Les Éditions du Sucrier — All rights reserved">© 2025 Les Éditions du Sucrier — Tous droits réservés</p>
+    <div class="footer-links">
+      <a href="#" data-fr="Mentions légales" data-en="Legal notice">Mentions légales</a>
+      <a href="#" data-fr="Politique de confidentialité" data-en="Privacy policy">Politique de confidentialité</a>
+      <a href="#" data-fr="CGV" data-en="Terms & Conditions">CGV</a>
+    </div>
+  </div>
+</footer>
+<script>
+  window.SUCRIER_ANALYTICS = window.SUCRIER_ANALYTICS || {};
+  /* Renseignez votre domaine Plausible et/ou ID Microsoft Clarity pour activer les stats RGPD-friendly */
+  // window.SUCRIER_ANALYTICS.plausibleDomain = "leseditionsdusucrier.fr";
+  // window.SUCRIER_ANALYTICS.clarityId = "VOTRE_ID_CLARITY";
+</script>
+<script src="app.js?v=20260521-vercel-content"></script>
+<script src="mobile-ux.js?v=20260521-hero-tablet" defer></script>
+</body>
+</html>
