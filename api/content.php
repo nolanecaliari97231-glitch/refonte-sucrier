@@ -10,7 +10,8 @@ require_once __DIR__ . '/../includes/cms-profiles.php';
 
 sucrier_send_security_headers(true);
 header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: public, max-age=300, must-revalidate');
+// Contenu dynamique (back-office) : autoriser la mise en cache mais imposer la revalidation.
+header('Cache-Control: public, max-age=0, must-revalidate');
 header('Vary: Accept-Encoding');
 
 $contentPath = __DIR__ . '/../data/contenu.json';

@@ -75,7 +75,6 @@ $catalogueDefaultBooks = [
 sucrier_ensure_upload_dirs();
 $newData = $contenu;
 $action = (string) ($_POST['action'] ?? '');
-$bookStockOverrides = [];
 
 if ($action === 'restore_backup') {
     if (is_file($backupPath)) {
@@ -274,12 +273,8 @@ if ($action === 'reset_catalogue') {
             $book['pedagogical_file'] = $uploadedPed;
         }
 
-        $bookIdForStock = trim((string) ($book['id'] ?? ''));
-        if ($bookIdForStock !== '' && isset($_POST['book_' . $i . '_stock_qty']) && $_POST['book_' . $i . '_stock_qty'] !== '') {
-            $bookStock = max(0, (int) $_POST['book_' . $i . '_stock_qty']);
-            $book['stock_qty'] = $bookStock;
-            $bookStockOverrides[$bookIdForStock] = $bookStock;
-        }
+        // Le stock est piloté uniquement via la table "Stocks du catalogue".
+        unset($book['stock_qty']);
 
         $booksOut[] = sucrier_admin_book_row_to_json($book);
     }
@@ -326,12 +321,7 @@ if (isset($_POST['stock_qty']) && is_array($_POST['stock_qty'])) {
         $catalogStockOut[$productId] = $qty;
     }
 }
-if (!empty($bookStockOverrides)) {
-    foreach ($bookStockOverrides as $productId => $qty) {
-        $catalogStockOut[$productId] = $qty;
-    }
-}
-$newData['catalog_stock'] = $catalogStockOut;
+$newData['catalog_stock'] = empty($catalogStockOut) ? (object) [] : $catalogStockOut;
 
 $filterGroupCount = max(0, (int) ($_POST['filter_group_count'] ?? 0));
 $filterGroupsOut = [];

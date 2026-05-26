@@ -39,7 +39,7 @@
             "id": "actu-bebe-nikou-dit-non",
             "tag": "nouveau",
             "tag_label": "Nouveau livre",
-            "title": "Sortie de Bébé Nikou dit non — édition révisée",
+            "title": "Sortie de Bébé Nikou dit non",
             "date": "Mars 2025",
             "image": "images/bebe-nikou-dit-non.webp",
             "link": "livre.html?id=bebe-nikou-dit-non"
@@ -163,7 +163,9 @@
             "hide_format": false,
             "hide_pages": false,
             "hide_publication_date": false,
-            "hide_languages": false
+            "hide_languages": false,
+            "label_format": "Dimensions",
+            "label_pages": "Présentation"
         },
         {
             "id": "nikou-champion",
@@ -578,7 +580,7 @@
             "price": "16,00 €",
             "description": "",
             "image": "images/circuit-ferme-premiere-couverture.webp",
-            "preview_images": "images/circuit-ferme-premiere-couverture.webp,images/lettres-ou-betes.webp,images/tice-et-metice-premiere-couverture.webp",
+            "preview_images": "images/circuit-ferme-premiere-couverture.webp,images/circuit-ferme-planche-1.png,images/circuit-ferme-planche-2.png",
             "pedagogical_file": "",
             "catalog_category": "",
             "isbn": "",
@@ -668,7 +670,7 @@
             "age_range": "6-8",
             "languages": "",
             "publication_date": "2026",
-            "coming_soon": true,
+            "coming_soon": false,
             "badge_new": false,
             "badge_bestseller": false,
             "badge_award": false,
@@ -880,7 +882,7 @@
         "retour_texte": "Retour à l'accueil"
     },
     "promo_codes": [],
-    "catalog_stock": [],
+    "catalog_stock": {},
     "ecommerce": {
         "cart_note": "Paiement sécurisé (CB, Visa, Mastercard).",
         "shipping_note": "Frais de livraison calculés selon le poids total du panier et le barème postal.",

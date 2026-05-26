@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   var STORAGE_KEYS = {
     cart: "sucrier_cart",
     favorites: "sucrier_favorites",
@@ -75,8 +75,8 @@
       cover: "images/circuit-ferme-premiere-couverture.webp",
       gallery: [
         "images/circuit-ferme-premiere-couverture.webp",
-        "images/le-carnaval-de-nikou.webp",
-        "images/tice-et-metice-premiere-couverture.webp",
+        "images/circuit-ferme-planche-1.png",
+        "images/circuit-ferme-planche-2.png",
       ],
       authors: [
         { name: "Jean Fritz Junior ODNÉ", slug: "ojf-junior" },
@@ -147,7 +147,7 @@
       title: "Exocette et la mer de plastique (tome 2)",
       collection: "Les histoires du Sucrier",
       price: 15,
-      comingSoon: true,
+      comingSoon: false,
       cover: "images/exocette-tome-2-premiere-couverture.png",
       gallery: [
         "images/exocette-tome-2-premiere-couverture.png",
@@ -1528,13 +1528,24 @@
   function applyCatalogStockFromContent(content) {
     PRODUCTS_OUT_OF_STOCK = {};
     CATALOG_STOCK = {};
+    var stockMap = content && content.catalog_stock;
+    if (stockMap && typeof stockMap === "object") {
+      Object.keys(stockMap).forEach(function (productId) {
+        var id = String(productId || "").trim();
+        if (!id) return;
+        var qty = parseInt(String(stockMap[productId]), 10);
+        if (isNaN(qty) || qty < 0) qty = 0;
+        CATALOG_STOCK[id] = qty;
+        if (qty <= 0) PRODUCTS_OUT_OF_STOCK[id] = true;
+      });
+    }
     var list = content && content.products_out_of_stock;
     if (!Array.isArray(list)) return;
     list.forEach(function (productId) {
       var id = String(productId || "").trim();
       if (!id) return;
       PRODUCTS_OUT_OF_STOCK[id] = true;
-      CATALOG_STOCK[id] = 0;
+      if (!Object.prototype.hasOwnProperty.call(CATALOG_STOCK, id)) CATALOG_STOCK[id] = 0;
     });
   }
 
@@ -1548,17 +1559,41 @@
     });
   }
 
+  function setBookOutOfStockBannerVisible(banner, visible) {
+    if (!banner) return;
+    if (visible) {
+      banner.hidden = false;
+      banner.classList.add("is-visible");
+      return;
+    }
+    banner.hidden = true;
+    banner.classList.remove("is-visible");
+    banner.innerHTML = "";
+  }
+
   function hasTrackedBookStock(bookId) {
-    return Object.prototype.hasOwnProperty.call(PRODUCTS_OUT_OF_STOCK, bookId);
+    var book = BOOK_CATALOG[bookId];
+    return !!(
+      Object.prototype.hasOwnProperty.call(CATALOG_STOCK, bookId) ||
+      (book && book.stockQty !== undefined && book.stockQty !== null && book.stockQty !== "")
+    );
   }
 
   function getBookStockQty(bookId) {
     if (!hasTrackedBookStock(bookId)) return null;
-    return 0;
+    if (Object.prototype.hasOwnProperty.call(CATALOG_STOCK, bookId)) {
+      return CATALOG_STOCK[bookId];
+    }
+    var book = BOOK_CATALOG[bookId];
+    var qty = parseInt(String(book && book.stockQty !== undefined ? book.stockQty : ""), 10);
+    if (isNaN(qty) || qty < 0) return 0;
+    return qty;
   }
 
   function isBookOutOfStock(bookId) {
-    return !!PRODUCTS_OUT_OF_STOCK[bookId];
+    if (Object.prototype.hasOwnProperty.call(PRODUCTS_OUT_OF_STOCK, bookId)) return true;
+    if (!hasTrackedBookStock(bookId)) return false;
+    return getBookStockQty(bookId) <= 0;
   }
 
   function canPurchaseBook(bookId) {
@@ -1566,6 +1601,17 @@
     if (!book) return false;
     if (book.comingSoon) return false;
     return !isBookOutOfStock(bookId);
+  }
+
+  function showOutOfStockToast(bookTitle) {
+    var message = bookTitle
+      ? t("ui.cannotAddOutOfStockNamed", "« {title} » est en rupture de stock.").replace("{title}", bookTitle)
+      : t("ui.cannotAddOutOfStock", "Ce produit est en rupture de stock.");
+    if (typeof window.showToast === "function") {
+      window.showToast(message, { variant: "error" });
+      return;
+    }
+    window.alert(message);
   }
 
   function rebuildBookCatalogFromContent(content) {
@@ -3333,7 +3379,7 @@
 
   function getDisplayPriceNodes() {
     return document.querySelectorAll(
-      ".book-card-prix, .catalogue-meta span:first-child, .cart-item-price, .related-book-price, .book-detail-price"
+      ".book-card-prix, .catalogue-meta > span[data-price-eur], .cart-item-price, .related-book-price, .book-detail-price"
     );
   }
 
@@ -3463,7 +3509,14 @@
     var productId =
       (card && card.getAttribute("data-product-id")) || button.getAttribute("data-product-id");
     if (!productId) return;
-    if (!canPurchaseBook(productId)) return;
+    if (!canPurchaseBook(productId)) {
+      var blockedTitleEl = card
+        ? card.querySelector(".book-card-titre, h3, h2, h4")
+        : document.getElementById("book-detail-title");
+      var blockedTitle = blockedTitleEl ? blockedTitleEl.textContent.trim() : "";
+      showOutOfStockToast(blockedTitle);
+      return;
+    }
     var titleEl = card
       ? card.querySelector(".book-card-titre, h3, h2, h4")
       : document.getElementById("book-detail-title");
@@ -3508,7 +3561,11 @@
   }
 
   function addBookToCartById(productId) {
-    if (!canPurchaseBook(productId)) return;
+    if (!canPurchaseBook(productId)) {
+      var blockedBook = getLocalizedBook(productId);
+      showOutOfStockToast(blockedBook ? blockedBook.title : "");
+      return;
+    }
     var book = getLocalizedBook(productId);
     if (!book) return;
     var cart = getCart();
@@ -4356,6 +4413,13 @@
     var cart = getCart();
     var target = cart[index];
     if (!target) return;
+    if (delta > 0 && target.id && hasTrackedBookStock(target.id)) {
+      var availableQty = getBookStockQty(target.id);
+      if (availableQty <= target.qty) {
+        showOutOfStockToast(target.title || "");
+        return;
+      }
+    }
     target.qty += delta;
     if (target.qty <= 0) {
       cart.splice(index, 1);
@@ -4778,7 +4842,7 @@
     }
     if (outOfStockBanner) {
       if (outOfStock) {
-        outOfStockBanner.hidden = false;
+        setBookOutOfStockBannerVisible(outOfStockBanner, true);
         outOfStockBanner.innerHTML =
           '<p class="book-out-of-stock-banner__title">' +
           escapeCatalogHtml(t("ui.bookOutOfStockTitle", "Rupture de stock")) +
@@ -4793,8 +4857,7 @@
           escapeCatalogHtml(t("ui.bookOutOfStockContact", "Nous contacter")) +
           "</a></p>";
       } else {
-        outOfStockBanner.hidden = true;
-        outOfStockBanner.innerHTML = "";
+        setBookOutOfStockBannerVisible(outOfStockBanner, false);
       }
     }
     if (addBtn) {
@@ -5805,57 +5868,94 @@
     return bindFilterInputs;
   }
 
-  function initHeaderDropdownMenu() {
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
-    var header = document.querySelector("header");
+  function restoreDesktopHeaderIcons(header) {
     if (!header) return;
-    var headerIcons = header.querySelector(".header-icons");
-    if (!headerIcons || header.querySelector(".header-actions-menu")) return;
-
-    var menu = document.createElement("details");
-    menu.className = "header-actions-menu";
-    menu.innerHTML =
-      '<summary class="header-actions-trigger" aria-label="Ouvrir les options">' +
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' +
-      "</summary>" +
-      '<div class="header-actions-panel"></div>';
-
+    var menu = header.querySelector(".header-actions-menu");
+    if (!menu) return;
     var panel = menu.querySelector(".header-actions-panel");
-    Array.from(headerIcons.children).forEach(function (child) {
-      panel.appendChild(child);
+    if (!panel) {
+      menu.parentNode && menu.parentNode.removeChild(menu);
+      return;
+    }
+    var icons = header.querySelector(".header-icons");
+    if (!icons) {
+      icons = document.createElement("div");
+      icons.className = "header-icons";
+      icons.setAttribute("aria-label", "Outils du site");
+      header.appendChild(icons);
+    }
+    Array.from(panel.children).forEach(function (child) {
+      if (child.classList && child.classList.contains("header-about-block")) return;
+      icons.appendChild(child);
     });
+    menu.parentNode && menu.parentNode.removeChild(menu);
+  }
 
-    var aboutMobileBlock = document.createElement("div");
-    aboutMobileBlock.className = "header-about-block";
-    aboutMobileBlock.innerHTML =
-      '<a href="./a-propos.html" class="header-about-main-link" data-fr="À propos" data-en="About">À propos</a>' +
-      '<details class="header-about-menu">' +
-      '<summary class="header-about-trigger">' +
-      '<span class="sr-only" data-fr="Autres rubriques À propos" data-en="Other About sections">Autres rubriques À propos</span>' +
-      "</summary>" +
-      '<div class="header-about-links">' +
-      '<a href="./a-propos-maison.html" data-fr="La Maison" data-en="The House">La Maison</a>' +
-      '<a href="./a-propos-auteurs.html" data-fr="Les Auteurs / Illustrateurs" data-en="Authors / Illustrators">Les Auteurs / Illustrateurs</a>' +
-      '<a href="./a-propos-partenaires.html" data-fr="Les Partenaires" data-en="Partners">Les Partenaires</a>' +
-      "</div></details>";
-    panel.insertBefore(aboutMobileBlock, panel.firstChild);
+  function initHeaderDropdownMenu() {
+    var header = document.querySelector("header");
+    if (!header || header.classList.contains("partners-hero")) return;
+    var mobileMq = window.matchMedia("(max-width: 767px)");
 
-    headerIcons.remove();
-    header.appendChild(menu);
+    function applyHeaderLayout() {
+      if (!mobileMq.matches) {
+        restoreDesktopHeaderIcons(header);
+        return;
+      }
+      var headerIcons = header.querySelector(".header-icons");
+      if (!headerIcons || header.querySelector(".header-actions-menu")) return;
 
-    panel.querySelectorAll("a, button").forEach(function (node) {
-      node.addEventListener("click", function () {
-        menu.removeAttribute("open");
+      var menu = document.createElement("details");
+      menu.className = "header-actions-menu";
+      menu.innerHTML =
+        '<summary class="header-actions-trigger" aria-label="Ouvrir les options">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>' +
+        "</summary>" +
+        '<div class="header-actions-panel"></div>';
+
+      var panel = menu.querySelector(".header-actions-panel");
+      Array.from(headerIcons.children).forEach(function (child) {
+        panel.appendChild(child);
       });
-    });
 
-    panel.querySelectorAll("select").forEach(function (node) {
-      node.addEventListener("change", function () {
-        setTimeout(function () {
+      var aboutMobileBlock = document.createElement("div");
+      aboutMobileBlock.className = "header-about-block";
+      aboutMobileBlock.innerHTML =
+        '<a href="./a-propos.html" class="header-about-main-link" data-fr="À propos" data-en="About">À propos</a>' +
+        '<details class="header-about-menu">' +
+        '<summary class="header-about-trigger">' +
+        '<span class="sr-only" data-fr="Autres rubriques À propos" data-en="Other About sections">Autres rubriques À propos</span>' +
+        "</summary>" +
+        '<div class="header-about-links">' +
+        '<a href="./a-propos-maison.html" data-fr="La Maison" data-en="The House">La Maison</a>' +
+        '<a href="./a-propos-auteurs.html" data-fr="Les Auteurs / Illustrateurs" data-en="Authors / Illustrators">Les Auteurs / Illustrateurs</a>' +
+        '<a href="./a-propos-partenaires.html" data-fr="Les Partenaires" data-en="Partners">Les Partenaires</a>' +
+        "</div></details>";
+      panel.insertBefore(aboutMobileBlock, panel.firstChild);
+
+      headerIcons.remove();
+      header.appendChild(menu);
+
+      panel.querySelectorAll("a, button").forEach(function (node) {
+        node.addEventListener("click", function () {
           menu.removeAttribute("open");
-        }, 80);
+        });
       });
-    });
+
+      panel.querySelectorAll("select").forEach(function (node) {
+        node.addEventListener("change", function () {
+          setTimeout(function () {
+            menu.removeAttribute("open");
+          }, 80);
+        });
+      });
+    }
+
+    applyHeaderLayout();
+    if (typeof mobileMq.addEventListener === "function") {
+      mobileMq.addEventListener("change", applyHeaderLayout);
+    } else if (typeof mobileMq.addListener === "function") {
+      mobileMq.addListener(applyHeaderLayout);
+    }
   }
 
   function initAboutNavDropdown() {
@@ -5902,9 +6002,20 @@
     var ul = document.createElement("ul");
     ul.className = "nav-about-submenu";
     ul.innerHTML =
-      '<li><a href="./a-propos-maison.html" data-fr="La Maison" data-en="The House">La Maison</a></li>' +
-      '<li><a href="./a-propos-auteurs.html" data-fr="Les Auteurs / Illustrateurs" data-en="Authors / Illustrators">Les Auteurs / Illustrateurs</a></li>' +
-      '<li><a href="./a-propos-partenaires.html" data-fr="Les Partenaires" data-en="Partners">Les Partenaires</a></li>';
+      '<li class="nav-about-submenu-lead" aria-hidden="true">' +
+      '<span data-fr="Découvrir" data-en="Discover">Découvrir</span></li>' +
+      '<li><a class="nav-about-link" href="./a-propos-maison.html">' +
+      '<span class="nav-about-link__title" data-fr="La Maison" data-en="The House">La Maison</span>' +
+      '<span class="nav-about-link__desc" data-fr="Notre histoire & nos valeurs" data-en="Our story & values">Notre histoire & nos valeurs</span>' +
+      "</a></li>" +
+      '<li><a class="nav-about-link" href="./a-propos-auteurs.html">' +
+      '<span class="nav-about-link__title" data-fr="Les Auteurs / Illustrateurs" data-en="Authors / Illustrators">Les Auteurs / Illustrateurs</span>' +
+      '<span class="nav-about-link__desc" data-fr="Les talents de la maison" data-en="Our creative team">Les talents de la maison</span>' +
+      "</a></li>" +
+      '<li><a class="nav-about-link" href="./a-propos-partenaires.html">' +
+      '<span class="nav-about-link__title" data-fr="Les Partenaires" data-en="Partners">Les Partenaires</span>' +
+      '<span class="nav-about-link__desc" data-fr="Librairies & diffuseurs" data-en="Bookshops & distributors">Librairies & diffuseurs</span>' +
+      "</a></li>";
 
     menu.appendChild(summary);
     menu.appendChild(ul);

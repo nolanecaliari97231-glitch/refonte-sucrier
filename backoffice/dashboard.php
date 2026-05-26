@@ -474,8 +474,8 @@ $siteBase = '../';
                 ? (string) $catalogStockMap[$bookStockId]
                 : (isset($books[$i]['stock_qty']) ? (string) $books[$i]['stock_qty'] : '');
             ?>
-            <label for="book_<?= $i ?>_stock_qty">Stock disponible (vide = non suivi, 0 = rupture)</label>
-            <input id="book_<?= $i ?>_stock_qty" name="book_<?= $i ?>_stock_qty" type="number" min="0" step="1" value="<?= e($bookStockVal) ?>" placeholder="—">
+            <label for="book_<?= $i ?>_stock_qty">Stock disponible (modifier dans « Stocks du catalogue »)</label>
+            <input id="book_<?= $i ?>_stock_qty" type="number" min="0" step="1" value="<?= e($bookStockVal) ?>" placeholder="—" readonly>
             <label for="book_<?= $i ?>_image">Image principale (ex: images/nikou-champion-cover.webp)</label>
             <input id="book_<?= $i ?>_image" name="book_<?= $i ?>_image" value="<?= e((string) (($books[$i]['image'] ?? ''))) ?>">
             <label for="book_<?= $i ?>_image_file">Ou televerser une image principale</label>

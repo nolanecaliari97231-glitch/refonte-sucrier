@@ -14,9 +14,10 @@ require_once __DIR__ . '/promo-codes.php';
  */
 function sucrier_public_content_payload(array $data): array
 {
-    unset($data['catalog_stock']);
-
+    // Important: calculer la liste rupture AVANT de retirer catalog_stock.
+    // Sinon sucrier_catalog_stock_map() ne voit plus rien.
     $data['products_out_of_stock'] = sucrier_public_products_out_of_stock($data);
+    unset($data['catalog_stock']);
     $data['promo_codes_active'] = sucrier_public_promo_codes_active($data);
     $data['home_promo'] = sucrier_public_home_promo($data);
     unset($data['promo_codes']);

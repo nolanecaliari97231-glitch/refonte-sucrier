@@ -18,7 +18,7 @@
   function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
   function on(el, ev, cb, opts) { if (el) el.addEventListener(ev, cb, opts || false); }
 
-  function isMobile() { return window.matchMedia('(max-width: 1200px)').matches; }
+  function isMobile() { return window.matchMedia('(max-width: 1023px)').matches; }
 
   // ---------- 1. SKIP LINK ----------
   function injectSkipLink() {
@@ -37,14 +37,22 @@
   }
 
   // ---------- 2. BURGER MENU + DRAWER ----------
-  function buildMobileDrawer() {
-    var header = $('header');
-    if (!header) return;
-
-    // Defensive : retirer tout drawer/burger existant pour eviter les doublons
+  function destroyMobileDrawer() {
     $$('.nav-burger').forEach(function (b) { b.parentNode && b.parentNode.removeChild(b); });
     $$('.mobile-drawer').forEach(function (d) { d.parentNode && d.parentNode.removeChild(d); });
     $$('.mobile-drawer-backdrop').forEach(function (bd) { bd.parentNode && bd.parentNode.removeChild(bd); });
+    document.body.classList.remove('nav-open');
+  }
+
+  function buildMobileDrawer() {
+    if (!isMobile()) {
+      destroyMobileDrawer();
+      return;
+    }
+    var header = $('header');
+    if (!header) return;
+
+    destroyMobileDrawer();
 
     // Bouton burger
     var burger = document.createElement('button');
@@ -156,7 +164,10 @@
       if (e.target.closest('a')) setOpen(false);
     });
     on(window, 'resize', function () {
-      if (!isMobile() && document.body.classList.contains('nav-open')) setOpen(false);
+      if (!isMobile()) {
+        if (document.body.classList.contains('nav-open')) setOpen(false);
+        destroyMobileDrawer();
+      }
     });
 
     // Sync devise / langue avec les selects desktop si prsents
@@ -382,6 +393,10 @@
   // Observe le DOM : si app.js retire/ajoute un burger ou injecte un autre
   // bouton menu, on rebuild proprement pour eviter les doublons fantomes.
   function ensureSingleBurger() {
+    if (!isMobile()) {
+      destroyMobileDrawer();
+      return;
+    }
     var burgers = $$('.nav-burger');
     if (burgers.length === 0) {
       buildMobileDrawer();
@@ -414,9 +429,15 @@
   }
 
   // ---------- INIT ----------
+  function syncMobileChrome() {
+    if (isMobile()) buildMobileDrawer();
+    else destroyMobileDrawer();
+  }
+
   function init() {
     injectSkipLink();
-    buildMobileDrawer();
+    syncMobileChrome();
+    on(window, 'resize', syncMobileChrome);
     setupStickyCta();
     setupCatalogueFilters();
     lazyifyImages();
