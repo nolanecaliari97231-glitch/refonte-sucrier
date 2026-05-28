@@ -548,7 +548,7 @@ nav .nav-about-link:focus-visible .nav-about-link__desc {
   background-color: #1a3d32;
   background-image: url('images/site/home-bg-editions-sucrier-4k.webp');
   background-size: cover;
-  background-position: center 48%;
+  background-position: 46% 48%;
   background-repeat: no-repeat;
   image-rendering: -webkit-optimize-contrast;
   display: grid;
@@ -784,7 +784,7 @@ nav .nav-about-link:focus-visible .nav-about-link__desc {
   }
 
   .hero {
-    background-position: center 46%;
+    background-position: 45% 46%;
   }
 
   .hero::before {
