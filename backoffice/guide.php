@@ -8,6 +8,8 @@ require __DIR__ . '/init.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(sucrier_backoffice_asset('admin.css')) ?>?v=20260526-bo-guide">
+  <?= sucrier_favicon_link_tags('../') ?>
+
   <title>Guide d'utilisation — Back-office Sucrier</title>
 </head>
 <body>

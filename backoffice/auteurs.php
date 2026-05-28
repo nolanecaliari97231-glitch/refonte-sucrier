@@ -109,6 +109,8 @@ $csrf = sucrier_get_csrf_token();
   <title>Back-office — Auteurs / Illustrateurs</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(sucrier_backoffice_asset('admin.css')) ?>?v=20260526-bo-authors">
+  <?= sucrier_favicon_link_tags('../') ?>
+
 </head>
 <body>
   <div class="admin-shell">

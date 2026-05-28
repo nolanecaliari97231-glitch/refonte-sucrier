@@ -3,6 +3,85 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/security.php';
 
+/**
+ * @return 'sqlite'|'pgsql'|'unknown'
+ */
+function sucrier_auth_driver_from_dsn(string $dsn): string
+{
+    if (str_starts_with($dsn, 'sqlite:')) {
+        return 'sqlite';
+    }
+    if (str_starts_with($dsn, 'pgsql:')) {
+        return 'pgsql';
+    }
+
+    return 'unknown';
+}
+
+/**
+ * Résout DSN + identifiants depuis l'environnement.
+ *
+ * @return array{dsn:string,user:?string,pass:?string,driver:string}
+ */
+function sucrier_auth_resolve_dsn_config(): array
+{
+    $supabaseDsn = trim((string) (getenv('SUPABASE_DB_DSN') ?: getenv('SUPABASE_DB_URL') ?: ''));
+    $authDsn = trim((string) (getenv('SUCRIER_AUTH_DSN') ?: ''));
+
+    if ($authDsn !== '') {
+        $dsn = $authDsn;
+    } elseif ($supabaseDsn !== '') {
+        $dsn = $supabaseDsn;
+    } else {
+        $dsn = 'sqlite:' . dirname(__DIR__) . '/data/auth.sqlite';
+    }
+
+    return [
+        'dsn' => $dsn,
+        'user' => getenv('SUCRIER_AUTH_DB_USER') ?: null,
+        'pass' => getenv('SUCRIER_AUTH_DB_PASSWORD') ?: null,
+        'driver' => sucrier_auth_driver_from_dsn($dsn),
+    ];
+}
+
+function sucrier_auth_is_using_postgresql(): bool
+{
+    return sucrier_auth_resolve_dsn_config()['driver'] === 'pgsql';
+}
+
+function sucrier_auth_mask_dsn(string $dsn): string
+{
+    if (preg_match('/^(pgsql|sqlite):([^;]+)(.*)$/i', $dsn, $m)) {
+        $scheme = $m[1];
+        $hostPart = $m[2];
+        $rest = $m[3] ?? '';
+        if ($scheme === 'sqlite') {
+            return 'sqlite:***';
+        }
+        if (preg_match('/^host=([^;]+)/i', $hostPart, $hm)) {
+            return 'pgsql:host=' . $hm[1] . ';***' . preg_replace('/password=[^;]*/i', 'password=***', $rest);
+        }
+
+        return $scheme . ':***';
+    }
+
+    return '***';
+}
+
+/**
+ * @return array{driver:string,dsn_masked:string,using_postgresql:bool}
+ */
+function sucrier_auth_database_info(): array
+{
+    $config = sucrier_auth_resolve_dsn_config();
+
+    return [
+        'driver' => $config['driver'],
+        'dsn_masked' => sucrier_auth_mask_dsn($config['dsn']),
+        'using_postgresql' => $config['driver'] === 'pgsql',
+    ];
+}
+
 function sucrier_auth_pdo(): PDO
 {
     static $pdo = null;
@@ -10,24 +89,32 @@ function sucrier_auth_pdo(): PDO
         return $pdo;
     }
 
-    $supabaseDsn = getenv('SUPABASE_DB_DSN') ?: getenv('SUPABASE_DB_URL') ?: '';
-    $dsn = getenv('SUCRIER_AUTH_DSN') ?: ($supabaseDsn !== '' ? $supabaseDsn : 'sqlite:' . __DIR__ . '/../data/auth.sqlite');
-    $user = getenv('SUCRIER_AUTH_DB_USER') ?: null;
-    $pass = getenv('SUCRIER_AUTH_DB_PASSWORD') ?: null;
+    $config = sucrier_auth_resolve_dsn_config();
+    $dsn = $config['dsn'];
+    $driver = $config['driver'];
+
+    if ($driver === 'pgsql' && !extension_loaded('pdo_pgsql')) {
+        throw new RuntimeException(
+            'PostgreSQL configuré (SUCRIER_AUTH_DSN) mais l’extension PHP pdo_pgsql est absente.'
+        );
+    }
+    if ($driver === 'unknown') {
+        throw new RuntimeException('DSN base de données non reconnu (attendu sqlite: ou pgsql:).');
+    }
 
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ];
 
-    $pdo = new PDO($dsn, $user ?: null, $pass ?: null, $options);
+    $pdo = new PDO($dsn, $config['user'] ?: null, $config['pass'] ?: null, $options);
     sucrier_auth_ensure_schema($pdo, $dsn);
     return $pdo;
 }
 
 function sucrier_auth_ensure_schema(PDO $pdo, string $dsn): void
 {
-    if (strpos($dsn, 'sqlite:') === 0) {
+    if (sucrier_auth_driver_from_dsn($dsn) === 'sqlite') {
         $pdo->exec(
             'CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,14 +132,29 @@ function sucrier_auth_ensure_schema(PDO $pdo, string $dsn): void
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS users (
             id BIGSERIAL PRIMARY KEY,
-            email TEXT NOT NULL UNIQUE,
+            email VARCHAR(254) NOT NULL,
             password_hash TEXT NULL,
             has_google BOOLEAN NOT NULL DEFAULT FALSE,
-            full_name TEXT NULL,
-            segment TEXT NOT NULL DEFAULT \'particulier\',
-            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            full_name VARCHAR(255) NULL,
+            segment VARCHAR(32) NOT NULL DEFAULT \'particulier\',
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            CONSTRAINT users_segment_check CHECK (segment IN (\'particulier\', \'professionnel\'))
         )'
     );
+    $pdo->exec('CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique_lower_idx ON users (LOWER(email))');
+}
+
+function sucrier_auth_bind_has_google(string $dsn, bool $hasGoogle): int|bool
+{
+    return sucrier_auth_driver_from_dsn($dsn) === 'pgsql' ? $hasGoogle : ($hasGoogle ? 1 : 0);
+}
+
+function sucrier_auth_normalize_user_row(array $row): array
+{
+    $row['has_google'] = !empty($row['has_google']);
+    $row['id'] = (int) ($row['id'] ?? 0);
+
+    return $row;
 }
 
 function sucrier_auth_find_user_by_email(PDO $pdo, string $email): ?array
@@ -60,11 +162,18 @@ function sucrier_auth_find_user_by_email(PDO $pdo, string $email): ?array
     $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
     $stmt->execute(['email' => strtolower(trim($email))]);
     $row = $stmt->fetch();
-    return is_array($row) ? $row : null;
+
+    return is_array($row) ? sucrier_auth_normalize_user_row($row) : null;
 }
 
 function sucrier_auth_create_user(PDO $pdo, array $payload): array
 {
+    $config = sucrier_auth_resolve_dsn_config();
+    $createdAt = trim((string) ($payload['created_at'] ?? ''));
+    if ($createdAt === '') {
+        $createdAt = gmdate('c');
+    }
+
     $stmt = $pdo->prepare(
         'INSERT INTO users (email, password_hash, has_google, full_name, segment, created_at)
          VALUES (:email, :password_hash, :has_google, :full_name, :segment, :created_at)'
@@ -72,10 +181,10 @@ function sucrier_auth_create_user(PDO $pdo, array $payload): array
     $stmt->execute([
         'email' => strtolower(trim((string) ($payload['email'] ?? ''))),
         'password_hash' => $payload['password_hash'] ?? null,
-        'has_google' => !empty($payload['has_google']) ? 1 : 0,
+        'has_google' => sucrier_auth_bind_has_google($config['dsn'], !empty($payload['has_google'])),
         'full_name' => $payload['full_name'] ?? null,
         'segment' => ($payload['segment'] ?? 'particulier') === 'professionnel' ? 'professionnel' : 'particulier',
-        'created_at' => gmdate('c'),
+        'created_at' => $createdAt,
     ]);
 
     $created = sucrier_auth_find_user_by_email($pdo, (string) ($payload['email'] ?? ''));
@@ -87,9 +196,10 @@ function sucrier_auth_create_user(PDO $pdo, array $payload): array
 
 function sucrier_auth_enable_google(PDO $pdo, int $userId, ?string $name = null): void
 {
+    $config = sucrier_auth_resolve_dsn_config();
     $stmt = $pdo->prepare('UPDATE users SET has_google = :has_google, full_name = COALESCE(:full_name, full_name) WHERE id = :id');
     $stmt->execute([
-        'has_google' => 1,
+        'has_google' => sucrier_auth_bind_has_google($config['dsn'], true),
         'full_name' => $name,
         'id' => $userId,
     ]);
@@ -268,4 +378,3 @@ function sucrier_auth_normalize_segment(string $segment): string
 {
     return $segment === 'professionnel' ? 'professionnel' : 'particulier';
 }
-

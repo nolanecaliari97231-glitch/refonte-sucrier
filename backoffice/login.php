@@ -47,13 +47,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $expectedHash !== '') {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(sucrier_backoffice_asset('admin.css')) ?>?v=20260525-bo-login">
+  <?= sucrier_favicon_link_tags('../') ?>
+
   <title>Back-office — Connexion</title>
 </head>
 <body class="admin-login-page">
   <main class="admin-login-shell">
   <div class="card admin-login-card">
     <div class="admin-login-brand">
-      <img src="../images/site/logo-editions-sucrier.webp" alt="" class="admin-login-logo" width="96" height="96" decoding="async" aria-hidden="true">
+      <img src="../images/site/logo-mark.webp" alt="" class="admin-login-logo" width="96" height="96" decoding="async" aria-hidden="true">
       <div class="admin-login-brand-text">
         <strong>Les Editions du Sucrier</strong>
         <span>Back-office éditorial</span>

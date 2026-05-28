@@ -23,3 +23,22 @@ function sucrier_backoffice_asset(string $filename): string
 
     return rtrim($scriptDir, '/') . '/' . ltrim($filename, '/');
 }
+
+/**
+ * Balises favicon / icône d'onglet (symbole Éditions du Sucrier recadré).
+ */
+function sucrier_favicon_link_tags(string $assetsPrefix = ''): string
+{
+    $base = rtrim($assetsPrefix, '/') . '/';
+    if ($base === '/') {
+        $base = '';
+    }
+    $iconBase = $base . 'images/site/';
+
+    return implode("\n  ", [
+        '<link rel="icon" href="' . $iconBase . 'favicon.ico" sizes="any">',
+        '<link rel="icon" type="image/png" sizes="32x32" href="' . $iconBase . 'favicon-32x32.png">',
+        '<link rel="icon" type="image/png" sizes="16x16" href="' . $iconBase . 'favicon-16x16.png">',
+        '<link rel="apple-touch-icon" sizes="180x180" href="' . $iconBase . 'favicon-180x180.png">',
+    ]);
+}

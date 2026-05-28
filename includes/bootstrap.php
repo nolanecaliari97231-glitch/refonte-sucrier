@@ -59,6 +59,21 @@ function contenu_get(array $data, string $path, string $default = ''): string
     return is_scalar($current) ? (string) $current : $default;
 }
 
+function contenu_get_array(array $data, string $path, array $default = []): array
+{
+    $current = $data;
+    $segments = explode('.', $path);
+
+    foreach ($segments as $segment) {
+        if (!is_array($current) || !array_key_exists($segment, $current)) {
+            return $default;
+        }
+        $current = $current[$segment];
+    }
+
+    return is_array($current) ? $current : $default;
+}
+
 function tr(string $fr, string $en): string
 {
     global $currentLang;

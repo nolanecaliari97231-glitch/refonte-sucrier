@@ -58,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Back-office — Chapitre 1 · La Maison</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(sucrier_backoffice_asset('admin.css')) ?>?v=20260528-bo-maison">
+  <?= sucrier_favicon_link_tags('../') ?>
+
 </head>
 <body>
   <div class="admin-shell">

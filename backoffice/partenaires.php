@@ -249,6 +249,8 @@ function section_label(string $key, array $section): string {
   <title>Back-office  Partenaires</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(sucrier_backoffice_asset('admin.css')) ?>?v=20260525-bo-login">
+  <?= sucrier_favicon_link_tags('../') ?>
+
   <style>
     .partner-section { margin-bottom: 28px; padding: 18px 20px; border: 1px solid #e5e0d4; border-radius: 12px; background: #fffdf8; }
     .partner-section h3 { margin: 0 0 8px; color: #2D6A4F; font-family: 'DM Sans', sans-serif; }

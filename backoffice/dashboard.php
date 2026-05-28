@@ -100,7 +100,7 @@ $postalRateDefaults = [
         ['max_weight_g' => 30000, 'amount_eur' => 254.99],
     ],
 ];
-$postalRates = contenu_get($contenu, 'ecommerce.postal_rates', []);
+$postalRates = contenu_get_array($contenu, 'ecommerce.postal_rates', []);
 if (!is_array($postalRates)) {
     $postalRates = [];
 }
@@ -112,6 +112,8 @@ if (!is_array($postalRates)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= e(sucrier_backoffice_asset('admin.css')) ?>?v=20260525-bo-login">
+  <?= sucrier_favicon_link_tags('../') ?>
+
   <title>Back-office — Édition du site</title>
 </head>
 <body>

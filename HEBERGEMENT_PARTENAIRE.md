@@ -76,12 +76,17 @@ Minimum en production :
   - `SUCRIER_CONTACT_TO`
   - `SUCRIER_CONTACT_FROM`
   - `SUCRIER_SMTP_HOST`, `SUCRIER_SMTP_PORT`, `SUCRIER_SMTP_USERNAME`, `SUCRIER_SMTP_PASSWORD`, `SUCRIER_SMTP_ENCRYPTION`
-- Comptes (si PostgreSQL/Supabase) :
-  - `SUPABASE_DB_DSN`
+- Comptes clients (**PostgreSQL obligatoire en test/prod**) :
+  - `SUCRIER_AUTH_DSN` (ex. `pgsql:host=…;port=5432;dbname=…;sslmode=require`)
   - `SUCRIER_AUTH_DB_USER`
   - `SUCRIER_AUTH_DB_PASSWORD`
+  - (`SUPABASE_DB_DSN` reste accepté si `SUCRIER_AUTH_DSN` est vide)
 
-Le gabarit complet est dans `.env.example`.
+Le contenu éditorial reste dans **`data/contenu.json`** (pas en base). Seule la table **`users`** est en PostgreSQL.
+
+Le gabarit complet est dans `.env.example`. Guide détaillé test : **`docs/ENVIRONNEMENT_TEST.md`**.
+
+Après configuration, vérifier : `php scripts/db-check.php` (doit afficher `Driver : pgsql`).
 
 ---
 
@@ -127,6 +132,7 @@ En production, coller le hash produit dans la variable :
 
 ## 8) Checklist de validation (après déploiement)
 
+- Base comptes : `php scripts/db-check.php` → **pgsql** (pas SQLite)
 - Pages publiques OK (pas d’erreur PHP)
 - Back-office :
   - connexion OK
