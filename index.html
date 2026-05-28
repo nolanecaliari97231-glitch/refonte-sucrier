@@ -26,8 +26,21 @@
 <link rel="preload" as="image" href="images/site/logo-editions-sucrier.webp">
 <link rel="preload" href="api/content.php" as="fetch" crossorigin="use-credentials">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=20260528-hero-center-x">
-<link rel="stylesheet" href="mobile-ux.css?v=20260528-hero-center-x">
+<link rel="stylesheet" href="style.css?v=20260528-hero-left">
+<link rel="stylesheet" href="mobile-ux.css?v=20260528-hero-left">
+<style>
+  /* Centrage horizontal hero (prioritaire sur le cache CSS) */
+  @media (max-width: 1023px) {
+    .hero-bg__img {
+      object-position: 38% 54% !important;
+    }
+  }
+  @media (max-width: 768px) {
+    .hero-bg__img {
+      object-position: 34% 50% !important;
+    }
+  }
+</style>
 <style>
   /* Anti-FOUC home : sections dynamiques masquees jusqu'au chargement JS */
   #home-reading-featured:empty,

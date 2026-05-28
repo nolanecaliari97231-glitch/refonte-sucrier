@@ -404,7 +404,7 @@ nav ul li a {
   /* Colibri (haut) + panneau bois entiers ; bas du livre peut être légèrement coupé */
   .hero-bg__img {
     object-fit: cover !important;
-    object-position: 46% 54% !important;
+    object-position: 38% 54% !important;
   }
 
   .hero::before {
@@ -491,7 +491,7 @@ nav ul li a {
   }
 
   .hero-bg__img {
-    object-position: 45% 50% !important;
+    object-position: 34% 50% !important;
   }
 }
 
@@ -1909,7 +1909,7 @@ img[loading="lazy"] {
     background-color: #1a3d32 !important;
     background-image: url('images/site/home-bg-editions-sucrier-4k.webp') !important;
     background-size: cover !important;
-    background-position: 45% 46% !important;
+    background-position: 40% 46% !important;
     background-repeat: no-repeat !important;
   }
 
