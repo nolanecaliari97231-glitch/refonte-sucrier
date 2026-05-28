@@ -3503,6 +3503,169 @@
     return "";
   }
 
+  function dismissCheckoutHintPopover() {
+    document.querySelectorAll(".checkout-hint-popover").forEach(function (node) {
+      if (node.parentNode) node.parentNode.removeChild(node);
+    });
+  }
+
+  /**
+   * @param {object} ctx
+   * @returns {Array<{message:string, element:HTMLElement|null}>}
+   */
+  function collectCheckoutValidationIssues(ctx) {
+    var issues = [];
+    var elements = (ctx && ctx.elements) || {};
+
+    function add(message, element) {
+      issues.push({ message: message, element: element || null });
+    }
+
+    var shippingMode = ctx ? ctx.shippingMode : "";
+    var shippingNote = ctx ? ctx.shippingNote : "";
+    var isAuthed = !!(ctx && ctx.isAuthed);
+    var identityChoice = ctx ? String(ctx.identityChoice || "") : "";
+    var savedChoice = ctx ? String(ctx.savedChoice || "") : "";
+    var useManualAddress = !!(ctx && ctx.useManualAddress);
+    var postalZone = ctx ? ctx.postalZone : "";
+
+    if (!shippingMode) {
+      add(t("ui.deliveryModeRequired", "Choisissez un mode de livraison avant le paiement."), elements.deliveryMode);
+      return issues;
+    }
+
+    if (shippingMode === "postal" && !postalZone) {
+      add(t("messages.postalDestinationRequired", "Choisissez le pays de destination postale."), elements.postalCountry);
+    }
+
+    if (!isAuthed && shippingMode !== "pickup_siege" && !identityChoice) {
+      add(
+        t("messages.checkoutIdentityChoiceRequired", "Choisissez si vous continuez avec ou sans compte."),
+        elements.identityChoice
+      );
+    }
+
+    if (!isAuthed && identityChoice === "create_account") {
+      add(
+        t("messages.checkoutCreateAccountFirst", "Créez votre compte puis ajoutez votre adresse dans votre espace."),
+        elements.identityChoice
+      );
+    }
+
+    if (isAuthed && shippingMode !== "pickup_siege" && !useManualAddress && savedChoice === "") {
+      add(
+        t("messages.checkoutSavedAddressRequired", "Sélectionnez une adresse enregistrée ou saisissez une autre adresse."),
+        elements.savedAddress
+      );
+    }
+
+    if ((shippingMode === "local_personal" || shippingMode === "pickup_siege") && !shippingNote) {
+      add(
+        shippingMode === "pickup_siege"
+          ? t("messages.pickupMessageRequired", "Le message d'organisation du retrait est obligatoire.")
+          : t("ui.deliveryNoteRequired", "Ajoutez vos précisions pour la remise ou la livraison locale."),
+        elements.deliveryNote
+      );
+    }
+
+    if (shippingMode !== "pickup_siege" && (!isAuthed || useManualAddress)) {
+      var customerError = validateCheckoutCustomer(ctx.customerPayload || {});
+      if (customerError) {
+        add(customerError, elements.contactRoot);
+      }
+    }
+
+    if (shippingMode !== "pickup_siege") {
+      var addressError = validateShippingAddress(ctx.addressPayload || {});
+      if (addressError) {
+        add(addressError, elements.addressRoot);
+      }
+    }
+
+    return issues;
+  }
+
+  function focusCheckoutValidationIssue(issue) {
+    if (!issue || !issue.element) return;
+    var target = issue.element;
+    if (target.hidden) {
+      target = target.querySelector("input, select, textarea") || target;
+    }
+    if (typeof target.scrollIntoView === "function") {
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    if (typeof target.focus === "function") {
+      try {
+        target.focus({ preventScroll: true });
+      } catch (e) {
+        target.focus();
+      }
+    }
+  }
+
+  function showCheckoutValidationHint(issues, deliveryFeedbackNode, checkoutButtonNode) {
+    if (!issues || !issues.length) return;
+    dismissCheckoutHintPopover();
+
+    if (deliveryFeedbackNode) {
+      deliveryFeedbackNode.textContent = issues[0].message;
+      deliveryFeedbackNode.classList.add("is-checkout-error");
+    }
+
+    var pop = document.createElement("div");
+    pop.className = "checkout-hint-popover";
+    pop.setAttribute("role", "alertdialog");
+    pop.setAttribute("aria-modal", "false");
+    pop.setAttribute("aria-labelledby", "checkout-hint-title");
+
+    var title = document.createElement("p");
+    title.id = "checkout-hint-title";
+    title.className = "checkout-hint-popover__title";
+    title.textContent = t(
+      "ui.checkoutHintTitle",
+      issues.length > 1 ? "Il manque quelques informations" : "Impossible de payer pour l'instant"
+    );
+
+    var list = document.createElement("ul");
+    list.className = "checkout-hint-popover__list";
+    issues.forEach(function (issue) {
+      var li = document.createElement("li");
+      li.textContent = issue.message;
+      list.appendChild(li);
+    });
+
+    var closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.className = "checkout-hint-popover__close";
+    closeBtn.setAttribute("aria-label", t("ui.close", "Fermer"));
+    closeBtn.textContent = "×";
+    closeBtn.addEventListener("click", dismissCheckoutHintPopover);
+
+    pop.appendChild(closeBtn);
+    pop.appendChild(title);
+    pop.appendChild(list);
+
+    var anchor = checkoutButtonNode ? checkoutButtonNode.parentElement : null;
+    if (anchor) {
+      anchor.insertBefore(pop, checkoutButtonNode);
+    } else {
+      document.body.appendChild(pop);
+    }
+
+    requestAnimationFrame(function () {
+      pop.classList.add("is-visible");
+    });
+
+    focusCheckoutValidationIssue(issues[0]);
+
+    if (typeof window.showToast === "function") {
+      window.showToast(
+        t("ui.checkoutHintToast", "Complétez les champs indiqués pour continuer."),
+        { type: "info", duration: 4200, replace: true }
+      );
+    }
+  }
+
   function makeAddressSummaryLabel(address) {
     var a = normalizeAddressPayload(address);
     var head = a.label || t("ui.accountAddressDefaultLabel", "Adresse");
@@ -7559,7 +7722,7 @@
       return;
     }
 
-    if (checkoutButton) checkoutButton.disabled = !shippingMode;
+    if (checkoutButton) checkoutButton.disabled = false;
     if (checkoutFeedback) checkoutFeedback.textContent = "";
 
     cart.forEach(function (item, index) {
@@ -7649,43 +7812,35 @@
           );
     }
     if (deliveryFeedback) {
-      var currentPostalZone = resolvePostalZoneFromCountry(getShippingPostalCountry());
-      var deliveryCustomerError = !isAuthed && shippingMode !== "pickup_siege" ? validateCheckoutCustomer(readCheckoutCustomer()) : "";
-      var requiresSavedAddress = isAuthed && shippingMode !== "pickup_siege";
-      var hasSavedAddressSelection =
-        !!savedAddressSelect &&
-        !savedAddressSelect.hidden &&
-        String(savedAddressSelect.value || "") !== "" &&
-        String(savedAddressSelect.value || "") !== "__manual__";
-      var deliveryAddressError =
-        shippingMode !== "pickup_siege" &&
-        (!isAuthed || (savedAddressSelect && !savedAddressSelect.hidden))
-          ? validateShippingAddress(readCheckoutAddress())
-          : "";
-      var identityChoice = String((identityChoiceSelect && identityChoiceSelect.value) || "");
-      if (!shippingMode) {
-        deliveryFeedback.textContent = t("ui.deliveryModeRequired", "Choisissez un mode avant le paiement.");
-      } else if (shippingMode === "postal" && !currentPostalZone) {
-        deliveryFeedback.textContent = t("messages.postalDestinationRequired", "Choisissez le pays de destination postale.");
-      } else if (!isAuthed && shippingMode !== "pickup_siege" && !identityChoice) {
-        deliveryFeedback.textContent = t("messages.checkoutIdentityChoiceRequired", "Choisissez si vous continuez avec ou sans compte.");
-      } else if (!isAuthed && identityChoice === "create_account") {
-        deliveryFeedback.textContent = t("messages.checkoutCreateAccountFirst", "Créez votre compte puis ajoutez votre adresse dans votre espace.");
-      } else if (requiresSavedAddress && !hasSavedAddressSelection) {
-        deliveryFeedback.textContent = t("messages.checkoutSavedAddressRequired", "Sélectionnez une adresse enregistrée ou ajoutez-en une dans votre espace.");
-      } else if (shippingMode === "pickup_siege" && !shippingNote) {
-        deliveryFeedback.textContent = t("messages.pickupMessageRequired", "Le message d'organisation du retrait est obligatoire.");
-      } else if (deliveryCustomerError) {
-        deliveryFeedback.textContent = deliveryCustomerError;
-      } else if (deliveryAddressError) {
-        deliveryFeedback.textContent = deliveryAddressError;
-      } else if (shippingMode === "local_personal" && !shippingNote) {
-        deliveryFeedback.textContent = t(
-          "ui.deliveryNoteRequired",
-          "Ajoutez vos precisions pour la remise/livraison locale."
-        );
+      var savedChoicePreview = savedAddressSelect ? String(savedAddressSelect.value || "") : "";
+      var checkoutIssuesPreview = collectCheckoutValidationIssues({
+        shippingMode: shippingMode,
+        shippingNote: shippingNote,
+        isAuthed: isAuthed,
+        identityChoice: String((identityChoiceSelect && identityChoiceSelect.value) || ""),
+        savedChoice: savedChoicePreview,
+        useManualAddress: isAuthed && savedChoicePreview === "__manual__",
+        postalZone: resolvePostalZoneFromCountry(getShippingPostalCountry()),
+        customerPayload: readCheckoutCustomer(),
+        addressPayload: readCheckoutAddress(),
+        elements: {
+          deliveryMode: deliveryModeSelect,
+          postalCountry: postalCountrySelect,
+          identityChoice: identityChoiceSelect,
+          savedAddress: savedAddressSelect,
+          deliveryNote: deliveryNoteInput,
+          contactRoot: contactRoot,
+          addressRoot: addressFieldsRoot,
+        },
+      });
+      if (checkoutIssuesPreview.length > 0) {
+        deliveryFeedback.textContent = checkoutIssuesPreview[0].message;
+        deliveryFeedback.classList.add("is-checkout-error");
       } else {
-        deliveryFeedback.textContent = t("ui.deliveryModeSaved", "Mode de livraison enregistre.");
+        deliveryFeedback.classList.remove("is-checkout-error");
+        deliveryFeedback.textContent = shippingMode
+          ? t("ui.checkoutReadyHint", "Tout est prêt : vous pouvez passer au paiement.")
+          : t("ui.deliveryModeRequired", "Choisissez un mode de livraison avant le paiement.");
       }
     }
     var weightSummaryNode = document.querySelector("[data-summary-weight]");
@@ -7805,6 +7960,8 @@
       input.addEventListener("input", function () {
         if (!deliveryFeedback) return;
         deliveryFeedback.textContent = "";
+        deliveryFeedback.classList.remove("is-checkout-error");
+        dismissCheckoutHintPopover();
       });
     });
 
@@ -7852,60 +8009,38 @@
             }
           }
         }
-        if (!activeShippingMode) {
-          if (deliveryFeedback) {
-            deliveryFeedback.textContent = t("ui.deliveryModeRequired", "Choisissez un mode avant le paiement.");
-          }
+
+        var checkoutIssues = collectCheckoutValidationIssues({
+          shippingMode: activeShippingMode,
+          shippingNote: activeShippingNote,
+          isAuthed: isAuthed,
+          identityChoice: identityChoice,
+          savedChoice: savedChoice,
+          useManualAddress: useManualAddress,
+          postalZone: activePostalZone,
+          customerPayload: customerPayload,
+          addressPayload: addressPayload,
+          elements: {
+            deliveryMode: deliveryModeSelect,
+            postalCountry: postalCountrySelect,
+            identityChoice: identityChoiceSelect,
+            savedAddress: savedAddressSelect,
+            deliveryNote: deliveryNoteInput,
+            contactRoot: contactRoot,
+            addressRoot: addressFieldsRoot,
+          },
+        });
+        if (checkoutIssues.length > 0) {
+          showCheckoutValidationHint(checkoutIssues, deliveryFeedback, checkoutButton);
           return;
         }
-        if (activeShippingMode === "postal" && !activePostalZone) {
-          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.postalDestinationRequired", "Choisissez le pays de destination postale.");
-          return;
-        }
-        if (!isAuthed && activeShippingMode !== "pickup_siege" && !identityChoice) {
-          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.checkoutIdentityChoiceRequired", "Choisissez si vous continuez avec ou sans compte.");
-          return;
-        }
-        if (!isAuthed && identityChoice === "create_account") {
-          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.checkoutCreateAccountFirst", "Créez votre compte puis ajoutez votre adresse dans votre espace.");
-          return;
-        }
-        if (
-          isAuthed &&
-          activeShippingMode !== "pickup_siege" &&
-          !useManualAddress &&
-          (!savedAddressSelect || savedAddressSelect.hidden || savedChoice === "")
-        ) {
-          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.checkoutSavedAddressRequired", "Sélectionnez une adresse enregistrée ou saisissez une autre adresse ci-dessous.");
-          return;
+
+        dismissCheckoutHintPopover();
+        if (deliveryFeedback) {
+          deliveryFeedback.classList.remove("is-checkout-error");
         }
         if (isAuthed && useManualAddress) {
           customerMode = "guest";
-        }
-        if (activeShippingMode !== "pickup_siege" && (!isAuthed || useManualAddress)) {
-          var customerError = validateCheckoutCustomer(customerPayload);
-          if (customerError) {
-            if (deliveryFeedback) deliveryFeedback.textContent = customerError;
-            return;
-          }
-        }
-        if (activeShippingMode !== "pickup_siege") {
-          var addressError = validateShippingAddress(addressPayload);
-          if (addressError) {
-            if (deliveryFeedback) deliveryFeedback.textContent = addressError;
-            return;
-          }
-        }
-        if ((activeShippingMode === "local_personal" || activeShippingMode === "pickup_siege") && !activeShippingNote) {
-          if (deliveryFeedback) {
-            deliveryFeedback.textContent = t(
-              activeShippingMode === "pickup_siege" ? "messages.pickupMessageRequired" : "ui.deliveryNoteRequired",
-              activeShippingMode === "pickup_siege"
-                ? "Le message d'organisation du retrait est obligatoire."
-                : "Ajoutez vos precisions pour la remise/livraison locale."
-            );
-          }
-          return;
         }
         if (activeShippingMode === "pickup_siege") {
           customerMode = "pickup";
