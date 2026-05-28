@@ -548,7 +548,7 @@ nav .nav-about-link:focus-visible .nav-about-link__desc {
   background-color: #1a3d32;
   background-image: url('images/site/home-bg-editions-sucrier-4k.webp');
   background-size: cover;
-  background-position: center 24%;
+  background-position: center 18%;
   background-repeat: no-repeat;
   image-rendering: -webkit-optimize-contrast;
   display: grid;
@@ -779,8 +779,12 @@ nav .nav-about-link:focus-visible .nav-about-link__desc {
 
 /* PC : cadrage référence + fondu blanc doux (premium) */
 @media (min-width: 1024px) {
+  .hero-bg {
+    display: none;
+  }
+
   .hero {
-    background-position: center 22%;
+    background-position: center 16%;
   }
 
   .hero::before {

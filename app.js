@@ -1930,7 +1930,13 @@
     var heroSection = document.querySelector(".hero");
     var heroBackground = contenuGet(content, "home_page.hero_background_image", "");
     if (heroSection && heroBackground) {
-      heroSection.style.backgroundImage = 'url("' + toDotSlashPath(heroBackground).replace(/"/g, "") + '")';
+      var bgUrl = 'url("' + toDotSlashPath(heroBackground).replace(/"/g, "") + '")';
+      heroSection.style.backgroundImage = bgUrl;
+      var heroBgLayer = document.querySelector(".hero-bg");
+      if (heroBgLayer) {
+        heroBgLayer.style.backgroundImage =
+          "linear-gradient(180deg, rgba(7, 33, 28, 0.1) 0%, rgba(7, 33, 28, 0.38) 100%), " + bgUrl;
+      }
     }
 
     var primaryCta = document.querySelector(".hero-ctas .btn-primary");

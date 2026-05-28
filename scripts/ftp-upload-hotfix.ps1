@@ -1,9 +1,8 @@
 $files = @(
-    @{ Local = "checkout-success.html"; Remote = "/checkout-success.html" },
+    @{ Local = "index.html"; Remote = "/index.html" },
     @{ Local = "app.js"; Remote = "/app.js" },
     @{ Local = "style.css"; Remote = "/style.css" },
-    @{ Local = "mobile-ux.css"; Remote = "/mobile-ux.css" },
-    @{ Local = "index.html"; Remote = "/index.html" }
+    @{ Local = "mobile-ux.css"; Remote = "/mobile-ux.css" }
 )
 $scriptDir = $PSScriptRoot
 foreach ($f in $files) {

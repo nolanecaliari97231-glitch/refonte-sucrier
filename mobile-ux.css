@@ -362,24 +362,37 @@ nav ul li a {
  * CORRECTIFS CIBLES PAR PAGE (mobile)
  * ============================================================ */
 
-/* ---------- HERO INDEX : fond pleine largeur (tablette / mobile), texte en dessous ---------- */
+/* ---------- HERO INDEX : calque visuel + texte en dessous (tablette / mobile) ---------- */
+.hero-bg {
+  display: none;
+}
+
 @media (max-width: 1023px) {
   .hero {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-end !important;
+    justify-content: flex-start !important;
     align-items: stretch !important;
     grid-template-columns: 1fr !important;
-    min-height: min(88svh, 720px) !important;
+    min-height: 0 !important;
     padding: 0 !important;
     overflow: hidden !important;
     position: relative !important;
     background-color: #1a3d32 !important;
+    background-image: none !important;
+  }
+
+  .hero-bg {
+    display: block !important;
+    width: 100% !important;
+    flex: 0 0 auto !important;
+    min-height: min(54svh, 460px) !important;
+    order: 0 !important;
     background-image:
-      linear-gradient(180deg, rgba(7, 33, 28, 0.1) 0%, rgba(7, 33, 28, 0.42) 68%, rgba(253, 246, 227, 0.12) 100%),
+      linear-gradient(180deg, rgba(7, 33, 28, 0.08) 0%, rgba(7, 33, 28, 0.35) 100%),
       url('images/site/home-bg-editions-sucrier-4k.webp') !important;
     background-size: cover !important;
-    background-position: center 26% !important;
+    background-position: center 14% !important;
     background-repeat: no-repeat !important;
   }
 
@@ -404,7 +417,7 @@ nav ul li a {
 
   .hero-texte {
     position: relative !important;
-    order: 1 !important;
+    order: 2 !important;
     z-index: 2 !important;
     width: 100% !important;
     max-width: none !important;
@@ -462,13 +475,12 @@ nav ul li a {
 }
 
 @media (max-width: 768px) {
-  .hero {
-    min-height: min(92svh, 680px) !important;
+  .hero-bg {
+    min-height: min(52svh, 420px) !important;
     background-image:
-      linear-gradient(180deg, rgba(7, 33, 28, 0.14) 0%, rgba(7, 33, 28, 0.48) 70%, rgba(253, 246, 227, 0.1) 100%),
+      linear-gradient(180deg, rgba(7, 33, 28, 0.1) 0%, rgba(7, 33, 28, 0.4) 100%),
       url('images/site/home-bg-mobile.webp') !important;
-    background-size: cover !important;
-    background-position: center 28% !important;
+    background-position: center 12% !important;
   }
 }
 
@@ -1899,8 +1911,12 @@ img[loading="lazy"] {
     background-color: #1a3d32 !important;
     background-image: url('images/site/home-bg-editions-sucrier-4k.webp') !important;
     background-size: cover !important;
-    background-position: center 22% !important;
+    background-position: center 16% !important;
     background-repeat: no-repeat !important;
+  }
+
+  .hero-bg {
+    display: none !important;
   }
 
   .hero-image,
