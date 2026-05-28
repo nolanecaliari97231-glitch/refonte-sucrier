@@ -53,7 +53,7 @@
     var icon = document.createElement("link");
     icon.rel = "apple-touch-icon";
     icon.sizes = "180x180";
-    icon.href = "./images/logo-editions-sucrier.webp";
+    icon.href = "./images/site/logo-editions-sucrier.webp";
     document.head.appendChild(icon);
   }
 

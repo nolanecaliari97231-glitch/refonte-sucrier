@@ -1,6 +1,15 @@
 <?php
 require __DIR__ . '/init.php';
 
+/**
+ * Point central de sauvegarde du backoffice.
+ *
+ * Ce script:
+ * - valide la requete POST + CSRF,
+ * - met a jour contenu.json (textes/pages/catalogue),
+ * - gere les uploads images/fichiers pedagogiques,
+ * - reconstruit le stock catalogue via catalog_stock.
+ */
 sucrier_require_admin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -40,8 +49,8 @@ $catalogueDefaultBooks = [
         'title' => 'Nikou champion',
         'authors' => 'Léanne Ramassamy · Wilfried Deroche',
         'price' => '10,00 €',
-        'image' => 'images/nikou-champion-cover.webp',
-        'preview_images' => 'images/nikou-champion-cover.webp,images/nikou-champion-planche-sports.png,images/nikou-champion-planche-athletisme.png',
+        'image' => 'images/catalog/nikou-champion-cover.webp',
+        'preview_images' => 'images/catalog/nikou-champion-cover.webp,images/catalog/nikou-champion-planche-sports.png,images/catalog/nikou-champion-planche-athletisme.png',
     ],
     [
         'id' => 'circuit-ferme',
@@ -49,8 +58,8 @@ $catalogueDefaultBooks = [
         'title' => 'Circuit ferme',
         'authors' => 'Jean Francisco Silva · Jean Fritz Junior ODNÉ',
         'price' => '16,00 €',
-        'image' => 'images/circuit-ferme-premiere-couverture.webp',
-        'preview_images' => 'images/circuit-ferme-premiere-couverture.webp,images/lettres-ou-betes.webp,images/tice-et-metice-premiere-couverture.webp',
+        'image' => 'images/catalog/circuit-ferme-premiere-couverture.webp',
+        'preview_images' => 'images/catalog/circuit-ferme-premiere-couverture.webp,images/catalog/lettres-ou-betes.webp,images/catalog/tice-et-metice-premiere-couverture.webp',
     ],
     [
         'id' => 'exocette',
@@ -58,8 +67,8 @@ $catalogueDefaultBooks = [
         'title' => 'Exocette',
         'authors' => 'Renata · W. Deroche',
         'price' => '14,00 €',
-        'image' => 'images/exocette-premiere-couverture.webp',
-        'preview_images' => 'images/exocette-premiere-couverture.webp,images/nikou-musicien.webp,images/circuit-ferme-premiere-couverture.webp',
+        'image' => 'images/catalog/exocette-premiere-couverture.webp',
+        'preview_images' => 'images/catalog/exocette-premiere-couverture.webp,images/catalog/nikou-musicien.webp,images/catalog/circuit-ferme-premiere-couverture.webp',
     ],
     [
         'id' => 'tice-et-metice',
@@ -67,8 +76,8 @@ $catalogueDefaultBooks = [
         'title' => 'Tice et Métice',
         'authors' => 'Karine Petevi · Gecko Dalch',
         'price' => '13,00 €',
-        'image' => 'images/tice-et-metice-premiere-couverture.webp',
-        'preview_images' => 'images/tice-et-metice-premiere-couverture.webp,images/tice-et-metice-planche-interieure.webp,images/tice-et-metice-quatrieme-couverture.webp',
+        'image' => 'images/catalog/tice-et-metice-premiere-couverture.webp',
+        'preview_images' => 'images/catalog/tice-et-metice-premiere-couverture.webp,images/catalog/tice-et-metice-planche-interieure.webp,images/catalog/tice-et-metice-quatrieme-couverture.webp',
     ],
 ];
 
@@ -276,11 +285,29 @@ if ($action === 'reset_catalogue') {
         // Le stock est piloté uniquement via la table "Stocks du catalogue".
         unset($book['stock_qty']);
 
-        $booksOut[] = sucrier_admin_book_row_to_json($book);
+        $displayOrderRaw = (int) ($_POST['book_' . $i . '_display_order'] ?? ($i + 1));
+        if ($displayOrderRaw < 1) {
+            $displayOrderRaw = $i + 1;
+        }
+        $displayOrderOriginal = (int) ($_POST['book_' . $i . '_display_order_original'] ?? ($i + 1));
+        if ($displayOrderOriginal < 1) {
+            $displayOrderOriginal = $i + 1;
+        }
+        $book['display_order'] = $displayOrderRaw;
+        $booksOut[] = [
+            'order' => $displayOrderRaw,
+            'changed' => $displayOrderRaw !== $displayOrderOriginal ? 1 : 0,
+            'seq' => $i,
+            'book' => sucrier_admin_book_row_to_json($book),
+        ];
     }
 
     if ($action === 'add_book') {
-        $booksOut[] = sucrier_admin_book_row_to_json([
+        $booksOut[] = [
+            'order' => count($booksOut) + 1,
+            'changed' => 1,
+            'seq' => $bookCount + 1,
+            'book' => sucrier_admin_book_row_to_json([
             'id' => 'produit-' . (count($booksOut) + 1),
             'collection' => 'Nouvelle collection',
             'title' => 'Nouveau produit',
@@ -291,8 +318,35 @@ if ($action === 'reset_catalogue') {
             'description' => '',
             'pedagogical_file' => '',
             'catalog_category' => 'albums',
-        ]);
+            'display_order' => count($booksOut) + 1,
+            ]),
+        ];
     }
+
+    usort($booksOut, static function (array $a, array $b): int {
+        $orderCmp = ((int) ($a['order'] ?? 0)) <=> ((int) ($b['order'] ?? 0));
+        if ($orderCmp !== 0) {
+            return $orderCmp;
+        }
+        $changedCmp = ((int) ($b['changed'] ?? 0)) <=> ((int) ($a['changed'] ?? 0));
+        if ($changedCmp !== 0) {
+            return $changedCmp;
+        }
+
+        return ((int) ($a['seq'] ?? 0)) <=> ((int) ($b['seq'] ?? 0));
+    });
+
+    foreach ($booksOut as $index => &$entry) {
+        if (is_array($entry['book'] ?? null)) {
+            $entry['book']['display_order'] = $index + 1;
+        }
+    }
+    unset($entry);
+
+    $booksOut = array_values(array_map(
+        static fn(array $entry): array => is_array($entry['book'] ?? null) ? $entry['book'] : [],
+        $booksOut
+    ));
 
     $newData['catalogue_books'] = $booksOut;
 

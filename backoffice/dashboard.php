@@ -1,6 +1,11 @@
 <?php
 require __DIR__ . '/init.php';
 
+/**
+ * Tableau de bord principal:
+ * - edition generale du contenu (accueil, catalogue, actualites, contact),
+ * - acces aux editeurs specialises (maison, auteurs, partenaires, heros).
+ */
 sucrier_require_admin();
 
 $saved = isset($_GET['saved']);
@@ -43,14 +48,36 @@ $newsCount = count($newsItems);
 $promoItems = sucrier_promo_codes_list($contenu);
 $promoCount = count($promoItems);
 $catalogStockMap = sucrier_catalog_stock_map($contenu);
-$catalogRegistry = array_values(array_filter(
-    sucrier_catalog_product_registry(),
-    static function (array $row) use ($contenu): bool {
-        $id = trim((string) ($row['id'] ?? ''));
-
-        return $id !== '' && !sucrier_is_admin_catalog_excluded($id, $contenu);
+$catalogRegistry = [];
+foreach ($books as $bookRow) {
+    if (!is_array($bookRow)) {
+        continue;
     }
-));
+    $id = trim((string) ($bookRow['id'] ?? ''));
+    if ($id === '' || sucrier_is_admin_catalog_excluded($id, $contenu)) {
+        continue;
+    }
+    $catalogRegistry[] = [
+        'id' => $id,
+        'title' => trim((string) ($bookRow['title'] ?? $id)),
+    ];
+}
+foreach ($catalogStockMap as $id => $qty) {
+    $id = trim((string) $id);
+    if ($id === '' || sucrier_is_admin_catalog_excluded($id, $contenu)) {
+        continue;
+    }
+    $already = false;
+    foreach ($catalogRegistry as $row) {
+        if (($row['id'] ?? '') === $id) {
+            $already = true;
+            break;
+        }
+    }
+    if (!$already) {
+        $catalogRegistry[] = ['id' => $id, 'title' => $id];
+    }
+}
 $siteBase = '../';
 ?>
 <!doctype html>
@@ -69,6 +96,7 @@ $siteBase = '../';
     <p>Gérez textes, images, catalogue, actualités et fiches pédagogiques. Les changements apparaissent sur le site public après enregistrement.</p>
     <div class="card-actions">
       <a class="link" href="guide.php">Guide d'utilisation</a>
+      <a class="link" href="maison.php">Chapitre 1 · La Maison</a>
       <a class="link" href="auteurs.php">Auteurs / Illustrateurs</a>
       <a class="link" href="heros.php">Univers Héros</a>
       <a class="link" href="partenaires.php">Gérer les partenaires</a>
@@ -115,13 +143,13 @@ $siteBase = '../';
       <div class="row-2">
         <div>
           <label for="home_hero_image">Image personnage hero (chemin)</label>
-          <input id="home_hero_image" name="home_hero_image" value="<?= e(contenu_get($contenu, 'home_page.hero_image', 'images/nikou-gambadeur.webp')) ?>">
+          <input id="home_hero_image" name="home_hero_image" value="<?= e(contenu_get($contenu, 'home_page.hero_image', 'images/catalog/nikou-gambadeur.webp')) ?>">
           <label for="home_hero_image_file">Ou téléverser</label>
           <input id="home_hero_image_file" name="home_hero_image_file" type="file" accept="image/*">
         </div>
         <div>
           <label for="home_hero_book_cover">Couverture livre hero (chemin)</label>
-          <input id="home_hero_book_cover" name="home_hero_book_cover" value="<?= e(contenu_get($contenu, 'home_page.hero_book_cover', 'images/nikou-champion-cover.webp')) ?>">
+          <input id="home_hero_book_cover" name="home_hero_book_cover" value="<?= e(contenu_get($contenu, 'home_page.hero_book_cover', 'images/catalog/nikou-champion-cover.webp')) ?>">
           <label for="home_hero_book_cover_file">Ou téléverser</label>
           <input id="home_hero_book_cover_file" name="home_hero_book_cover_file" type="file" accept="image/*">
         </div>
@@ -252,6 +280,12 @@ $siteBase = '../';
 
     <div class="card">
       <h2>Page A propos</h2>
+      <p class="section-note">
+        Chapitres À propos :
+        <a href="maison.php">Chapitre 1 · La Maison</a> ·
+        <a href="auteurs.php">Chapitre 2 · Auteurs / Illustrateurs</a> ·
+        <a href="partenaires.php">Chapitre 3 · Partenaires</a>
+      </p>
       <div class="row-2">
         <div>
           <label for="about_title">Titre de la page</label>
@@ -468,6 +502,16 @@ $siteBase = '../';
                 <input id="book_<?= $i ?>_id" name="book_<?= $i ?>_id" value="<?= e((string) (($books[$i]['id'] ?? ''))) ?>">
               </div>
             </div>
+            <label for="book_<?= $i ?>_display_order">Position dans le catalogue (1 = premier)</label>
+            <input
+              id="book_<?= $i ?>_display_order"
+              name="book_<?= $i ?>_display_order"
+              type="number"
+              min="1"
+              step="1"
+              value="<?= e((string) (max(1, (int) (($books[$i]['display_order'] ?? 0) ?: ($i + 1)))) ) ?>"
+            >
+            <input type="hidden" name="book_<?= $i ?>_display_order_original" value="<?= e((string) (max(1, (int) (($books[$i]['display_order'] ?? 0) ?: ($i + 1)))) ) ?>">
             <?php
               $bookStockId = (string) (($books[$i]['id'] ?? ''));
               $bookStockVal = $bookStockId !== '' && array_key_exists($bookStockId, $catalogStockMap)
@@ -476,7 +520,7 @@ $siteBase = '../';
             ?>
             <label for="book_<?= $i ?>_stock_qty">Stock disponible (modifier dans « Stocks du catalogue »)</label>
             <input id="book_<?= $i ?>_stock_qty" type="number" min="0" step="1" value="<?= e($bookStockVal) ?>" placeholder="—" readonly>
-            <label for="book_<?= $i ?>_image">Image principale (ex: images/nikou-champion-cover.webp)</label>
+            <label for="book_<?= $i ?>_image">Image principale (ex: images/catalog/nikou-champion-cover.webp)</label>
             <input id="book_<?= $i ?>_image" name="book_<?= $i ?>_image" value="<?= e((string) (($books[$i]['image'] ?? ''))) ?>">
             <label for="book_<?= $i ?>_image_file">Ou televerser une image principale</label>
             <input id="book_<?= $i ?>_image_file" name="book_<?= $i ?>_image_file" type="file" accept="image/*">

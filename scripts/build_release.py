@@ -18,6 +18,9 @@ FILES = [
     "panier.html",
     "checkout-success.html",
     "checkout-cancel.html",
+    "cgv.html",
+    "robots.txt",
+    "sitemap.xml",
     "app.js",
     "style.css",
     "google-auth-config.js",
@@ -29,6 +32,9 @@ DIRS = [
     "images",
     "locales",
     "api",
+    "backoffice",
+    "includes",
+    "data",
 ]
 
 

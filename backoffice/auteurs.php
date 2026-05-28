@@ -14,6 +14,11 @@ if (!is_array($authors)) {
     $authors = [];
 }
 $page = $data['page'] ?? [];
+$authorsUploadFs = SUCRIER_SITE_ROOT . '/images/uploads/authors';
+$authorsUploadWeb = 'images/uploads/authors';
+if (!is_dir($authorsUploadFs)) {
+    @mkdir($authorsUploadFs, 0755, true);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!sucrier_validate_csrf_from_post()) {
@@ -41,9 +46,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($slug === '') {
             continue;
         }
+        $photoPath = trim((string) ($_POST['author_' . $i . '_photo'] ?? ''));
+        $uploadedPhoto = sucrier_upload_image_file(
+            'author_' . $i . '_photo_file',
+            $authorsUploadFs,
+            $authorsUploadWeb
+        );
+        if ($uploadedPhoto !== null) {
+            $photoPath = $uploadedPhoto;
+        }
+        if (isset($_POST['author_' . $i . '_remove_photo'])) {
+            $photoPath = '';
+        }
         $out[] = [
             'slug' => $slug,
-            'photo' => trim((string) ($_POST['author_' . $i . '_photo'] ?? '')),
+            'photo' => $photoPath,
             'roles' => trim((string) ($_POST['author_' . $i . '_roles'] ?? 'author')),
             'name_fr' => trim((string) ($_POST['author_' . $i . '_name_fr'] ?? '')),
             'name_en' => trim((string) ($_POST['author_' . $i . '_name_en'] ?? '')),
@@ -161,6 +178,12 @@ $csrf = sucrier_get_csrf_token();
               </div>
               <label for="author_<?= $i ?>_photo">Photo (chemin)</label>
               <input id="author_<?= $i ?>_photo" name="author_<?= $i ?>_photo" value="<?= e((string) ($a['photo'] ?? '')) ?>">
+              <label for="author_<?= $i ?>_photo_file">Ou importer une photo (PNG/JPG/WEBP/GIF)</label>
+              <input id="author_<?= $i ?>_photo_file" name="author_<?= $i ?>_photo_file" type="file" accept="image/png,image/jpeg,image/webp,image/gif">
+              <label class="checkbox-row">
+                <input type="checkbox" name="author_<?= $i ?>_remove_photo" value="1">
+                Supprimer la photo actuelle
+              </label>
               <div class="row-2">
                 <div>
                   <label for="author_<?= $i ?>_name_fr">Nom (FR)</label>

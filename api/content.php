@@ -8,6 +8,15 @@ require_once __DIR__ . '/../includes/pedagogical-sheets.php';
 require_once __DIR__ . '/../includes/content-public.php';
 require_once __DIR__ . '/../includes/cms-profiles.php';
 
+/**
+ * API publique du contenu front.
+ *
+ * Role:
+ * - lire data/contenu.json,
+ * - resoudre certains assets (images/fiches),
+ * - filtrer les champs sensibles (via content-public.php),
+ * - renvoyer un JSON exploitable directement par app.js.
+ */
 sucrier_send_security_headers(true);
 header('Content-Type: application/json; charset=utf-8');
 // Contenu dynamique (back-office) : autoriser la mise en cache mais imposer la revalidation.

@@ -4,6 +4,11 @@ Refonte du site Les Editions du Sucrier (stage BUT informatique).
 
 **Documentation d’ensemble (architecture, hébergement) :** voir [`DOCUMENTATION_SITE.md`](DOCUMENTATION_SITE.md) et [`HEBERGEMENT_PARTENAIRE.md`](HEBERGEMENT_PARTENAIRE.md).
 
+**Guides code simplifiés :**
+- [`docs/CODE_GUIDE_FRONT.md`](docs/CODE_GUIDE_FRONT.md)
+- [`docs/CODE_GUIDE_BACKOFFICE.md`](docs/CODE_GUIDE_BACKOFFICE.md)
+- [`docs/CODE_GUIDE_API_INCLUDES.md`](docs/CODE_GUIDE_API_INCLUDES.md)
+
 ## Source active (bloc 1)
 
 La source de verite du front est la racine en HTML/JS:

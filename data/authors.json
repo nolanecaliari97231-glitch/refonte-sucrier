@@ -10,7 +10,7 @@
     "authors": [
         {
             "slug": "renata",
-            "photo": "images/renee-laure-zou.webp",
+            "photo": "images/portraits/renee-laure-zou.webp",
             "roles": "author illustrator",
             "name_fr": "Renée-Laure Zou (Renata)",
             "name_en": "Renée-Laure Zou (Renata)",
@@ -21,7 +21,7 @@
         },
         {
             "slug": "w-deroche",
-            "photo": "images/wilfried-deroche-illustrateur.webp",
+            "photo": "images/portraits/wilfried-deroche-illustrateur.webp",
             "roles": "illustrator",
             "name_fr": "Wilfried Deroche",
             "name_en": "Wilfried Deroche",
@@ -32,7 +32,7 @@
         },
         {
             "slug": "l-ramassamy",
-            "photo": "images/author-leane-ramassamy.webp",
+            "photo": "images/portraits/author-leane-ramassamy.webp",
             "roles": "author",
             "name_fr": "Léanne Ramassamy",
             "name_en": "Léanne Ramassamy",
@@ -43,7 +43,7 @@
         },
         {
             "slug": "k-petevi",
-            "photo": "images/author-karine-petevi.webp",
+            "photo": "images/portraits/author-karine-petevi.webp",
             "roles": "author",
             "name_fr": "Karine Petevi",
             "name_en": "Karine Petevi",
@@ -54,7 +54,7 @@
         },
         {
             "slug": "rolyne-pam",
-            "photo": "images/author-rolyne-pam.webp",
+            "photo": "images/portraits/author-rolyne-pam.webp",
             "roles": "author",
             "name_fr": "Rolyne Pam",
             "name_en": "Rolyne Pam",
@@ -65,7 +65,7 @@
         },
         {
             "slug": "patrick-petito",
-            "photo": "images/patrick-petito-cultura.webp",
+            "photo": "images/portraits/patrick-petito-cultura.webp",
             "roles": "author",
             "name_fr": "Patrick Petito",
             "name_en": "Patrick Petito",
@@ -76,7 +76,7 @@
         },
         {
             "slug": "ojf-junior",
-            "photo": "images/jean-fritz-junior-odne.webp",
+            "photo": "images/portraits/jean-fritz-junior-odne.webp",
             "roles": "author",
             "name_fr": "Jean Fritz Junior ODNÉ",
             "name_en": "Jean Fritz Junior ODNÉ",
@@ -87,7 +87,7 @@
         },
         {
             "slug": "jf-silva",
-            "photo": "images/francisco-silva.webp",
+            "photo": "images/portraits/francisco-silva.webp",
             "roles": "illustrator",
             "name_fr": "Jean Francisco Silva",
             "name_en": "Jean Francisco Silva",
@@ -98,7 +98,7 @@
         },
         {
             "slug": "collectif",
-            "photo": "images/logo-editions-sucrier.webp",
+            "photo": "images/site/logo-editions-sucrier.webp",
             "roles": "author illustrator",
             "name_fr": "Collectif",
             "name_en": "Collective",

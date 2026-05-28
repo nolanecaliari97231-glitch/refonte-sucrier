@@ -1,4 +1,16 @@
 ﻿(function () {
+  /**
+   * Vue d'ensemble du fichier:
+   * 1) Configuration globale (catalogue par defaut, devise, stockage local)
+   * 2) Chargement du contenu CMS (api/content.php -> fusion dans le front)
+   * 3) Rendu des pages (catalogue, fiche produit, auteurs, partenaires, panier)
+   * 4) Comportements utilisateur (panier, favoris, auth, i18n, navigation)
+   *
+   * Le principe important:
+   * - BOOK_CATALOG_DEFAULT = base front statique
+   * - contenu.json (via API) = surcouche editable en backoffice
+   * - les fonctions "apply*" injectent les textes/donnees CMS dans le DOM
+   */
   var STORAGE_KEYS = {
     cart: "sucrier_cart",
     favorites: "sucrier_favorites",
@@ -47,11 +59,11 @@
       collection: "Nikou",
       price: 10,
       catalogueCoverPosition: "top",
-      cover: "images/nikou-champion-cover.webp",
+      cover: "images/catalog/nikou-champion-cover.webp",
       gallery: [
-        "images/nikou-champion-cover.webp",
-        "images/nikou-champion-planche-sports.png",
-        "images/nikou-champion-planche-athletisme.png",
+        "images/catalog/nikou-champion-cover.webp",
+        "images/catalog/nikou-champion-planche-sports.png",
+        "images/catalog/nikou-champion-planche-athletisme.png",
       ],
       authors: [
         { name: "Léanne Ramassamy", slug: "l-ramassamy" },
@@ -72,11 +84,11 @@
       title: "Circuit fermé",
       collection: "Bulles de Sucrier",
       price: 16,
-      cover: "images/circuit-ferme-premiere-couverture.webp",
+      cover: "images/catalog/circuit-ferme-premiere-couverture.webp",
       gallery: [
-        "images/circuit-ferme-premiere-couverture.webp",
-        "images/circuit-ferme-planche-1.png",
-        "images/circuit-ferme-planche-2.png",
+        "images/catalog/circuit-ferme-premiere-couverture.webp",
+        "images/catalog/circuit-ferme-planche-1.png",
+        "images/catalog/circuit-ferme-planche-2.png",
       ],
       authors: [
         { name: "Jean Fritz Junior ODNÉ", slug: "ojf-junior" },
@@ -97,11 +109,11 @@
       title: "Exocette (tome 1) — 2e édition",
       collection: "Les histoires du Sucrier",
       price: 14,
-      cover: "images/exocette-premiere-couverture.webp",
+      cover: "images/catalog/exocette-premiere-couverture.webp",
       gallery: [
-        "images/exocette-premiere-couverture.webp",
-        "images/exocette-tome-1-planche-2.png",
-        "images/exocette-tome-1-planche-3.png",
+        "images/catalog/exocette-premiere-couverture.webp",
+        "images/catalog/exocette-tome-1-planche-2.png",
+        "images/catalog/exocette-tome-1-planche-3.png",
       ],
       authors: [
         { name: "Renata", slug: "renata" },
@@ -122,11 +134,11 @@
       title: "Tice et Métice",
       collection: "Les histoires du Sucrier",
       price: 13,
-      cover: "images/tice-et-metice-premiere-couverture.webp",
+      cover: "images/catalog/tice-et-metice-premiere-couverture.webp",
       gallery: [
-        "images/tice-et-metice-premiere-couverture.webp",
-        "images/tice-et-metice-planche-interieure.webp",
-        "images/tice-et-metice-quatrieme-couverture.webp",
+        "images/catalog/tice-et-metice-premiere-couverture.webp",
+        "images/catalog/tice-et-metice-planche-interieure.webp",
+        "images/catalog/tice-et-metice-quatrieme-couverture.webp",
       ],
       authors: [
         { name: "Karine Petevi", slug: "k-petevi" },
@@ -148,10 +160,10 @@
       collection: "Les histoires du Sucrier",
       price: 15,
       comingSoon: false,
-      cover: "images/exocette-tome-2-premiere-couverture.png",
+      cover: "images/catalog/exocette-tome-2-premiere-couverture.png",
       gallery: [
-        "images/exocette-tome-2-premiere-couverture.png",
-        "images/exocette-tome-2-quatrieme-couverture.png",
+        "images/catalog/exocette-tome-2-premiere-couverture.png",
+        "images/catalog/exocette-tome-2-quatrieme-couverture.png",
       ],
       authors: [
         { name: "Renata", slug: "renata" },
@@ -173,11 +185,11 @@
       collection: "Nikou",
       price: 12,
       catalogueCoverPosition: "top",
-      cover: "images/nikou-patron-premiere-couverture.webp",
+      cover: "images/catalog/nikou-patron-premiere-couverture.webp",
       gallery: [
-        "images/nikou-patron-premiere-couverture.webp",
-        "images/nikou-patron-planche-interieure.png",
-        "images/nikou-patron-quatrieme-couverture.png",
+        "images/catalog/nikou-patron-premiere-couverture.webp",
+        "images/catalog/nikou-patron-planche-interieure.png",
+        "images/catalog/nikou-patron-quatrieme-couverture.png",
       ],
       authors: [
         { name: "Patrick Petito", slug: "patrick-petito" },
@@ -198,11 +210,11 @@
       title: "Bébé Nikou a faim",
       collection: "Bébé Nikou",
       price: 11.5,
-      cover: "images/bebe-nikou-a-faim.webp",
+      cover: "images/catalog/bebe-nikou-a-faim.webp",
       gallery: [
-        "images/bebe-nikou-a-faim.webp",
-        "images/bebe-nikou-a-faim-planche-interieure.webp",
-        "images/bebe-nikou-a-faim-quatrieme-couverture.webp",
+        "images/catalog/bebe-nikou-a-faim.webp",
+        "images/catalog/bebe-nikou-a-faim-planche-interieure.webp",
+        "images/catalog/bebe-nikou-a-faim-quatrieme-couverture.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }, { name: "W. Deroche", slug: "w-deroche" }],
       description:
@@ -220,10 +232,10 @@
       title: "Bébé Nikou dit non",
       collection: "Bébé Nikou",
       price: 11.5,
-      cover: "images/bebe-nikou-dit-non.webp",
+      cover: "images/catalog/bebe-nikou-dit-non.webp",
       gallery: [
-        "images/bebe-nikou-dit-non.webp",
-        "images/bebe-nikou-dit-non-planche-interieure.webp",
+        "images/catalog/bebe-nikou-dit-non.webp",
+        "images/catalog/bebe-nikou-dit-non-planche-interieure.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }, { name: "W. Deroche", slug: "w-deroche" }],
       description:
@@ -242,11 +254,11 @@
       collection: "Nikou",
       price: 12,
       catalogueCoverPosition: "top",
-      cover: "images/nikou-musicien.webp",
+      cover: "images/catalog/nikou-musicien.webp",
       gallery: [
-        "images/nikou-musicien.webp",
-        "images/nikou-musicien-planche-interieure.webp",
-        "images/nikou-musicien-quatrieme-couverture.webp",
+        "images/catalog/nikou-musicien.webp",
+        "images/catalog/nikou-musicien-planche-interieure.webp",
+        "images/catalog/nikou-musicien-quatrieme-couverture.webp",
       ],
       authors: [
         { name: "Renata", slug: "renata" },
@@ -297,11 +309,11 @@
       collection: "Nikou",
       price: 6,
       catalogueCoverPosition: "top",
-      cover: "images/compte-avec-nikou.webp",
+      cover: "images/catalog/compte-avec-nikou.webp",
       gallery: [
-        "images/compte-avec-nikou.webp",
-        "images/compte-avec-nikou-planche-interieure.webp",
-        "images/compte-avec-nikou-planche-interieure-2.webp",
+        "images/catalog/compte-avec-nikou.webp",
+        "images/catalog/compte-avec-nikou-planche-interieure.webp",
+        "images/catalog/compte-avec-nikou-planche-interieure-2.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
@@ -320,10 +332,10 @@
       collection: "Nikou",
       price: 9,
       catalogueCoverPosition: "top",
-      cover: "images/nikou-formes-premiere-couverture.webp",
+      cover: "images/catalog/nikou-formes-premiere-couverture.webp",
       gallery: [
-        "images/nikou-formes-premiere-couverture.webp",
-        "images/nikou-formes-quatrieme-couverture.webp",
+        "images/catalog/nikou-formes-premiere-couverture.webp",
+        "images/catalog/nikou-formes-quatrieme-couverture.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
@@ -365,11 +377,11 @@
       collection: "Nikou",
       price: 6,
       catalogueCoverPosition: "top",
-      cover: "images/le-carnaval-de-nikou.webp",
+      cover: "images/catalog/le-carnaval-de-nikou.webp",
       gallery: [
-        "images/le-carnaval-de-nikou.webp",
-        "images/le-carnaval-de-nikou-planche-interieure.webp",
-        "images/le-carnaval-de-nikou-planche-interieure-2.webp",
+        "images/catalog/le-carnaval-de-nikou.webp",
+        "images/catalog/le-carnaval-de-nikou-planche-interieure.webp",
+        "images/catalog/le-carnaval-de-nikou-planche-interieure-2.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
@@ -412,10 +424,10 @@
       collection: "Lettres ou bêtes",
       price: 15,
       catalogueCoverPosition: "top",
-      cover: "images/lettres-ou-betes-premiere-couverture.webp",
+      cover: "images/catalog/lettres-ou-betes-premiere-couverture.webp",
       gallery: [
-        "images/lettres-ou-betes-premiere-couverture.webp",
-        "images/lettres-ou-betes-quatrieme-couverture.webp",
+        "images/catalog/lettres-ou-betes-premiere-couverture.webp",
+        "images/catalog/lettres-ou-betes-quatrieme-couverture.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
@@ -429,11 +441,11 @@
       collection: "Nikou",
       price: 6,
       catalogueCoverPosition: "top",
-      cover: "images/les-couleurs-de-nikou.webp",
+      cover: "images/catalog/les-couleurs-de-nikou.webp",
       gallery: [
-        "images/les-couleurs-de-nikou.webp",
-        "images/les-couleurs-de-nikou-planche-interieure.webp",
-        "images/les-couleurs-de-nikou-planche-interieure-2.webp",
+        "images/catalog/les-couleurs-de-nikou.webp",
+        "images/catalog/les-couleurs-de-nikou-planche-interieure.webp",
+        "images/catalog/les-couleurs-de-nikou-planche-interieure-2.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
@@ -451,11 +463,11 @@
       title: "Les comptines de Karambole",
       collection: "Hors collection — parutions événements",
       price: 12,
-      cover: "images/comptines-karambole-bateaux.webp",
+      cover: "images/catalog/comptines-karambole-bateaux.webp",
       gallery: [
-        "images/comptines-karambole-bateaux.webp",
-        "images/comptines-karambole-bateaux-planche-interieure.webp",
-        "images/comptines-karambole-bateaux-planche-interieure-2.webp",
+        "images/catalog/comptines-karambole-bateaux.webp",
+        "images/catalog/comptines-karambole-bateaux-planche-interieure.webp",
+        "images/catalog/comptines-karambole-bateaux-planche-interieure-2.webp",
       ],
       authors: [{ name: "Rolyne Pam", slug: "rolyne-pam" }],
       description:
@@ -476,8 +488,8 @@
       catalogCategory: "posters",
       catalogueCoverPosition: "top",
       languages: ["Français"],
-      cover: "images/poster-abecedaire.webp",
-      gallery: ["images/poster-abecedaire.webp"],
+      cover: "images/catalog/poster-abecedaire.webp",
+      gallery: ["images/catalog/poster-abecedaire.webp"],
       authors: [{ name: "Collectif", slug: "collectif" }],
       description: "Poster 50 × 70 cm sur papier couché mat 300 g — édition 2020 — pour afficher tous les alphabets et animaux caraïbéens créés avec Renata.",
       specs: { pages: "Affiche", format: "50 x 70 cm", publicationDate: "Dès 3 ans" },
@@ -489,8 +501,8 @@
       catalogCategory: "posters",
       catalogueCoverPosition: "top",
       languages: ["Français"],
-      cover: "images/poster-carnaval-nikou.webp",
-      gallery: ["images/poster-carnaval-nikou.webp"],
+      cover: "images/catalog/poster-carnaval-nikou.webp",
+      gallery: ["images/catalog/poster-carnaval-nikou.webp"],
       authors: [{ name: "Collectif", slug: "collectif" }],
       description:
         "Format 42 × 60 cm imprimé sur papier couché mat pour afficher tous les costumes que Nikou a empruntés lors du carnaval martiniquais.",
@@ -503,8 +515,8 @@
       catalogCategory: "autres",
       catalogueSquareNudge: true,
       languages: ["Français"],
-      cover: "images/stickers-carnaval-nikou.webp",
-      gallery: ["images/stickers-carnaval-nikou.webp"],
+      cover: "images/catalog/stickers-carnaval-nikou.webp",
+      gallery: ["images/catalog/stickers-carnaval-nikou.webp"],
       authors: [{ name: "Collectif", slug: "collectif" }],
       description: "Planche d'autocollants avec les tenues du carnaval de Nikou pour créer, jouer et décorer.",
       specs: { pages: "1 planche", format: "A4", publicationDate: "PVP 3 €" },
@@ -516,8 +528,8 @@
       catalogCategory: "autres",
       catalogueSquareNudge: true,
       languages: ["Français"],
-      cover: "images/stickers-abecedaire.webp",
-      gallery: ["images/stickers-abecedaire.webp"],
+      cover: "images/catalog/stickers-abecedaire.webp",
+      gallery: ["images/catalog/stickers-abecedaire.webp"],
       authors: [{ name: "Collectif", slug: "collectif" }],
       description: "Stickers éducatifs pour jouer avec les lettres et les animaux.",
       specs: { pages: "1 planche", format: "A4", poids: "40 g" },
@@ -529,8 +541,8 @@
       catalogCategory: "autres",
       ageGroup: "3-6",
       languages: ["Français", "Créole martiniquais", "Espagnol", "Anglais"],
-      cover: "images/stickers-fruits-martinique.webp",
-      gallery: ["images/stickers-fruits-martinique.webp"],
+      cover: "images/catalog/stickers-fruits-martinique.webp",
+      gallery: ["images/catalog/stickers-fruits-martinique.webp"],
       authors: [{ name: "Collectif", slug: "collectif" }],
       description:
         "Planche A4 glacée où les fruits martiniquais portent quatre langues : parfait complément après la lecture des albums Bébé Nikou.",
@@ -542,8 +554,8 @@
       price: 6,
       catalogCategory: "cahiers",
       catalogueCoverPosition: "top",
-      cover: "images/coloriages-lettres-ou-betes.webp",
-      gallery: ["images/coloriages-lettres-ou-betes.webp"],
+      cover: "images/catalog/coloriages-lettres-ou-betes.webp",
+      gallery: ["images/catalog/coloriages-lettres-ou-betes.webp"],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
         "S’inspirant des principes de l’art-thérapie, ce cahier de coloriage s’adresse à tous les artistes curieux et amoureux de la nature, à partir de 5 ans. Format A5 · 26 pages en couleur.",
@@ -556,8 +568,8 @@
       price: 6,
       catalogCategory: "sous-mains",
       catalogueSquareNudge: true,
-      cover: "images/sous-main-abecedaire.webp",
-      gallery: ["images/sous-main-abecedaire.webp"],
+      cover: "images/catalog/sous-main-abecedaire.webp",
+      gallery: ["images/catalog/sous-main-abecedaire.webp"],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
         "Format A3 en Feuille de Pierre® (Mineral Print) : papier sans bois, résistant et waterproof. En dessinant, en travaillant ou en mangeant, votre enfant continue d’apprendre son alphabet avec les animaux caribéens.",
@@ -571,8 +583,8 @@
       comingSoon: true,
       catalogHidden: true,
       catalogCategory: "autres",
-      cover: "images/exocette-tome-2-premiere-couverture.png",
-      gallery: ["images/exocette-tome-2-premiere-couverture.png", "images/exocette-premiere-couverture.webp"],
+      cover: "images/catalog/exocette-tome-2-premiere-couverture.png",
+      gallery: ["images/catalog/exocette-tome-2-premiere-couverture.png", "images/catalog/exocette-premiere-couverture.webp"],
       authors: [{ name: "Renata", slug: "renata" }, { name: "Wilfried Deroche", slug: "w-deroche" }],
       description:
         "Serious game pour découvrir les richesses de la biodiversité aquatique caribéenne avec Exocette ! Jeu de plateau — à paraître en 2026. Visuel provisoire.",
@@ -584,8 +596,8 @@
       collection: "Les histoires du Sucrier",
       price: 10,
       catalogCategory: "autres",
-      cover: "images/sac-a-dos-vole-wo.webp",
-      gallery: ["images/sac-a-dos-vole-wo.webp"],
+      cover: "images/catalog/sac-a-dos-vole-wo.webp",
+      gallery: ["images/catalog/sac-a-dos-vole-wo.webp"],
       authors: [{ name: "Collectif", slug: "collectif" }],
       description:
         "Sac à dos en coton indien naturel, brodé en Martinique (poisson volant). L’idéal pour emporter partout son album Exocette, ses produits préférés des Éditions du Sucrier et même un petit goûter ! Format 37 × 41 cm.",
@@ -602,11 +614,11 @@
       hideLanguages: true,
       hideIsbn: true,
       hidePublicationDate: true,
-      cover: "images/peluche-nikou-vue-marina.webp",
+      cover: "images/catalog/peluche-nikou-vue-marina.webp",
       gallery: [
-        "images/peluche-nikou-vue-marina.webp",
-        "images/peluche-nikou.webp",
-        "images/peluche-nikou-vue-profil.webp",
+        "images/catalog/peluche-nikou-vue-marina.webp",
+        "images/catalog/peluche-nikou.webp",
+        "images/catalog/peluche-nikou-vue-profil.webp",
       ],
       authors: [{ name: "Renata", slug: "renata" }],
       description:
@@ -810,7 +822,7 @@
         fr: "Petit manicou curieux · Collection phare",
         en: "Curious little opossum · Flagship series",
       },
-      portrait: "images/nikou-surfeur.webp",
+      portrait: "images/catalog/nikou-surfeur.webp",
       cardClass: "heros-card--nikou",
       imageFit: "contain",
       imagePosition: "center 88%",
@@ -1082,7 +1094,7 @@
   var PEDAGOGICAL_SHEETS_AVAILABLE = [];
   var AUTHOR_PROFILES_DEFAULT = {
     renata: {
-      photo: "images/renee-laure-zou.webp",
+      photo: "images/portraits/renee-laure-zou.webp",
       roles: ["author", "illustrator"],
       name: { fr: "Renée-Laure Zou (Renata)", en: "Renée-Laure Zou (Renata)" },
       roleLabel: {
@@ -1097,7 +1109,7 @@
       ],
     },
     "w-deroche": {
-      photo: "images/wilfried-deroche-illustrateur.webp",
+      photo: "images/portraits/wilfried-deroche-illustrateur.webp",
       roles: ["illustrator"],
       name: { fr: "Wilfried Deroche", en: "Wilfried Deroche" },
       roleLabel: {
@@ -1112,7 +1124,7 @@
       ],
     },
     "l-ramassamy": {
-      photo: "images/author-leane-ramassamy.webp",
+      photo: "images/portraits/author-leane-ramassamy.webp",
       roles: ["author"],
       name: { fr: "Léanne Ramassamy", en: "Léanne Ramassamy" },
       roleLabel: { fr: "Auteure · championne de boxe", en: "Author · boxing champion" },
@@ -1124,7 +1136,7 @@
       ],
     },
     "patrick-petito": {
-      photo: "images/patrick-petito-cultura.webp",
+      photo: "images/portraits/patrick-petito-cultura.webp",
       roles: ["author"],
       name: { fr: "Patrick Petito", en: "Patrick Petito" },
       roleLabel: { fr: "Auteur", en: "Author" },
@@ -1136,7 +1148,7 @@
       ],
     },
     "ojf-junior": {
-      photo: "images/jean-fritz-junior-odne.webp",
+      photo: "images/portraits/jean-fritz-junior-odne.webp",
       roles: ["author"],
       name: { fr: "Jean Fritz Junior ODNÉ", en: "Jean Fritz Junior ODNÉ" },
       roleLabel: {
@@ -1151,7 +1163,7 @@
       ],
     },
     "jf-silva": {
-      photo: "images/francisco-silva.webp",
+      photo: "images/portraits/francisco-silva.webp",
       roles: ["illustrator"],
       name: { fr: "Jean Francisco Silva", en: "Jean Francisco Silva" },
       roleLabel: {
@@ -1166,7 +1178,7 @@
       ],
     },
     "k-petevi": {
-      photo: "images/author-karine-petevi.webp",
+      photo: "images/portraits/author-karine-petevi.webp",
       roles: ["author"],
       name: { fr: "Karine Petevi", en: "Karine Petevi" },
       roleLabel: {
@@ -1181,7 +1193,7 @@
       ],
     },
     "rolyne-pam": {
-      photo: "images/author-rolyne-pam.webp",
+      photo: "images/portraits/author-rolyne-pam.webp",
       roles: ["author"],
       name: { fr: "Rolyne Pam", en: "Rolyne Pam" },
       roleLabel: { fr: "Auteure · enseignante", en: "Author · teacher" },
@@ -1193,7 +1205,7 @@
       ],
     },
     collectif: {
-      photo: "images/logo-editions-sucrier.webp",
+      photo: "images/site/logo-editions-sucrier.webp",
       roles: ["author", "illustrator"],
       name: { fr: "Collectif", en: "Collective" },
       roleLabel: {
@@ -1528,7 +1540,8 @@
   function applyCatalogStockFromContent(content) {
     PRODUCTS_OUT_OF_STOCK = {};
     CATALOG_STOCK = {};
-    var stockMap = content && content.catalog_stock;
+    // Source principale du stock: map explicite { productId: qty }.
+    var stockMap = content && (content.catalog_stock || content.catalog_stock_public);
     if (stockMap && typeof stockMap === "object") {
       Object.keys(stockMap).forEach(function (productId) {
         var id = String(productId || "").trim();
@@ -1540,6 +1553,7 @@
       });
     }
     var list = content && content.products_out_of_stock;
+    // Compatibilite/fallback: ancienne forme "liste des ruptures".
     if (!Array.isArray(list)) return;
     list.forEach(function (productId) {
       var id = String(productId || "").trim();
@@ -1972,6 +1986,7 @@
     }
 
     applyAuthorsChapterHero(content);
+    applyAboutHousePage(content);
     renderAboutAuthorsGrid();
 
     if (document.querySelector(".cart-layout")) {
@@ -2120,11 +2135,13 @@
 
   /** PHP en local ; JSON statique en secours (Vercel, GitHub Pages, etc.). */
   function loadSiteContent() {
+    // Priorite: API PHP (retourne la version "publique" securisee du CMS).
     return fetchContentText("./api/content.php")
       .then(function (text) {
         return applyContentPayload(JSON.parse(text || "{}"));
       })
       .catch(function () {
+        // Fallback statique pour environnements sans PHP.
         return Promise.all([
           fetchContentText("./data/contenu.json"),
           fetchContentText("./data/authors.json").catch(function () {
@@ -4717,6 +4734,8 @@
   function buildProductTechListHtml(book, productId) {
     var ts = getTechnicalSpecs(book, productId);
     var rows = [];
+    var trackedStock = hasTrackedBookStock(productId);
+    var stockQty = trackedStock ? getBookStockQty(productId) : null;
     if (ts.isbn) {
       rows.push(
         "<li><strong>" +
@@ -4750,6 +4769,21 @@
           escapeCatalogHtml(book.labelPublicationDate || t("ui.bookPublicationDate", "Date de parution :")) +
           "</strong> " +
           escapeCatalogHtml(ts.publicationDate) +
+          "</li>"
+      );
+    }
+    if (trackedStock && stockQty > 0) {
+      rows.push(
+        "<li><strong>" +
+          escapeCatalogHtml(t("ui.bookStock", "Stock :")) +
+          "</strong> " +
+          escapeCatalogHtml(
+            String(stockQty) +
+              " " +
+              (stockQty > 1
+                ? t("ui.bookStockUnitsPlural", "exemplaires")
+                : t("ui.bookStockUnitsSingle", "exemplaire"))
+          ) +
           "</li>"
       );
     }
@@ -4830,11 +4864,27 @@
     if (languagesCard) languagesCard.hidden = !!book.hideLanguages;
     if (languagesNode && !book.hideLanguages) languagesNode.textContent = getBookLanguages(book);
 
+    // Etat calculé a partir du stock backoffice (ou absence de suivi).
     var outOfStock = isBookOutOfStock(bookId);
     if (availabilityNode) {
       if (outOfStock) {
         availabilityNode.textContent = t("ui.bookOutOfStockAvailability", "Rupture de stock");
         availabilityNode.classList.add("book-detail-availability--out");
+      } else if (hasTrackedBookStock(bookId) && getBookStockQty(bookId) > 0) {
+        var stockQtyLabel = getBookStockQty(bookId);
+        availabilityNode.textContent =
+          (I18N_STATE.language === "en"
+            ? "In stock (" +
+              String(stockQtyLabel) +
+              " " +
+              (stockQtyLabel > 1 ? "left" : "left") +
+              ") · Ships within 48h"
+            : "En stock (" +
+              String(stockQtyLabel) +
+              " " +
+              (stockQtyLabel > 1 ? "restants" : "restant") +
+              ") · Expédition sous 48h");
+        availabilityNode.classList.remove("book-detail-availability--out");
       } else {
         availabilityNode.textContent = t("ui.bookInStock", "En stock · Expédition sous 48h");
         availabilityNode.classList.remove("book-detail-availability--out");
@@ -5243,6 +5293,28 @@
       var leadText = lang === "en" ? page.lead_en || page.lead_fr : page.lead_fr;
       if (leadText) setCmsText(lead, leadText);
     }
+  }
+
+  function applyAboutHousePage(content) {
+    if (!document.querySelector(".about-maison-page")) return;
+    var page = (content && content.about_house_page) || {};
+    setTextContent(".about-chapter-hero__kicker", contenuGet(page, "chapter_kicker", ""));
+    setTextContent("#maison-chapter-title", contenuGet(page, "chapter_title", ""));
+    setTextContent(".about-chapter-hero__lead", contenuGet(page, "chapter_lead", ""));
+    setTextContent(".maison-hero__motto p", contenuGet(page, "motto", ""));
+    setTextContent(".maison-story__main h2", contenuGet(page, "story_title", ""));
+    setTextContent(".maison-story__main p:nth-of-type(1)", contenuGet(page, "story_p1", ""));
+    setTextContent(".maison-story__main p:nth-of-type(2)", contenuGet(page, "story_p2", ""));
+    setTextContent(".maison-story__main p:nth-of-type(3)", contenuGet(page, "story_p3", ""));
+    setTextContent("#maison-pillars-title", contenuGet(page, "pillars_title", ""));
+    setTextContent(".maison-section-head--stack p", contenuGet(page, "pillars_intro", ""));
+    setTextContent(".maison-pillars__grid article:nth-of-type(1) h3", contenuGet(page, "pillar_1_title", ""));
+    setTextContent(".maison-pillars__grid article:nth-of-type(1) p", contenuGet(page, "pillar_1_text", ""));
+    setTextContent(".maison-pillars__grid article:nth-of-type(2) h3", contenuGet(page, "pillar_2_title", ""));
+    setTextContent(".maison-pillars__grid article:nth-of-type(2) p", contenuGet(page, "pillar_2_text", ""));
+    setTextContent(".maison-pillars__grid article:nth-of-type(3) h3", contenuGet(page, "pillar_3_title", ""));
+    setTextContent(".maison-pillars__grid article:nth-of-type(3) p", contenuGet(page, "pillar_3_text", ""));
+    setTextContent(".maison-recognition p", contenuGet(page, "recognition_text", ""));
   }
 
   function initAboutPeopleFilters() {
@@ -6627,7 +6699,7 @@
         labelFr: "Politique de confidentialité",
         labelEn: "Privacy policy",
       },
-      { pattern: /^cgv$|conditions/i, href: "./droit-retractation.html", labelFr: "CGV", labelEn: "Terms" },
+      { pattern: /^cgv$|conditions/i, href: "./cgv.html", labelFr: "CGV", labelEn: "Terms" },
     ];
 
     document.querySelectorAll(".footer-links a").forEach(function (link) {
@@ -6649,7 +6721,7 @@
       '<div class="footer-grid">' +
       '<div>' +
       '<div class="footer-brand">' +
-      '<img src="./images/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true">' +
+      '<img src="./images/site/logo-footer-noir.webp" alt="" class="footer-logo-img" width="120" height="120" decoding="async" loading="lazy" aria-hidden="true">' +
       '<div class="footer-wordmark">' +
       '<span class="footer-brand-name">Les Éditions du Sucrier</span>' +
       '<span class="footer-brand-tagline" data-fr="Maison d\\\'édition jeunesse · Martinique" data-en="Children\\\'s publishing house · Martinique">Maison d\\\'édition jeunesse · Martinique</span>' +
@@ -6695,7 +6767,7 @@
       '<div class="footer-links">' +
       '<a href="./mentions-legales.html" data-fr="Mentions légales" data-en="Legal notice">Mentions légales</a>' +
       '<a href="./politique-confidentialite.html" data-fr="Politique de confidentialité" data-en="Privacy policy">Politique de confidentialité</a>' +
-      '<a href="./droit-retractation.html" data-fr="CGV" data-en="Terms & Conditions">CGV</a>' +
+      '<a href="./cgv.html" data-fr="CGV" data-en="Terms & Conditions">CGV</a>' +
       "</div>" +
       "</div>";
   }
@@ -7289,7 +7361,7 @@
       '<div class="page-loader-art">' +
       '<span class="loader-orbit loader-orbit--outer" aria-hidden="true"></span>' +
       '<span class="loader-orbit loader-orbit--inner" aria-hidden="true"></span>' +
-      '<span class="loader-core"><img src="images/logo-editions-sucrier.webp" alt="" class="page-loader-logo" decoding="async"></span>' +
+      '<span class="loader-core"><img src="images/site/logo-editions-sucrier.webp" alt="" class="page-loader-logo" decoding="async"></span>' +
       "</div>";
     body.appendChild(pageLoader);
 

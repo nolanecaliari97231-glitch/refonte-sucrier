@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Bloquer les zones techniques/sensibles
+Disallow: /backoffice/
+Disallow: /api/
+Disallow: /includes/
+Disallow: /data/
+
+Sitemap: https://leseditionsdusucrier.com/sitemap.xml

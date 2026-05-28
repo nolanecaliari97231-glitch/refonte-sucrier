@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $expectedHash !== '') {
   <main class="admin-login-shell">
   <div class="card admin-login-card">
     <div class="admin-login-brand">
-      <img src="../images/logo-editions-sucrier.webp" alt="" class="admin-login-logo" width="96" height="96" decoding="async" aria-hidden="true">
+      <img src="../images/site/logo-editions-sucrier.webp" alt="" class="admin-login-logo" width="96" height="96" decoding="async" aria-hidden="true">
       <div class="admin-login-brand-text">
         <strong>Les Editions du Sucrier</strong>
         <span>Back-office éditorial</span>

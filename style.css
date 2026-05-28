@@ -533,7 +533,7 @@ nav .nav-about-link:focus-visible .nav-about-link__desc {
 .hero {
   min-height: 92vh;
   background-color: #1a3d32;
-  background-image: url('images/home-bg-editions-sucrier-4k.webp');
+  background-image: url('images/site/home-bg-editions-sucrier-4k.webp');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -7218,12 +7218,12 @@ nav a {
   min-height: calc(100svh - 64px);
   background-image:
     linear-gradient(180deg, rgba(7, 33, 28, 0.18) 0%, rgba(7, 33, 28, 0.5) 100%),
-    url('images/home-bg-mobile.webp');
+    url('images/site/home-bg-mobile.webp');
   background-image:
     linear-gradient(180deg, rgba(7, 33, 28, 0.18) 0%, rgba(7, 33, 28, 0.5) 100%),
     image-set(
-      url('images/home-bg-mobile.webp') 1x,
-      url('images/home-bg-editions-sucrier-4k.webp') 2x
+      url('images/site/home-bg-mobile.webp') 1x,
+      url('images/site/home-bg-editions-sucrier-4k.webp') 2x
     );
   background-size: cover;
   background-position: center center;
@@ -7450,7 +7450,7 @@ footer {
   .hero {
     grid-template-columns: 1fr;
     min-height: auto;
-    background-image: url('images/home-bg-editions-sucrier-4k.webp');
+    background-image: url('images/site/home-bg-editions-sucrier-4k.webp');
   }
 
   .hero-texte {
@@ -7500,7 +7500,7 @@ footer {
   .hero {
     grid-template-columns: 1fr 1fr;
     min-height: calc(100vh - 68px);
-    background-image: url('images/home-bg-editions-sucrier-4k.webp');
+    background-image: url('images/site/home-bg-editions-sucrier-4k.webp');
     background-position: center 30%;
   }
 
@@ -7683,12 +7683,12 @@ footer {
     min-height: 62svh;
     background-image:
       linear-gradient(180deg, rgba(5, 20, 16, 0.1) 0%, rgba(5, 20, 16, 0.36) 100%),
-      url('images/home-bg-mobile.webp');
+      url('images/site/home-bg-mobile.webp');
     background-image:
       linear-gradient(180deg, rgba(5, 20, 16, 0.1) 0%, rgba(5, 20, 16, 0.36) 100%),
       image-set(
-        url('images/home-bg-mobile.webp') 1x,
-        url('images/home-bg-editions-sucrier-4k.webp') 2x
+        url('images/site/home-bg-mobile.webp') 1x,
+        url('images/site/home-bg-editions-sucrier-4k.webp') 2x
       );
     background-size: cover;
     background-position: center center;
@@ -9268,7 +9268,7 @@ header .icon-btn[href*="panier.html"] {
     grid-template-columns: 1fr 1fr;
     min-height: 92vh;
     background-color: #1a3d32;
-    background-image: url('images/home-bg-editions-sucrier-4k.webp');
+    background-image: url('images/site/home-bg-editions-sucrier-4k.webp');
     background-size: cover;
     background-position: center 30%;
     background-repeat: no-repeat;

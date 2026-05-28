@@ -8,7 +8,7 @@
     "dev:mobile": "php -S 0.0.0.0:8000 router.php",
     "dev:tunnel": "npx localtunnel --port 8000",
     "dev:backoffice": "php -S localhost:8001 -t backoffice",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node scripts/e2e-audit.js"
   },
   "repository": {
     "type": "git",

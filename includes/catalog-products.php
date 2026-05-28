@@ -3,6 +3,12 @@
 declare(strict_types=1);
 
 /**
+ * Outils catalogue partages (backoffice + API):
+ * - registre des produits connus,
+ * - lecture/normalisation du stock (catalog_stock),
+ * - verification serveur des quantites commandables.
+ */
+/**
  * Registre des produits du catalogue (IDs alignés sur app.js / BOOK_CATALOG).
  * Utilisé par le back-office pour gérer les stocks de tous les articles.
  */
@@ -136,42 +142,17 @@ function sucrier_catalog_product_available_for_qty(string $productId, int $qty, 
 }
 
 /**
- * Liste triée des produits pour les menus « Conseils de lecture » (back-office).
+ * Liste des produits pour les menus « Conseils de lecture » (back-office).
+ *
+ * Ordre: d'abord catalogue_books (ordre CMS), puis IDs du registre absents.
  *
  * @return list<array{id: string, title: string}>
  */
 function sucrier_reading_pick_product_choices(array $contenu): array
 {
-    $titles = [];
     $books = $contenu['catalogue_books'] ?? [];
-    if (is_array($books)) {
-        foreach ($books as $book) {
-            if (!is_array($book)) {
-                continue;
-            }
-            $id = trim((string) ($book['id'] ?? ''));
-            if ($id === '') {
-                continue;
-            }
-            $title = trim((string) ($book['title'] ?? ''));
-            $titles[$id] = $title !== '' ? $title : $id;
-        }
-    }
-
-    $seen = [];
     $choices = [];
-    foreach (sucrier_catalog_product_registry() as $row) {
-        $id = trim((string) ($row['id'] ?? ''));
-        if ($id === '' || isset($seen[$id]) || sucrier_is_admin_catalog_excluded($id, $contenu)) {
-            continue;
-        }
-        $seen[$id] = true;
-        $registryTitle = trim((string) ($row['title'] ?? ''));
-        $choices[] = [
-            'id' => $id,
-            'title' => $titles[$id] ?? ($registryTitle !== '' ? $registryTitle : $id),
-        ];
-    }
+    $seen = [];
 
     if (is_array($books)) {
         foreach ($books as $book) {
@@ -191,12 +172,18 @@ function sucrier_reading_pick_product_choices(array $contenu): array
         }
     }
 
-    usort(
-        $choices,
-        static function (array $a, array $b): int {
-            return strcasecmp($a['title'], $b['title']);
+    foreach (sucrier_catalog_product_registry() as $row) {
+        $id = trim((string) ($row['id'] ?? ''));
+        if ($id === '' || isset($seen[$id]) || sucrier_is_admin_catalog_excluded($id, $contenu)) {
+            continue;
         }
-    );
+        $seen[$id] = true;
+        $title = trim((string) ($row['title'] ?? ''));
+        $choices[] = [
+            'id' => $id,
+            'title' => $title !== '' ? $title : $id,
+        ];
+    }
 
     return $choices;
 }

@@ -40,7 +40,7 @@ function sucrier_default_authors_data(): array
         'authors' => [
             [
                 'slug' => 'renata',
-                'photo' => 'images/renee-laure-zou.webp',
+                'photo' => 'images/portraits/renee-laure-zou.webp',
                 'roles' => 'author illustrator',
                 'name_fr' => 'Renée-Laure Zou (Renata)',
                 'name_en' => 'Renée-Laure Zou (Renata)',
@@ -51,7 +51,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'w-deroche',
-                'photo' => 'images/wilfried-deroche-illustrateur.webp',
+                'photo' => 'images/portraits/wilfried-deroche-illustrateur.webp',
                 'roles' => 'illustrator',
                 'name_fr' => 'Wilfried Deroche',
                 'name_en' => 'Wilfried Deroche',
@@ -62,7 +62,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'l-ramassamy',
-                'photo' => 'images/author-leane-ramassamy.webp',
+                'photo' => 'images/portraits/author-leane-ramassamy.webp',
                 'roles' => 'author',
                 'name_fr' => 'Léanne Ramassamy',
                 'name_en' => 'Léanne Ramassamy',
@@ -73,7 +73,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'k-petevi',
-                'photo' => 'images/author-karine-petevi.webp',
+                'photo' => 'images/portraits/author-karine-petevi.webp',
                 'roles' => 'author',
                 'name_fr' => 'Karine Petevi',
                 'name_en' => 'Karine Petevi',
@@ -84,7 +84,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'rolyne-pam',
-                'photo' => 'images/author-rolyne-pam.webp',
+                'photo' => 'images/portraits/author-rolyne-pam.webp',
                 'roles' => 'author',
                 'name_fr' => 'Rolyne Pam',
                 'name_en' => 'Rolyne Pam',
@@ -95,7 +95,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'patrick-petito',
-                'photo' => 'images/patrick-petito-cultura.webp',
+                'photo' => 'images/portraits/patrick-petito-cultura.webp',
                 'roles' => 'author',
                 'name_fr' => 'Patrick Petito',
                 'name_en' => 'Patrick Petito',
@@ -106,7 +106,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'ojf-junior',
-                'photo' => 'images/jean-fritz-junior-odne.webp',
+                'photo' => 'images/portraits/jean-fritz-junior-odne.webp',
                 'roles' => 'author',
                 'name_fr' => 'Jean Fritz Junior ODNÉ',
                 'name_en' => 'Jean Fritz Junior ODNÉ',
@@ -117,7 +117,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'jf-silva',
-                'photo' => 'images/francisco-silva.webp',
+                'photo' => 'images/portraits/francisco-silva.webp',
                 'roles' => 'illustrator',
                 'name_fr' => 'Jean Francisco Silva',
                 'name_en' => 'Jean Francisco Silva',
@@ -128,7 +128,7 @@ function sucrier_default_authors_data(): array
             ],
             [
                 'slug' => 'collectif',
-                'photo' => 'images/logo-editions-sucrier.webp',
+                'photo' => 'images/site/logo-editions-sucrier.webp',
                 'roles' => 'author illustrator',
                 'name_fr' => 'Collectif',
                 'name_en' => 'Collective',
@@ -154,7 +154,7 @@ function sucrier_default_heroes_data(): array
                 'name_en' => 'Nikou',
                 'tagline_fr' => 'Petit manicou curieux · Collection phare',
                 'tagline_en' => 'Curious little opossum · Flagship series',
-                'portrait' => 'images/nikou-surfeur.webp',
+                'portrait' => 'images/catalog/nikou-surfeur.webp',
                 'card_class' => 'heros-card--nikou',
                 'image_fit' => 'contain',
                 'image_position' => 'center 88%',

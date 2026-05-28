@@ -13,7 +13,7 @@
             "name_en": "Nikou",
             "tagline_fr": "Petit manicou curieux · Collection phare",
             "tagline_en": "Curious little opossum · Flagship series",
-            "portrait": "images/nikou-surfeur.webp",
+            "portrait": "images/catalog/nikou-surfeur.webp",
             "card_class": "heros-card--nikou",
             "image_fit": "contain",
             "image_position": "center 88%",
