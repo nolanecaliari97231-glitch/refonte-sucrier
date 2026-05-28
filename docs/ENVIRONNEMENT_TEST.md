@@ -16,6 +16,11 @@ Ce guide est destiné à la personne qui prépare le **serveur de test** (héber
 - PostgreSQL **13+** (ou service managé type Supabase)
 - HTTPS sur l’URL de test
 
+## PlanetHoster (universe.wf)
+
+Instance **sucrier.sc1scrp972.universe.wf** : voir **`docs/PLANETHOSTER_SC1SCRP972.md`** et `deploy/env.planethoster` (gitignoré).  
+PostgreSQL depuis PHP sur le serveur : **`host=127.0.0.1`** (pas `localhost`).
+
 ## Variables d’environnement (test)
 
 Copier `.env.example` vers `.env` sur le serveur (ou définir les variables dans le panel hébergeur) :
@@ -25,7 +30,7 @@ SUCRIER_BASE_URL=https://test.votre-domaine.tld
 SUCRIER_ALLOWED_ORIGINS=https://test.votre-domaine.tld
 
 # Connexion PostgreSQL (recommandé : SUCRIER_AUTH_DSN)
-SUCRIER_AUTH_DSN=pgsql:host=HOST;port=5432;dbname=NOM_BDD;sslmode=require
+SUCRIER_AUTH_DSN=pgsql:host=HOST;port=5432;dbname=NOM_BDD
 SUCRIER_AUTH_DB_USER=utilisateur
 SUCRIER_AUTH_DB_PASSWORD=mot_de_passe
 

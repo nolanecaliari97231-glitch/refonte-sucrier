@@ -28,7 +28,7 @@ Options -Indexes
 
 # Bloquer l'accès aux fichiers commençant par .env, .git, .ht, etc.
 RedirectMatch 403 (?i)^/?\.(env|git|ht|svn|idea|vscode)
-RedirectMatch 403 (?i)^/?(package_upload_php|scripts|prototype_homepage|dist_release)(/|$)
+RedirectMatch 403 (?i)^/?(package_upload_php|scripts|prototype_homepage|dist_release|deploy)(/|$)
 
 # Empêcher l'exécution PHP dans data/, includes/, images/uploads/
 <IfModule mod_php.c>

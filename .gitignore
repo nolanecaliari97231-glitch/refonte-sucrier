@@ -23,6 +23,8 @@ images/uploads/
 .env
 .env.*
 !.env.example
+deploy/env.planethoster
+deploy/ftp.credentials.json
 *.pem
 *.key
 *.p12
