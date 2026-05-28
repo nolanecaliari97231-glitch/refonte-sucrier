@@ -2831,6 +2831,92 @@
       });
   }
 
+  function setCheckoutResultVisibility(root, state) {
+    if (!root) return;
+    root.setAttribute("data-checkout-result", state);
+    var paidActions = root.querySelector("[data-checkout-actions-paid]");
+    var unpaidActions = root.querySelector("[data-checkout-actions-unpaid]");
+    var statusNode = root.querySelector("[data-payment-status]");
+    if (paidActions) paidActions.classList.toggle("is-hidden", state !== "paid");
+    if (unpaidActions) unpaidActions.classList.toggle("is-hidden", state !== "unpaid");
+    if (statusNode) statusNode.classList.toggle("is-hidden", state === "paid");
+  }
+
+  function initCheckoutResultPage() {
+    var path = window.location.pathname || "";
+    var isSuccessPage = path.endsWith("/checkout-success.html") || path.endsWith("\\checkout-success.html");
+    var isCancelPage = path.endsWith("/checkout-cancel.html") || path.endsWith("\\checkout-cancel.html");
+    if (!isSuccessPage && !isCancelPage) return;
+
+    var root = document.querySelector("[data-checkout-result]") || document.body;
+    var titleNode = document.querySelector("[data-checkout-title]");
+    var leadNode = document.querySelector("[data-checkout-lead]");
+    var statusNode = document.querySelector("[data-payment-status]");
+    var params = new URLSearchParams(window.location.search);
+    var checkoutRef = params.get("checkout_ref") || "";
+
+    function showPaidState() {
+      setCheckoutResultVisibility(root, "paid");
+      document.title = t("messages.checkoutPaidDocumentTitle", "Paiement validé — Les Éditions du Sucrier");
+      if (titleNode) {
+        titleNode.textContent = t("messages.checkoutPaidTitle", "Paiement confirmé");
+      }
+      if (leadNode) {
+        leadNode.textContent = t(
+          "messages.checkoutPaidLead",
+          "Merci pour votre commande. Un email de confirmation vous sera envoyé."
+        );
+        leadNode.classList.remove("is-hidden");
+      }
+    }
+
+    function showUnpaidState(message) {
+      setCheckoutResultVisibility(root, "unpaid");
+      document.title = t("messages.checkoutUnpaidDocumentTitle", "Paiement non finalisé — Les Éditions du Sucrier");
+      if (titleNode) {
+        titleNode.textContent = t("messages.checkoutUnpaidTitle", "Paiement non finalisé");
+      }
+      if (leadNode) {
+        leadNode.textContent = t(
+          "messages.checkoutUnpaidLead",
+          "Vous avez quitté le paiement avant validation. Votre panier est conservé : vous pouvez réessayer quand vous voulez."
+        );
+        leadNode.classList.remove("is-hidden");
+      }
+      if (statusNode) {
+        statusNode.textContent =
+          message ||
+          t(
+            "messages.checkoutUnpaidStatus",
+            "Aucun paiement n'a été enregistré pour cette commande."
+          );
+      }
+    }
+
+    if (isCancelPage) {
+      setCheckoutResultVisibility(root, "unpaid");
+      return;
+    }
+
+    verifySumupCheckoutStatus(checkoutRef).then(function (result) {
+      if (result && result.ok && result.paid) {
+        var cartSnapshot = getCart();
+        appendVerifiedOrderToHistory(cartSnapshot, checkoutRef);
+        setCart([]);
+        setPromoCode("");
+        showPaidState();
+        return;
+      }
+      showUnpaidState(
+        (result && result.error) ||
+          t(
+            "messages.checkoutUnpaidStatus",
+            "Aucun paiement n'a été enregistré pour cette commande."
+          )
+      );
+    });
+  }
+
   function getPromoCode() {
     return (localStorage.getItem(STORAGE_KEYS.promo) || "").toUpperCase();
   }
@@ -8282,29 +8368,7 @@
       initCookieConsentBanner();
       renderRecentlyViewedSection("#home-recently-viewed");
       renderRecentlyViewedSection("#catalogue-recently-viewed");
-      if (window.location.pathname.endsWith("/checkout-success.html") || window.location.pathname.endsWith("\\checkout-success.html")) {
-        var params = new URLSearchParams(window.location.search);
-        var checkoutRef = params.get("checkout_ref") || "";
-        var statusNode = document.querySelector("[data-payment-status]");
-        verifySumupCheckoutStatus(checkoutRef).then(function (result) {
-          if (result && result.ok && result.paid) {
-            var cartSnapshot = getCart();
-            appendVerifiedOrderToHistory(cartSnapshot, checkoutRef);
-            setCart([]);
-            setPromoCode("");
-            if (statusNode) statusNode.textContent = t("messages.paymentVerified", "Paiement vérifié avec succès.");
-            return;
-          }
-          if (statusNode) {
-            statusNode.textContent =
-              (result && result.error) ||
-              t(
-                "messages.paymentNotVerified",
-                "Paiement non vérifié automatiquement. Votre panier n'a pas été vidé."
-              );
-          }
-        });
-      }
+      initCheckoutResultPage();
       refreshExchangeRates().finally(function () {
         renderDisplayPrices();
         renderCartPage();

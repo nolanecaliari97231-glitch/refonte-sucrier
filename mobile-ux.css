@@ -379,7 +379,7 @@ nav ul li a {
       linear-gradient(180deg, rgba(7, 33, 28, 0.1) 0%, rgba(7, 33, 28, 0.42) 68%, rgba(253, 246, 227, 0.12) 100%),
       url('images/site/home-bg-editions-sucrier-4k.webp') !important;
     background-size: cover !important;
-    background-position: center 42% !important;
+    background-position: center 26% !important;
     background-repeat: no-repeat !important;
   }
 
@@ -468,7 +468,7 @@ nav ul li a {
       linear-gradient(180deg, rgba(7, 33, 28, 0.14) 0%, rgba(7, 33, 28, 0.48) 70%, rgba(253, 246, 227, 0.1) 100%),
       url('images/site/home-bg-mobile.webp') !important;
     background-size: cover !important;
-    background-position: center center !important;
+    background-position: center 28% !important;
   }
 }
 
@@ -1899,7 +1899,7 @@ img[loading="lazy"] {
     background-color: #1a3d32 !important;
     background-image: url('images/site/home-bg-editions-sucrier-4k.webp') !important;
     background-size: cover !important;
-    background-position: center 30% !important;
+    background-position: center 22% !important;
     background-repeat: no-repeat !important;
   }
 

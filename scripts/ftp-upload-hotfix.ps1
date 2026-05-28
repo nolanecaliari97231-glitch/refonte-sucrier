@@ -1,10 +1,9 @@
 $files = @(
-    @{ Local = ".htaccess"; Remote = "/.htaccess" },
-    @{ Local = "deploy\env.planethoster"; Remote = "/.env" },
-    @{ Local = "includes\security.php"; Remote = "/includes/security.php" },
-    @{ Local = "api\health.php"; Remote = "/api/health.php" },
-    @{ Local = "backoffice\index.php"; Remote = "/backoffice/index.php" },
-    @{ Local = "app.js"; Remote = "/app.js" }
+    @{ Local = "checkout-success.html"; Remote = "/checkout-success.html" },
+    @{ Local = "app.js"; Remote = "/app.js" },
+    @{ Local = "style.css"; Remote = "/style.css" },
+    @{ Local = "mobile-ux.css"; Remote = "/mobile-ux.css" },
+    @{ Local = "index.html"; Remote = "/index.html" }
 )
 $scriptDir = $PSScriptRoot
 foreach ($f in $files) {
