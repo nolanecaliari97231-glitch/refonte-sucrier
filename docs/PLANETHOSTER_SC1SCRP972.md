@@ -60,6 +60,27 @@ Alternative : FileZilla / client FTP avec les identifiants fournis par l’hébe
 5. **Droits** : le dossier `data/` doit être inscriptible par PHP.
 6. Compléter dans `.env` : SumUp, SMTP, `SUCRIER_ADMIN_PASSWORD_HASH` si pas fait à l’étape 4.
 
+## Back-office (403 sur `/backoffice/`)
+
+Apache refuse l’accès au **dossier** sans page d’accueil. Ouvrir :
+
+**https://sucrier.sc1scrp972.universe.wf/backoffice/login.php**
+
+(Mot de passe admin = celui défini avec `setup_admin_password.php` en local.)
+
+## Google OAuth
+
+Console Google Cloud → client OAuth **Application Web** → **Origines JavaScript autorisées** :
+
+- `https://sucrier.sc1scrp972.universe.wf`
+- `http://sucrier.sc1scrp972.universe.wf` (si le site s’affiche en HTTP)
+
+Même ID client que `google-auth-config.js` et `SUCRIER_GOOGLE_CLIENT_ID` dans `.env`.
+
+## Diagnostic
+
+**https://sucrier.sc1scrp972.universe.wf/api/health.php** — doit indiquer `database.ok: true` pour que connexion Google et comptes fonctionnent.
+
 ## Sécurité
 
 Les mots de passe fournis par l’hébergeur ne doivent **jamais** être commités sur GitHub. En cas d’exposition (chat, mail), demander une rotation des mots de passe FTP et base.

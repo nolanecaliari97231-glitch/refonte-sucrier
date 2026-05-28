@@ -7031,7 +7031,15 @@
                       showLoginSegmentMismatchModal();
                       return;
                     }
-                    if (authFeedback) authFeedback.textContent = error.message || t("messages.googleLoginNetworkError", "Erreur réseau pendant la connexion Google.");
+                    var msg = error && error.message ? error.message : "";
+                    if (/indisponible|Service temporairement/i.test(msg)) {
+                      msg =
+                        t(
+                          "messages.googleLoginServerDb",
+                          "Connexion Google bloquée côté serveur (base PostgreSQL ou PHP). Ouvrez /api/health.php pour le diagnostic."
+                        ) + (msg ? " (" + msg + ")" : "");
+                    }
+                    if (authFeedback) authFeedback.textContent = msg || t("messages.googleLoginNetworkError", "Erreur réseau pendant la connexion Google.");
                   });
               })
               .catch(function () {

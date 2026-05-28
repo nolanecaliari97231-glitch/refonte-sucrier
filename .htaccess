@@ -15,6 +15,7 @@ Options -Indexes
 # Suivre HTTPS uniquement (forcer HTTPS si possible)
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteRule ^backoffice/?$ backoffice/login.php [L,R=302]
     RewriteCond %{HTTPS} !=on
     RewriteCond %{HTTP_HOST} !^localhost [NC]
     RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
@@ -41,8 +42,8 @@ RedirectMatch 403 (?i)^/?(package_upload_php|scripts|prototype_homepage|dist_rel
     Header always set X-Frame-Options "DENY"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(self)"
-    Header always set Cross-Origin-Opener-Policy "same-origin"
-    Header always set Cross-Origin-Resource-Policy "same-origin"
+    Header always set Cross-Origin-Opener-Policy "same-origin-allow-popups"
+    Header always set Cross-Origin-Resource-Policy "same-site"
     Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" "expr=%{HTTPS} == 'on'"
     Header always unset X-Powered-By
     Header unset Server

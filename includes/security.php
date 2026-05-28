@@ -89,8 +89,9 @@ function sucrier_send_security_headers(bool $apiResponse = false): void
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: strict-origin-when-cross-origin');
     header('Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(self)');
-    header('Cross-Origin-Opener-Policy: same-origin');
-    header('Cross-Origin-Resource-Policy: same-origin');
+    // same-origin-allow-popups : requis pour Google OAuth (GIS) et retours SumUp.
+    header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
+    header('Cross-Origin-Resource-Policy: same-site');
     header('Content-Security-Policy: ' . sucrier_content_security_policy());
 
     if (sucrier_is_https()) {
@@ -133,13 +134,14 @@ function sucrier_start_secure_session(): void
         'domain' => '',
         'secure' => sucrier_is_https(),
         'httponly' => true,
-        'samesite' => 'Strict',
+        // Lax : cookie envoyé au retour SumUp / navigation depuis Google (test + prod).
+        'samesite' => 'Lax',
     ]);
 
     @ini_set('session.use_strict_mode', '1');
     @ini_set('session.use_only_cookies', '1');
     @ini_set('session.cookie_httponly', '1');
-    @ini_set('session.cookie_samesite', 'Strict');
+    @ini_set('session.cookie_samesite', 'Lax');
 
     session_start();
 }
