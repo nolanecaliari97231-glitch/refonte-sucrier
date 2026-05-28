@@ -362,7 +362,7 @@ nav ul li a {
  * CORRECTIFS CIBLES PAR PAGE (mobile)
  * ============================================================ */
 
-/* ---------- HERO INDEX : calque visuel + texte en dessous (tablette / mobile) ---------- */
+/* ---------- HERO INDEX : image dédiée + texte en dessous (tablette / mobile) ---------- */
 .hero-bg {
   display: none;
 }
@@ -384,16 +384,27 @@ nav ul li a {
 
   .hero-bg {
     display: block !important;
+    position: relative !important;
     width: 100% !important;
     flex: 0 0 auto !important;
-    min-height: min(54svh, 460px) !important;
     order: 0 !important;
-    background-image:
-      linear-gradient(180deg, rgba(7, 33, 28, 0.08) 0%, rgba(7, 33, 28, 0.35) 100%),
-      url('images/site/home-bg-editions-sucrier-4k.webp') !important;
-    background-size: cover !important;
-    background-position: center 14% !important;
-    background-repeat: no-repeat !important;
+    height: clamp(300px, 62svh, 500px) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    background: #1a3d32 !important;
+  }
+
+  .hero-bg picture,
+  .hero-bg__img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Panneau bois en bas du fichier : cadrer vers le bas (pas 12–14 % qui coupaient le titre) */
+  .hero-bg__img {
+    object-fit: cover !important;
+    object-position: center 72% !important;
   }
 
   .hero::before {
@@ -476,11 +487,11 @@ nav ul li a {
 
 @media (max-width: 768px) {
   .hero-bg {
-    min-height: min(52svh, 420px) !important;
-    background-image:
-      linear-gradient(180deg, rgba(7, 33, 28, 0.1) 0%, rgba(7, 33, 28, 0.4) 100%),
-      url('images/site/home-bg-mobile.webp') !important;
-    background-position: center 12% !important;
+    height: clamp(280px, 58svh, 460px) !important;
+  }
+
+  .hero-bg__img {
+    object-position: center 68% !important;
   }
 }
 
@@ -734,23 +745,10 @@ section.maison-cta .btn-outline {
     box-shadow: none !important;
   }
 
-  /* Fondu jungle → encart crème (mobile / tablette) */
+  /* Pas de fondu sur l'image : il masquait le panneau « Les Éditions du Sucrier » */
   .hero-texte::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 100%;
-    height: clamp(48px, 11vw, 72px);
-    pointer-events: none;
-    z-index: 1;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.22) 38%,
-      rgba(253, 246, 227, 0.88) 72%,
-      rgba(253, 246, 227, 0.98) 100%
-    );
+    display: none !important;
+    content: none !important;
   }
 
   /* Bandeau chiffres : courbe + léger relief (effet premium) */
@@ -1911,7 +1909,7 @@ img[loading="lazy"] {
     background-color: #1a3d32 !important;
     background-image: url('images/site/home-bg-editions-sucrier-4k.webp') !important;
     background-size: cover !important;
-    background-position: center 16% !important;
+    background-position: center 36% !important;
     background-repeat: no-repeat !important;
   }
 
