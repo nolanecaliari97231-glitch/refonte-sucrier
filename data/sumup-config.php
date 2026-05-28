@@ -7,15 +7,27 @@ const SUCRIER_SUMUP_MERCHANT_CODE = '';
 const SUCRIER_BASE_URL = '';
 const SUCRIER_WEBHOOK_SECRET = '';
 const SUCRIER_DEFAULT_WEIGHT_G = 280;
-const SUCRIER_POSTAL_WEIGHT_TIERS = [
-    ['max_weight_g' => 250, 'amount_cents' => 495],
-    ['max_weight_g' => 500, 'amount_cents' => 665],
-    ['max_weight_g' => 750, 'amount_cents' => 745],
-    ['max_weight_g' => 1000, 'amount_cents' => 845],
-    ['max_weight_g' => 2000, 'amount_cents' => 995],
+const SUCRIER_POSTAL_ZONE_TIERS = [
+    'dom_martinique_near' => [
+        ['max_weight_g' => 500, 'amount_cents' => 1569],
+        ['max_weight_g' => 1000, 'amount_cents' => 1969],
+        ['max_weight_g' => 2000, 'amount_cents' => 2249],
+        ['max_weight_g' => 5000, 'amount_cents' => 2859],
+        ['max_weight_g' => 10000, 'amount_cents' => 4719],
+        ['max_weight_g' => 15000, 'amount_cents' => 6939],
+        ['max_weight_g' => 20000, 'amount_cents' => 8979],
+    ],
+    'dom_international' => [
+        ['max_weight_g' => 500, 'amount_cents' => 3459],
+        ['max_weight_g' => 1000, 'amount_cents' => 3869],
+        ['max_weight_g' => 2000, 'amount_cents' => 5329],
+        ['max_weight_g' => 5000, 'amount_cents' => 7789],
+        ['max_weight_g' => 10000, 'amount_cents' => 14739],
+        ['max_weight_g' => 15000, 'amount_cents' => 20929],
+        ['max_weight_g' => 20000, 'amount_cents' => 25499],
+        ['max_weight_g' => 30000, 'amount_cents' => 25499],
+    ],
 ];
-const SUCRIER_POSTAL_OVERFLOW_STEP_G = 500;
-const SUCRIER_POSTAL_OVERFLOW_STEP_CENTS = 150;
 
 $envApiKey = getenv('SUCRIER_SUMUP_API_KEY');
 if (is_string($envApiKey) && $envApiKey !== '') {

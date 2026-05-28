@@ -22,8 +22,8 @@ if ($contentType !== '' && strpos($contentType, 'application/json') !== 0) {
     sucrier_json_safe_error(415, 'Content-Type invalide.');
 }
 
-if (!sucrier_throttle_login_attempts(5, 600)) {
-    sucrier_json_safe_error(429, 'Trop de tentatives. Reessayez plus tard.');
+if (!sucrier_throttle_consume('auth_register', 8, 600)) {
+    sucrier_json_safe_error(429, 'Trop de tentatives. Reessayez plus tard.', 'auth-register: throttled');
 }
 
 $rawInput = file_get_contents('php://input');

@@ -97,12 +97,33 @@
         <p class="account-dash-hint">Enregistrement local (navigateur).</p>
         <ul class="account-address-list" data-account-address-list></ul>
         <form class="account-address-form" data-account-address-form>
-          <label>Libellé <input type="text" name="addr_label" placeholder="Maison, école…"></label>
-          <label>Adresse <input type="text" name="addr_line1" required placeholder="Ligne 1"></label>
+          <label>Libellé <input type="text" name="addr_label" required placeholder="Maison, école…"></label>
+          <label>Adresse <input type="text" name="addr_line1" list="account-address-suggestions" required placeholder="Ligne 1"></label>
+          <datalist id="account-address-suggestions"></datalist>
           <label>Complément <input type="text" name="addr_line2" placeholder="Bât., étage…"></label>
-          <label>Code postal <input type="text" name="addr_postal" placeholder="97200"></label>
+          <label>Code postal <input type="text" name="addr_postal" inputmode="numeric" pattern="[0-9]{5}" required placeholder="97200"></label>
           <label>Ville <input type="text" name="addr_city" required placeholder="Fort-de-France"></label>
+          <label>Pays
+            <select name="addr_country" required>
+              <option value="MQ">Martinique</option>
+              <option value="GP">Guadeloupe</option>
+              <option value="GF">Guyane</option>
+              <option value="RE">La Réunion</option>
+              <option value="FR">France métropolitaine</option>
+              <option value="US">États-Unis</option>
+              <option value="HT">Haïti</option>
+              <option value="LC">Sainte-Lucie</option>
+              <option value="TT">Trinité-et-Tobago</option>
+              <option value="CA">Canada</option>
+              <option value="GB">Royaume-Uni</option>
+              <option value="DE">Allemagne</option>
+              <option value="ES">Espagne</option>
+              <option value="IT">Italie</option>
+              <option value="OTHER">Autre pays</option>
+            </select>
+          </label>
           <button type="submit" class="btn-primary">Ajouter l’adresse</button>
+          <p class="promo-feedback" data-account-address-feedback aria-live="polite"></p>
         </form>
       </article>
       <article class="account-dash-tile">
@@ -186,7 +207,7 @@
 </footer>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="google-auth-config.js"></script>
-<script src="app.js?v=20260519-i18n-fix"></script>
+<script src="app.js?v=20260528-checkout-country-v3"></script>
 <script src="mobile-ux.js?v=20260519-perf" defer></script>
 </body>
 </html>

@@ -36,6 +36,12 @@ if (!is_array($payload)) {
     sucrier_json_safe_error(400, 'Payload invalide.');
 }
 
+$honeypot = trim((string) ($payload['_website'] ?? ($payload['website'] ?? '')));
+if ($honeypot !== '') {
+    echo json_encode(['ok' => true, 'delivered' => true, 'copySent' => false, 'dev' => false, 'message' => 'OK']);
+    exit;
+}
+
 $name = trim((string) ($payload['name'] ?? ''));
 $email = strtolower(trim((string) ($payload['email'] ?? '')));
 $contactType = trim((string) ($payload['contactType'] ?? ''));

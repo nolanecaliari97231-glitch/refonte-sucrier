@@ -909,7 +909,9 @@
         "retour_texte": "Retour à l'accueil"
     },
     "promo_codes": [],
-    "catalog_stock": {},
+    "catalog_stock": {
+        "bebe-nikou-a-faim": 0
+    },
     "ecommerce": {
         "cart_note": "Paiement sécurisé (CB, Visa, Mastercard).",
         "shipping_note": "Frais de livraison calculés selon le poids total du panier et le barème postal.",

@@ -100,8 +100,95 @@
           <option value="">Choisir une option</option>
           <option value="pickup_siege">Retrait au siège (0,00 €)</option>
           <option value="local_personal">Rencontre / livraison personnelle Martinique (1,50 €)</option>
-          <option value="postal">Livraison hors Martinique (frais postaux)</option>
+          <option value="postal">Livraison postale (Martinique et international)</option>
         </select>
+        <label for="delivery-postal-country" data-delivery-postal-country-label hidden>Pays de destination postale</label>
+        <select id="delivery-postal-country" name="delivery-postal-country" data-delivery-postal-country hidden>
+          <option value="MQ">Martinique</option>
+          <option value="GP">Guadeloupe</option>
+          <option value="GF">Guyane</option>
+          <option value="RE">La Réunion</option>
+          <option value="FR">France métropolitaine</option>
+          <option value="US">États-Unis</option>
+          <option value="HT">Haïti</option>
+          <option value="LC">Sainte-Lucie</option>
+          <option value="TT">Trinité-et-Tobago</option>
+          <option value="CA">Canada</option>
+          <option value="GB">Royaume-Uni</option>
+          <option value="DE">Allemagne</option>
+          <option value="ES">Espagne</option>
+          <option value="IT">Italie</option>
+          <option value="OTHER">Autre pays</option>
+        </select>
+        <label for="delivery-identity-choice" data-delivery-identity-choice-label hidden>Continuer la commande</label>
+        <select id="delivery-identity-choice" name="delivery-identity-choice" data-delivery-identity-choice hidden>
+          <option value="">Choisir une option</option>
+          <option value="guest">Continuer sans compte</option>
+          <option value="create_account">Créer un compte puis ajouter une adresse</option>
+        </select>
+        <p class="cart-note" data-delivery-account-cta hidden>
+          <a href="inscription.html" class="btn-outline">Créer mon compte</a>
+        </p>
+        <label for="delivery-saved-address" data-delivery-saved-address-label hidden>Adresse enregistrée</label>
+        <select id="delivery-saved-address" name="delivery-saved-address" data-delivery-saved-address hidden>
+          <option value="">Choisir une adresse enregistrée</option>
+          <option value="__manual__">Saisir une autre adresse</option>
+        </select>
+        <p class="cart-note" data-delivery-manual-hint hidden>Renseignez votre adresse de livraison dans le formulaire ci-dessous (coordonnées et adresse).</p>
+        <p class="cart-note" data-delivery-manage-addresses hidden>
+          <a href="espace.html" class="btn-outline">Gérer / ajouter mes adresses</a>
+        </p>
+        <div class="delivery-fieldset" data-delivery-pickup-block hidden>
+          <p class="delivery-fieldset-title">Organisation du retrait (obligatoire)</p>
+          <p class="cart-note">Le retrait au siège est possible uniquement après prise de contact avec la gérante.</p>
+          <p class="cart-note">Téléphone entreprise : <strong data-cms-support-phone>06 96 93 27 58</strong></p>
+        </div>
+
+        <div class="delivery-fieldset" data-delivery-contact>
+          <p class="delivery-fieldset-title">Coordonnées de contact</p>
+          <label for="delivery-lastname">Nom</label>
+          <input id="delivery-lastname" name="delivery_lastname" type="text" autocomplete="family-name" required>
+          <label for="delivery-firstname">Prénom</label>
+          <input id="delivery-firstname" name="delivery_firstname" type="text" autocomplete="given-name" required>
+          <label for="delivery-email">Email</label>
+          <input id="delivery-email" name="delivery_email" type="email" autocomplete="email" required>
+          <label for="delivery-phone">Téléphone</label>
+          <input id="delivery-phone" name="delivery_phone" type="tel" autocomplete="tel" required placeholder="06 96 00 00 00">
+        </div>
+
+        <div class="delivery-fieldset" data-delivery-address-fields>
+          <p class="delivery-fieldset-title">Adresse de livraison</p>
+          <label for="delivery-label">Libellé de l'adresse</label>
+          <input id="delivery-label" name="delivery_label" type="text" autocomplete="shipping address-level4" required placeholder="Maison, travail...">
+          <label for="delivery-line1">Adresse</label>
+          <input id="delivery-line1" name="delivery_line1" type="text" list="delivery-address-suggestions" autocomplete="shipping address-line1" required placeholder="12 rue de la Liberté">
+          <datalist id="delivery-address-suggestions"></datalist>
+          <label for="delivery-line2">Complément (facultatif)</label>
+          <input id="delivery-line2" name="delivery_line2" type="text" autocomplete="shipping address-line2" placeholder="Bâtiment, étage, code porte...">
+          <label for="delivery-postal">Code postal</label>
+          <input id="delivery-postal" name="delivery_postal" type="text" inputmode="numeric" pattern="[0-9]{5}" autocomplete="shipping postal-code" required placeholder="97200">
+          <label for="delivery-city">Ville</label>
+          <input id="delivery-city" name="delivery_city" type="text" autocomplete="shipping address-level2" required placeholder="Fort-de-France">
+          <label for="delivery-country">Pays</label>
+          <select id="delivery-country" name="delivery_country" autocomplete="shipping country" required>
+            <option value="MQ">Martinique</option>
+            <option value="GP">Guadeloupe</option>
+            <option value="GF">Guyane</option>
+            <option value="RE">La Réunion</option>
+            <option value="FR">France métropolitaine</option>
+            <option value="US">États-Unis</option>
+            <option value="HT">Haïti</option>
+            <option value="LC">Sainte-Lucie</option>
+            <option value="TT">Trinité-et-Tobago</option>
+            <option value="CA">Canada</option>
+            <option value="GB">Royaume-Uni</option>
+            <option value="DE">Allemagne</option>
+            <option value="ES">Espagne</option>
+            <option value="IT">Italie</option>
+            <option value="OTHER">Autre pays</option>
+          </select>
+        </div>
+
         <label for="delivery-note" data-delivery-note-label hidden>Précisions livraison locale</label>
         <textarea id="delivery-note" name="delivery-note" rows="3" placeholder="Ex: point de rencontre, créneau souhaité, numéro de téléphone..." data-delivery-note hidden></textarea>
         <p class="promo-feedback" data-delivery-feedback aria-live="polite"></p>
@@ -122,7 +209,7 @@
         <span class="payment-method-badge" data-fr="Paiement sécurisé" data-en="Secure checkout">Paiement sécurisé</span>
       </div>
       <p class="cart-note" data-cms-cart-note data-fr="Paiement sécurisé (CB, Visa, Mastercard)." data-en="Secure payment (CB, Visa, Mastercard).">Paiement sécurisé (CB, Visa, Mastercard).</p>
-      <p class="cart-note" data-cms-shipping-note data-fr="Choisissez d'abord votre mode de livraison : retrait au siège (0 €), remise en main propre locale (1,50 €) ou frais postaux hors Martinique. Les frais de port sont calculés avant le paiement." data-en="First choose delivery: pickup at our office (€0), local hand delivery (€1.50), or postal shipping outside Martinique. Shipping is calculated before payment.">Choisissez d'abord votre mode de livraison : retrait au siège (0 €), remise en main propre locale (1,50 €) ou frais postaux hors Martinique. Les frais de port sont calculés avant le paiement.</p>
+      <p class="cart-note" data-cms-shipping-note data-fr="Retrait au siège (0 €), remise en main propre en Martinique (1,50 €) ou livraison postale Colissimo (barème au départ du siège, selon pays et poids). Pour la même île, la remise locale est souvent la moins chère." data-en="Pickup at our office (€0), local hand delivery in Martinique (€1.50), or Colissimo postal shipping from our office (rates by country and weight). For same-island delivery, local hand delivery is often cheapest.">Retrait au siège (0 €), remise en main propre en Martinique (1,50 €) ou livraison postale Colissimo (barème au départ du siège, selon pays et poids). Pour la même île, la remise locale est souvent la moins chère.</p>
       <p class="cart-continue"><a href="catalogue.html" class="voir-tout">Continuer les achats →</a></p>
     </aside>
   </section>
@@ -176,7 +263,7 @@
     </div>
   </div>
 </footer>
-<script src="app.js?v=20260526-stock-fix-2"></script>
+<script src="app.js?v=20260528-postal-manual-v4"></script>
 <script src="mobile-ux.js?v=20260521-cart-toast" defer></script>
 </body>
 </html>

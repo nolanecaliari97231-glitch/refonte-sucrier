@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../includes/security.php';
+require_once __DIR__ . '/../includes/auth_db.php';
 require_once __DIR__ . '/../includes/catalog-products.php';
 require_once __DIR__ . '/../includes/checkout-promo.php';
 require_once __DIR__ . '/../data/sumup-config.php';
@@ -35,7 +36,75 @@ function sucrier_append_order_intent(array $entry): void
 /**
  * @param array<int, array<string, mixed>> $items
  */
-function sucrier_compute_shipping_cents(array $items, string $shippingMode): int
+function sucrier_normalize_postal_zone(string $postalZone): string
+{
+    $aliases = [
+        'martinique' => 'dom_martinique_near',
+        'antilles_usa' => 'dom_martinique_near',
+        'international_other' => 'dom_international',
+    ];
+
+    return $aliases[$postalZone] ?? $postalZone;
+}
+
+function sucrier_postal_zone_tiers_from_content(array $contenuData, string $postalZone): array
+{
+    $postalZone = sucrier_normalize_postal_zone($postalZone);
+    $defaults = SUCRIER_POSTAL_ZONE_TIERS[$postalZone] ?? SUCRIER_POSTAL_ZONE_TIERS['dom_martinique_near'];
+    $rates = $contenuData['ecommerce']['postal_rates'][$postalZone] ?? null;
+    if (!is_array($rates) || count($rates) === 0) {
+        foreach (['martinique', 'antilles_usa', 'international_other'] as $legacyKey) {
+            if (sucrier_normalize_postal_zone($legacyKey) !== $postalZone) {
+                continue;
+            }
+            $legacyRates = $contenuData['ecommerce']['postal_rates'][$legacyKey] ?? null;
+            if (is_array($legacyRates) && count($legacyRates) > 0) {
+                $rates = $legacyRates;
+                break;
+            }
+        }
+    }
+    if (!is_array($rates) || count($rates) === 0) {
+        return $defaults;
+    }
+    $sanitized = [];
+    foreach ($rates as $row) {
+        if (!is_array($row)) {
+            continue;
+        }
+        $maxWeight = isset($row['max_weight_g']) ? (int) $row['max_weight_g'] : 0;
+        $amountEur = isset($row['amount_eur']) ? (float) $row['amount_eur'] : -1;
+        if ($maxWeight < 1 || $amountEur < 0) {
+            continue;
+        }
+        $sanitized[] = [
+            'max_weight_g' => $maxWeight,
+            'amount_cents' => (int) round($amountEur * 100),
+        ];
+    }
+    usort($sanitized, static function (array $a, array $b): int {
+        return (int) ($a['max_weight_g'] ?? 0) <=> (int) ($b['max_weight_g'] ?? 0);
+    });
+    return count($sanitized) > 0 ? $sanitized : $defaults;
+}
+
+function sucrier_resolve_postal_zone_from_country(string $countryCode): string
+{
+    $code = strtoupper(trim($countryCode));
+    $nearZone = [
+        'MQ', 'GP', 'AG', 'AN', 'BB', 'DM', 'US', 'GD', 'GY', 'HT', 'MS', 'KN', 'VC', 'LC', 'TT', 'VG',
+    ];
+    if (in_array($code, $nearZone, true)) {
+        return 'dom_martinique_near';
+    }
+
+    return 'dom_international';
+}
+
+/**
+ * @param array<int, array<string, mixed>> $items
+ */
+function sucrier_compute_shipping_cents(array $items, string $shippingMode, string $postalZone, array $contenuData): int
 {
     if ($shippingMode === 'pickup_siege') {
         return 0;
@@ -66,26 +135,20 @@ function sucrier_compute_shipping_cents(array $items, string $shippingMode): int
         return 0;
     }
 
-    foreach (SUCRIER_POSTAL_WEIGHT_TIERS as $tier) {
+    $zone = sucrier_normalize_postal_zone($postalZone);
+    if (!isset(SUCRIER_POSTAL_ZONE_TIERS[$zone])) {
+        $zone = 'dom_martinique_near';
+    }
+    $tiers = sucrier_postal_zone_tiers_from_content($contenuData, $zone);
+    foreach ($tiers as $tier) {
         $maxWeight = isset($tier['max_weight_g']) ? (int) $tier['max_weight_g'] : 0;
         $amount = isset($tier['amount_cents']) ? (int) $tier['amount_cents'] : 0;
         if ($maxWeight > 0 && $totalWeightG <= $maxWeight) {
             return max(0, $amount);
         }
     }
-
-    $lastTier = SUCRIER_POSTAL_WEIGHT_TIERS[count(SUCRIER_POSTAL_WEIGHT_TIERS) - 1] ?? ['max_weight_g' => 0, 'amount_cents' => 0];
-    $baseMaxWeight = max(0, (int) ($lastTier['max_weight_g'] ?? 0));
-    $baseAmount = max(0, (int) ($lastTier['amount_cents'] ?? 0));
-    $overflow = max(0, $totalWeightG - $baseMaxWeight);
-    if ($overflow === 0) {
-        return $baseAmount;
-    }
-    $stepG = max(1, SUCRIER_POSTAL_OVERFLOW_STEP_G);
-    $stepAmount = max(0, SUCRIER_POSTAL_OVERFLOW_STEP_CENTS);
-    $extraSteps = (int) ceil($overflow / $stepG);
-
-    return $baseAmount + ($extraSteps * $stepAmount);
+    $lastTier = $tiers[count($tiers) - 1] ?? ['amount_cents' => 0];
+    return max(0, (int) ($lastTier['amount_cents'] ?? 0));
 }
 
 /**
@@ -155,7 +218,6 @@ if (!sucrier_check_request_origin()) {
     sucrier_json_safe_error(403, 'Requete refusee.', 'checkout: origin mismatch');
 }
 
-sucrier_start_secure_session();
 if (!sucrier_throttle_consume('checkout_create', 12, 600)) {
     sucrier_json_safe_error(429, 'Trop de tentatives. Reessayez dans quelques minutes.', 'checkout: throttled');
 }
@@ -166,7 +228,11 @@ if ($contentType !== '' && strpos($contentType, 'application/json') !== 0) {
 }
 
 if (SUCRIER_SUMUP_API_KEY_RUNTIME === '' || SUCRIER_SUMUP_MERCHANT_CODE_RUNTIME === '') {
-    sucrier_json_error('Configuration SumUp manquante (API key ou merchant code).', 500);
+    sucrier_json_safe_error(
+        503,
+        'Paiement temporairement indisponible. Réessayez plus tard ou contactez-nous.',
+        'checkout: sumup not configured'
+    );
 }
 
 $rawInput = file_get_contents('php://input');
@@ -177,6 +243,24 @@ if ($rawSize > 100_000) {
 $payload = json_decode($rawInput ?: '', true);
 if (!is_array($payload) || !isset($payload['items']) || !is_array($payload['items'])) {
     sucrier_json_error('Panier invalide.');
+}
+
+$customer = isset($payload['customer']) && is_array($payload['customer']) ? $payload['customer'] : [];
+$customerFirstName = trim((string) ($customer['firstName'] ?? ''));
+$customerLastName = trim((string) ($customer['lastName'] ?? ''));
+$customerEmail = strtolower(trim((string) ($customer['email'] ?? '')));
+$customerPhone = trim((string) ($customer['phone'] ?? ''));
+$customerPhoneDigits = preg_replace('/[^\d+]/', '', $customerPhone) ?? '';
+
+$shippingAddress = isset($payload['shipping_address']) && is_array($payload['shipping_address']) ? $payload['shipping_address'] : [];
+$addressLabel = trim((string) ($shippingAddress['label'] ?? ''));
+$addressLine1 = trim((string) ($shippingAddress['line1'] ?? ''));
+$addressLine2 = trim((string) ($shippingAddress['line2'] ?? ''));
+$addressPostal = trim((string) ($shippingAddress['postal'] ?? ''));
+$addressCity = trim((string) ($shippingAddress['city'] ?? ''));
+$addressCountry = strtoupper(trim((string) ($shippingAddress['country'] ?? 'MQ')));
+if ($addressCountry === '') {
+    $addressCountry = 'MQ';
 }
 
 $contenuData = sucrier_load_contenu_data();
@@ -217,14 +301,72 @@ $shippingMode = isset($payload['shipping_mode']) ? (string) $payload['shipping_m
 if (!in_array($shippingMode, ['pickup_siege', 'local_personal', 'postal'], true)) {
     sucrier_json_error('Mode de livraison invalide.');
 }
+$postalZone = 'dom_martinique_near';
+$customerMode = isset($payload['customer_mode']) ? (string) $payload['customer_mode'] : 'guest';
+if (!in_array($customerMode, ['guest', 'account_saved', 'pickup'], true)) {
+    $customerMode = 'guest';
+}
+
+if ($customerMode === 'account_saved') {
+    $sessionUser = sucrier_auth_get_user_session();
+    if (!$sessionUser || empty($sessionUser['email'])) {
+        sucrier_json_safe_error(
+            401,
+            'Connectez-vous pour finaliser la commande avec votre compte.',
+            'checkout: account_saved without session'
+        );
+    }
+    $customerEmail = strtolower(trim((string) $sessionUser['email']));
+    $sessionFullName = trim((string) ($sessionUser['full_name'] ?? ''));
+    if ($sessionFullName !== '') {
+        $nameParts = preg_split('/\s+/u', $sessionFullName) ?: [];
+        if ($customerFirstName === '' && count($nameParts) > 1) {
+            $customerFirstName = implode(' ', array_slice($nameParts, 0, -1));
+        }
+        if ($customerLastName === '' && count($nameParts) > 0) {
+            $customerLastName = (string) $nameParts[count($nameParts) - 1];
+        }
+    }
+}
+
+if ($shippingMode !== 'pickup_siege' && $customerMode === 'guest') {
+    if ($customerFirstName === '' || $customerLastName === '') {
+        sucrier_json_error('Nom et prénom sont obligatoires.');
+    }
+    if ($customerEmail === '' || !filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
+        sucrier_json_error('Adresse email invalide.');
+    }
+    if (strlen($customerPhoneDigits) < 8) {
+        sucrier_json_error('Numéro de téléphone invalide.');
+    }
+}
+if ($shippingMode !== 'pickup_siege') {
+    if ($addressLabel === '' || $addressLine1 === '' || $addressCity === '') {
+        sucrier_json_error('Adresse de livraison incomplète.');
+    }
+    $requiresFrenchPostal = in_array($addressCountry, ['MQ', 'GP', 'GF', 'RE', 'FR'], true);
+    if ($requiresFrenchPostal && !preg_match('/^\d{5}$/', $addressPostal)) {
+        sucrier_json_error('Code postal invalide (5 chiffres attendus).');
+    }
+    if (!$requiresFrenchPostal && $addressPostal === '') {
+        sucrier_json_error('Code postal obligatoire.');
+    }
+    if (!preg_match('/^(?:[A-Z]{2}|OTHER)$/', $addressCountry)) {
+        sucrier_json_error('Pays de destination invalide.');
+    }
+}
 $shippingNote = isset($payload['shipping_note']) ? (string) $payload['shipping_note'] : '';
 $shippingNote = trim(preg_replace('/\s+/', ' ', $shippingNote) ?? '');
 $shippingNote = mb_substr($shippingNote, 0, 500);
-if ($shippingMode === 'local_personal' && $shippingNote === '') {
-    sucrier_json_error('Precisions livraison locale obligatoires.');
+if (($shippingMode === 'local_personal' || $shippingMode === 'pickup_siege') && $shippingNote === '') {
+    sucrier_json_error('Message de coordination obligatoire pour ce mode de livraison.');
 }
 
-$shippingAmount = sucrier_compute_shipping_cents($payload['items'], $shippingMode);
+if ($shippingMode === 'postal') {
+    $postalZone = sucrier_resolve_postal_zone_from_country($addressCountry);
+}
+
+$shippingAmount = sucrier_compute_shipping_cents($payload['items'], $shippingMode, $postalZone, $contenuData);
 $subtotalCents = $totalAmount;
 $totalAmount += $shippingAmount;
 
@@ -279,7 +421,11 @@ if (!is_array($responseData) || !isset($responseData['hosted_checkout_url']) || 
 
 $checkoutId = isset($responseData['id']) ? (string) $responseData['id'] : '';
 if ($checkoutId === '') {
-    sucrier_json_error('Réponse SumUp incomplète: identifiant checkout manquant.', 502);
+    sucrier_json_safe_error(
+        502,
+        'Impossible d\'ouvrir le paiement pour le moment. Réessayez ou contactez-nous.',
+        'checkout: sumup missing checkout id'
+    );
 }
 
 if (!isset($_SESSION['sumup_pending']) || !is_array($_SESSION['sumup_pending'])) {
@@ -294,7 +440,23 @@ $_SESSION['sumup_pending'][$checkoutReference] = [
     'promo_code' => $promoRule !== null ? strtoupper(trim($promoCode)) : '',
     'shipping_cents' => $shippingAmount,
     'shipping_mode' => $shippingMode,
+    'postal_zone' => $postalZone,
+    'customer_mode' => $customerMode,
     'shipping_note' => $shippingNote,
+    'customer' => [
+        'first_name' => $customerFirstName,
+        'last_name' => $customerLastName,
+        'email' => $customerEmail,
+        'phone' => $customerPhone,
+    ],
+    'shipping_address' => [
+        'label' => $addressLabel,
+        'line1' => $addressLine1,
+        'line2' => $addressLine2,
+        'postal' => $addressPostal,
+        'city' => $addressCity,
+        'country' => $addressCountry,
+    ],
     'items' => $payload['items'],
 ];
 if (count($_SESSION['sumup_pending']) > 30) {
@@ -306,7 +468,23 @@ sucrier_append_order_intent([
     'checkout_ref' => $checkoutReference,
     'created_at' => gmdate('c'),
     'shipping_mode' => $shippingMode,
+    'postal_zone' => $postalZone,
+    'customer_mode' => $customerMode,
     'shipping_note' => $shippingNote,
+    'customer' => [
+        'first_name' => $customerFirstName,
+        'last_name' => $customerLastName,
+        'email' => $customerEmail,
+        'phone' => $customerPhone,
+    ],
+    'shipping_address' => [
+        'label' => $addressLabel,
+        'line1' => $addressLine1,
+        'line2' => $addressLine2,
+        'postal' => $addressPostal,
+        'city' => $addressCity,
+        'country' => $addressCountry,
+    ],
     'shipping_cents' => $shippingAmount,
     'discount_cents' => $discountCents,
     'promo_code' => $promoRule !== null ? strtoupper(trim($promoCode)) : '',

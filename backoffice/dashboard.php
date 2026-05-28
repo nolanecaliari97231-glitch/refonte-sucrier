@@ -79,6 +79,31 @@ foreach ($catalogStockMap as $id => $qty) {
     }
 }
 $siteBase = '../';
+$postalRateDefaults = [
+    'dom_martinique_near' => [
+        ['max_weight_g' => 500, 'amount_eur' => 15.69],
+        ['max_weight_g' => 1000, 'amount_eur' => 19.69],
+        ['max_weight_g' => 2000, 'amount_eur' => 22.49],
+        ['max_weight_g' => 5000, 'amount_eur' => 28.59],
+        ['max_weight_g' => 10000, 'amount_eur' => 47.19],
+        ['max_weight_g' => 15000, 'amount_eur' => 69.39],
+        ['max_weight_g' => 20000, 'amount_eur' => 89.79],
+    ],
+    'dom_international' => [
+        ['max_weight_g' => 500, 'amount_eur' => 34.59],
+        ['max_weight_g' => 1000, 'amount_eur' => 38.69],
+        ['max_weight_g' => 2000, 'amount_eur' => 53.29],
+        ['max_weight_g' => 5000, 'amount_eur' => 77.89],
+        ['max_weight_g' => 10000, 'amount_eur' => 147.39],
+        ['max_weight_g' => 15000, 'amount_eur' => 209.29],
+        ['max_weight_g' => 20000, 'amount_eur' => 254.99],
+        ['max_weight_g' => 30000, 'amount_eur' => 254.99],
+    ],
+];
+$postalRates = contenu_get($contenu, 'ecommerce.postal_rates', []);
+if (!is_array($postalRates)) {
+    $postalRates = [];
+}
 ?>
 <!doctype html>
 <html lang="fr">
@@ -704,6 +729,37 @@ $siteBase = '../';
           <input id="ecom_support_phone" name="ecom_support_phone" value="<?= e(contenu_get($contenu, 'ecommerce.support_phone')) ?>">
         </div>
       </div>
+      <h3 style="margin-top:14px;">Barème postal (modifiable)</h3>
+      <p class="section-note">Tarifs Colissimo au départ du siège (Martinique). Mettez à jour ces montants dès que La Poste publie une nouvelle grille.</p>
+      <?php
+      $postalZoneLabels = [
+          'dom_martinique_near' => 'Caraïbes / USA (départ Martinique)',
+          'dom_international' => 'France métropole et autres pays',
+      ];
+      foreach ($postalRateDefaults as $zoneKey => $rows):
+          $zoneRows = $postalRates[$zoneKey] ?? [];
+          if (!is_array($zoneRows)) $zoneRows = [];
+      ?>
+        <h4><?= e($postalZoneLabels[$zoneKey] ?? $zoneKey) ?></h4>
+        <div class="row-2">
+          <?php foreach ($rows as $idx => $row):
+              $saved = $zoneRows[$idx] ?? [];
+              $weightVal = (int) ($saved['max_weight_g'] ?? $row['max_weight_g']);
+              $amountVal = (float) ($saved['amount_eur'] ?? $row['amount_eur']);
+          ?>
+            <div>
+              <label for="ecom_rate_<?= e($zoneKey) ?>_<?= $idx ?>">Jusqu'à <?= e((string) $row['max_weight_g']) ?> g (€)</label>
+              <input
+                id="ecom_rate_<?= e($zoneKey) ?>_<?= $idx ?>"
+                name="ecom_rate_<?= e($zoneKey) ?>_<?= $idx ?>"
+                type="text"
+                value="<?= e(number_format($amountVal, 2, '.', '')) ?>"
+              >
+              <input type="hidden" name="ecom_rate_weight_<?= e($zoneKey) ?>_<?= $idx ?>" value="<?= e((string) $weightVal) ?>">
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endforeach; ?>
     </div>
 
     <div class="card">

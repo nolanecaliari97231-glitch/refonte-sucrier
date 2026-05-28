@@ -6,7 +6,14 @@ require_once __DIR__ . '/../includes/security.php';
 require_once __DIR__ . '/../includes/auth_db.php';
 require_once __DIR__ . '/../includes/pedagogical-sheets.php';
 
+sucrier_harden_error_reporting();
+sucrier_send_security_headers();
 sucrier_start_secure_session();
+
+if (!sucrier_throttle_consume('pedagogical_download', 40, 600)) {
+    http_response_code(429);
+    exit('Trop de téléchargements. Réessayez plus tard.');
+}
 
 $bookId = trim((string) ($_GET['book'] ?? ''));
 if ($bookId === '' || !preg_match('/^[a-z0-9-]+$/i', $bookId)) {

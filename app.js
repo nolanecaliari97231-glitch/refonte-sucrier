@@ -24,6 +24,7 @@
     cookieConsent: "sucrier_cookie_consent",
     fxRatesCache: "sucrier_fx_rates_cache",
     shippingMode: "sucrier_shipping_mode",
+    shippingPostalCountry: "sucrier_shipping_postal_country",
     shippingNote: "sucrier_shipping_note",
     orderHistory: "sucrier_order_history",
     shippingAddresses: "sucrier_shipping_addresses",
@@ -43,15 +44,57 @@
     stale: false,
   };
   var DEFAULT_BOOK_WEIGHT_G = 280;
-  var SHIPPING_WEIGHT_TIERS = [
-    { maxWeightG: 250, amountEur: 4.95 },
-    { maxWeightG: 500, amountEur: 6.65 },
-    { maxWeightG: 750, amountEur: 7.45 },
-    { maxWeightG: 1000, amountEur: 8.45 },
-    { maxWeightG: 2000, amountEur: 9.95 },
-  ];
-  var SHIPPING_EXTRA_STEP_G = 500;
-  var SHIPPING_EXTRA_STEP_EUR = 1.5;
+  var SHIPPING_POSTAL_ZONE_TIERS = {
+    dom_martinique_near: [
+      { maxWeightG: 500, amountEur: 15.69 },
+      { maxWeightG: 1000, amountEur: 19.69 },
+      { maxWeightG: 2000, amountEur: 22.49 },
+      { maxWeightG: 5000, amountEur: 28.59 },
+      { maxWeightG: 10000, amountEur: 47.19 },
+      { maxWeightG: 15000, amountEur: 69.39 },
+      { maxWeightG: 20000, amountEur: 89.79 },
+    ],
+    dom_international: [
+      { maxWeightG: 500, amountEur: 34.59 },
+      { maxWeightG: 1000, amountEur: 38.69 },
+      { maxWeightG: 2000, amountEur: 53.29 },
+      { maxWeightG: 5000, amountEur: 77.89 },
+      { maxWeightG: 10000, amountEur: 147.39 },
+      { maxWeightG: 15000, amountEur: 209.29 },
+      { maxWeightG: 20000, amountEur: 254.99 },
+      { maxWeightG: 30000, amountEur: 254.99 },
+    ],
+  };
+  var SHIPPING_POSTAL_ZONE_ALIASES = {
+    martinique: "dom_martinique_near",
+    antilles_usa: "dom_martinique_near",
+    international_other: "dom_international",
+  };
+  var SHIPPING_COUNTRY_ZONE_MAP = {
+    MQ: "dom_martinique_near",
+    GP: "dom_martinique_near",
+    AG: "dom_martinique_near",
+    AN: "dom_martinique_near",
+    BB: "dom_martinique_near",
+    DM: "dom_martinique_near",
+    US: "dom_martinique_near",
+    GD: "dom_martinique_near",
+    GY: "dom_martinique_near",
+    HT: "dom_martinique_near",
+    MS: "dom_martinique_near",
+    KN: "dom_martinique_near",
+    VC: "dom_martinique_near",
+    LC: "dom_martinique_near",
+    TT: "dom_martinique_near",
+    VG: "dom_martinique_near",
+    FR: "dom_international",
+    RE: "dom_international",
+    CA: "dom_international",
+    GB: "dom_international",
+    DE: "dom_international",
+    ES: "dom_international",
+    IT: "dom_international",
+  };
   var SHIPPING_LOCAL_PERSONAL_EUR = 1.5;
   var BOOK_CATALOG_DEFAULT = {
     "nikou-champion": {
@@ -2261,6 +2304,87 @@
     });
   }
 
+  function normalizeHeaderAccountLinks() {
+    document
+      .querySelectorAll(
+        'header a.icon-btn[href*="compte.html"], header a.icon-btn[href*="espace.html"], header a.header-account-btn'
+      )
+      .forEach(function (link) {
+        if (link.dataset.headerAccountNormalized === "1") return;
+        link.dataset.headerAccountNormalized = "1";
+        link.classList.add("header-account-btn");
+        var svg = link.querySelector("svg");
+        var svgMarkup = svg
+          ? svg.outerHTML
+          : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+        link.innerHTML =
+          '<span class="header-auth-status" aria-hidden="true"><span class="header-auth-dot"></span></span>' +
+          svgMarkup +
+          '<span class="header-auth-label" data-fr="Compte" data-en="Account">Compte</span>';
+      });
+  }
+
+  function getHeaderAuthFirstName(session) {
+    if (!session || !session.fullName) return "";
+    var parts = String(session.fullName).trim().split(/\s+/);
+    return parts[0] || "";
+  }
+
+  function updateHeaderAuthState() {
+    if (!document.querySelector("header")) return;
+    normalizeHeaderAccountLinks();
+    var authed = isClientAuthenticated();
+    var session = getClientAuthSession();
+    var firstName = getHeaderAuthFirstName(session);
+    var lang = getSelectedLanguage();
+    var guestLabelFr = "Compte";
+    var guestLabelEn = "Account";
+    var authedLabelFr = firstName || "Connecté";
+    var authedLabelEn = firstName || "Signed in";
+    var ariaAuthed = firstName
+      ? "Mon compte — connecté (" + firstName + ")"
+      : "Mon compte — connecté";
+    var ariaGuest = "Mon compte — non connecté";
+
+    document.querySelectorAll("header .header-account-btn").forEach(function (link) {
+      link.classList.toggle("is-header-authed", authed);
+      link.classList.toggle("is-header-guest", !authed);
+      link.href = authed ? "espace.html" : "compte.html";
+      var label = link.querySelector(".header-auth-label");
+      if (label) {
+        if (authed) {
+          label.textContent = lang === "en" ? authedLabelEn : authedLabelFr;
+          label.setAttribute("data-fr", authedLabelFr);
+          label.setAttribute("data-en", authedLabelEn);
+        } else {
+          label.textContent = lang === "en" ? guestLabelEn : guestLabelFr;
+          label.setAttribute("data-fr", guestLabelFr);
+          label.setAttribute("data-en", guestLabelEn);
+        }
+      }
+      link.setAttribute("aria-label", authed ? ariaAuthed : ariaGuest);
+      link.setAttribute("title", link.getAttribute("aria-label") || "");
+    });
+
+    document.querySelectorAll("header .header-actions-menu").forEach(function (menu) {
+      menu.classList.toggle("is-header-authed", authed);
+      menu.classList.toggle("is-header-guest", !authed);
+      var trigger = menu.querySelector(".header-actions-trigger");
+      if (trigger) {
+        trigger.setAttribute(
+          "aria-label",
+          authed
+            ? lang === "en"
+              ? "Open menu — signed in"
+              : "Ouvrir le menu — connecté"
+            : lang === "en"
+              ? "Open menu — guest"
+              : "Ouvrir le menu — non connecté"
+        );
+      }
+    });
+  }
+
   function refreshAllLocalizedViews() {
     renderCatalogueFiltersPanel();
     renderCatalogueGrid();
@@ -2380,7 +2504,43 @@
   function getOptimizedImagePath(path) {
     var value = String(path || "");
     if (!value) return value;
-    return value;
+    var match = value.match(/^images\/([^/]+)$/i);
+    if (!match) return value;
+    var fileName = match[1];
+    var lower = fileName.toLowerCase();
+    var stem = lower.replace(/\.(png|webp|jpe?g|gif|svg)$/i, "");
+    var sitePrefixes = [
+      "logo-editions-sucrier",
+      "logo-footer-noir",
+      "home-bg-editions-sucrier",
+      "home-bg-mobile",
+      "maison-edition-banner",
+      "a-propos-hero-droite",
+      "a-propos-maison-fond",
+    ];
+    var portraitPrefixes = [
+      "author-",
+      "francisco-silva",
+      "jean-fritz-junior-odne",
+      "laane-ramassamy",
+      "patrick-petito",
+      "renee-laure-zou",
+      "wilfried-deroche",
+      "rolyne-pam",
+    ];
+    var eventPrefixes = ["stand-", "biographie-"];
+
+    function startsWithAny(prefixes) {
+      for (var i = 0; i < prefixes.length; i += 1) {
+        if (stem.indexOf(prefixes[i]) === 0) return true;
+      }
+      return false;
+    }
+
+    if (startsWithAny(sitePrefixes)) return "images/site/" + fileName;
+    if (startsWithAny(eventPrefixes)) return "images/events/" + fileName;
+    if (startsWithAny(portraitPrefixes)) return "images/portraits/" + fileName;
+    return "images/catalog/" + fileName;
   }
 
   function getLocalizedBook(bookId) {
@@ -2524,11 +2684,14 @@
       var catalogBook = item && item.id ? getLocalizedBook(item.id) : null;
       var parsedPrice = Number(item.price);
       var safePrice = Number.isFinite(parsedPrice) && parsedPrice > 0 ? parsedPrice : catalogBook ? Number(catalogBook.price) || 0 : 0;
+      var canonicalCover = catalogBook && catalogBook.cover ? catalogBook.cover : "";
       return {
         id: item.id,
         title: item.title || (catalogBook ? catalogBook.title : item.id),
         price: safePrice,
-        image: item.image || (catalogBook ? catalogBook.cover : ""),
+        // Toujours privilegier la couverture source catalogue pour eviter d'utiliser
+        // une ancienne vignette potentiellement moins nette depuis le localStorage.
+        image: getOptimizedImagePath(canonicalCover || item.image || ""),
         qty: Math.max(1, Number(item.qty) || 1),
       };
     });
@@ -2538,7 +2701,7 @@
     localStorage.setItem(STORAGE_KEYS.cart, JSON.stringify(cart));
   }
 
-  function createCheckoutSession(cart, shippingMode, shippingNote) {
+  function createCheckoutSession(cart, shippingMode, shippingNote, customer, shippingAddress, postalZone, customerMode) {
     return fetch("./api/create-checkout-session.php", {
       method: "POST",
       headers: {
@@ -2551,6 +2714,10 @@
         shipping_mode: shippingMode,
         shipping_note: shippingNote,
         promo_code: getPromoCode() || "",
+        customer: customer || {},
+        shipping_address: shippingAddress || {},
+        postal_zone: postalZone || "dom_martinique_near",
+        customer_mode: customerMode || "guest",
       }),
     }).then(function (response) {
       return response.text().then(function (rawBody) {
@@ -2691,6 +2858,32 @@
       return;
     }
     localStorage.removeItem(STORAGE_KEYS.shippingMode);
+  }
+
+  function normalizeCountryCode(countryCode) {
+    var code = String(countryCode || "").trim().toUpperCase();
+    if (!code) return "MQ";
+    return code === "OTHER" ? "OTHER" : code.slice(0, 2);
+  }
+
+  function getShippingPostalCountry() {
+    return normalizeCountryCode(localStorage.getItem(STORAGE_KEYS.shippingPostalCountry) || "MQ");
+  }
+
+  function setShippingPostalCountry(countryCode) {
+    localStorage.setItem(STORAGE_KEYS.shippingPostalCountry, normalizeCountryCode(countryCode));
+  }
+
+  function normalizePostalZoneKey(zoneKey) {
+    var key = String(zoneKey || "").trim();
+    if (SHIPPING_POSTAL_ZONE_ALIASES[key]) return SHIPPING_POSTAL_ZONE_ALIASES[key];
+    return key;
+  }
+
+  function resolvePostalZoneFromCountry(countryCode) {
+    var code = normalizeCountryCode(countryCode);
+    if (code === "OTHER") return "dom_international";
+    return SHIPPING_COUNTRY_ZONE_MAP[code] || "dom_international";
   }
 
   function getShippingNote() {
@@ -2972,6 +3165,7 @@
 
   function setUserSession(sessionData) {
     localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(sessionData || {}));
+    updateHeaderAuthState();
   }
 
   function getClientAuthSession() {
@@ -3180,6 +3374,7 @@
 
   function clearClientAuthSession() {
     localStorage.removeItem(STORAGE_KEYS.session);
+    updateHeaderAuthState();
   }
 
   function refreshClientAuthSession() {
@@ -3210,9 +3405,11 @@
         } else if (data && data.authenticated === false) {
           clearClientAuthSession();
         }
+        updateHeaderAuthState();
         return data;
       })
       .catch(function () {
+        updateHeaderAuthState();
         return null;
       });
   }
@@ -3223,7 +3420,12 @@
 
   function appendVerifiedOrderToHistory(cart, checkoutRef) {
     if (!cart || cart.length === 0) return;
-    var totals = computeCartTotals(cart, getPromoCode(), getShippingMode());
+    var totals = computeCartTotals(
+      cart,
+      getPromoCode(),
+      getShippingMode(),
+      resolvePostalZoneFromCountry(getShippingPostalCountry())
+    );
     var rec = {
       id: "local-" + String(Date.now()),
       date: new Date().toISOString(),
@@ -3244,6 +3446,134 @@
 
   function saveShippingAddresses(list) {
     localStorage.setItem(STORAGE_KEYS.shippingAddresses, JSON.stringify(Array.isArray(list) ? list.slice(0, 12) : []));
+  }
+
+  function normalizeWhitespace(value) {
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function normalizeAddressPayload(raw) {
+    var source = raw && typeof raw === "object" ? raw : {};
+    return {
+      label: normalizeWhitespace(source.label),
+      line1: normalizeWhitespace(source.line1),
+      line2: normalizeWhitespace(source.line2),
+      postal: normalizeWhitespace(source.postal),
+      city: normalizeWhitespace(source.city),
+      country: normalizeCountryCode(source.country || "MQ"),
+    };
+  }
+
+  function normalizeCustomerPayload(raw) {
+    var source = raw && typeof raw === "object" ? raw : {};
+    return {
+      firstName: normalizeWhitespace(source.firstName),
+      lastName: normalizeWhitespace(source.lastName),
+      email: normalizeEmail(source.email),
+      phone: normalizeWhitespace(source.phone),
+    };
+  }
+
+  function validateShippingAddress(address) {
+    var a = normalizeAddressPayload(address);
+    if (!a.label) return t("messages.deliveryLabelRequired", "Renseignez un libellé pour cette adresse.");
+    if (!a.line1) return t("messages.deliveryAddressRequired", "Renseignez l'adresse de livraison.");
+    var needsFrenchPostalFormat = a.country === "MQ" || a.country === "GP" || a.country === "GF" || a.country === "RE" || a.country === "FR";
+    if (needsFrenchPostalFormat) {
+      if (!/^\d{5}$/.test(a.postal)) return t("messages.deliveryPostalInvalid", "Le code postal doit contenir 5 chiffres.");
+    } else if (!a.postal) {
+      return t("messages.deliveryPostalRequired", "Renseignez le code postal.");
+    }
+    if (!a.city) return t("messages.deliveryCityRequired", "Renseignez la ville.");
+    if (!a.country) return t("messages.deliveryCountryRequired", "Renseignez le pays de destination.");
+    return "";
+  }
+
+  function validateCheckoutCustomer(customer) {
+    var c = normalizeCustomerPayload(customer);
+    if (!c.lastName) return t("messages.deliveryLastNameRequired", "Renseignez votre nom.");
+    if (!c.firstName) return t("messages.deliveryFirstNameRequired", "Renseignez votre prénom.");
+    if (!c.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email)) {
+      return t("messages.deliveryEmailInvalid", "Renseignez un email valide.");
+    }
+    var phoneDigits = c.phone.replace(/[^\d+]/g, "");
+    if (phoneDigits.length < 8) return t("messages.deliveryPhoneInvalid", "Renseignez un numéro de téléphone valide.");
+    return "";
+  }
+
+  function makeAddressSummaryLabel(address) {
+    var a = normalizeAddressPayload(address);
+    var head = a.label || t("ui.accountAddressDefaultLabel", "Adresse");
+    var tail = [a.line1, a.postal, a.city, a.country].filter(Boolean).join(", ");
+    return tail ? head + " — " + tail : head;
+  }
+
+  function attachAddressAutocomplete(inputEl, datalistEl, onAddressResolved) {
+    if (!inputEl || !datalistEl || inputEl.dataset.addressAutocompleteBound === "1") return;
+    inputEl.dataset.addressAutocompleteBound = "1";
+    var suggestionMap = {};
+    var timer = 0;
+
+    function clearSuggestions() {
+      datalistEl.innerHTML = "";
+      suggestionMap = {};
+    }
+
+    function renderSuggestions(items) {
+      suggestionMap = {};
+      datalistEl.innerHTML = "";
+      items.forEach(function (item) {
+        if (!item || !item.label) return;
+        suggestionMap[item.label] = item;
+        var option = document.createElement("option");
+        option.value = item.label;
+        datalistEl.appendChild(option);
+      });
+    }
+
+    inputEl.addEventListener("input", function () {
+      var query = normalizeWhitespace(inputEl.value);
+      if (timer) clearTimeout(timer);
+      if (query.length < 4) {
+        clearSuggestions();
+        return;
+      }
+      timer = setTimeout(function () {
+        fetch("https://api-adresse.data.gouv.fr/search/?q=" + encodeURIComponent(query) + "&limit=6&autocomplete=1")
+          .then(function (response) {
+            if (!response.ok) return null;
+            return response.json();
+          })
+          .then(function (data) {
+            if (!data || !Array.isArray(data.features)) return;
+            var rows = data.features
+              .map(function (feature) {
+                var props = feature && feature.properties ? feature.properties : {};
+                return {
+                  label: normalizeWhitespace(props.label || ""),
+                  line1: normalizeWhitespace((props.housenumber ? props.housenumber + " " : "") + (props.street || props.name || "")),
+                  postal: normalizeWhitespace(props.postcode || ""),
+                  city: normalizeWhitespace(props.city || props.name || ""),
+                };
+              })
+              .filter(function (item) {
+                return item.label && item.line1 && item.city;
+              });
+            renderSuggestions(rows);
+          })
+          .catch(function () {
+            clearSuggestions();
+          });
+      }, 260);
+    });
+
+    inputEl.addEventListener("change", function () {
+      var picked = suggestionMap[normalizeWhitespace(inputEl.value)];
+      if (!picked || typeof onAddressResolved !== "function") return;
+      onAddressResolved(picked);
+    });
   }
 
   function getProResourceDownloads() {
@@ -3454,6 +3784,7 @@
     var favorites = getFavorites();
 
     normalizeHeaderFavoriteLinks();
+    updateHeaderAuthState();
 
     document.querySelectorAll(".panier-badge").forEach(function (badge) {
       badge.textContent = String(cart.length);
@@ -4287,11 +4618,11 @@
     });
   }
 
-  function computeCartTotals(cart, promoCode, shippingMode) {
+  function computeCartTotals(cart, promoCode, shippingMode, postalZone) {
     var subtotal = cart.reduce(function (sum, item) {
       return sum + item.price * item.qty;
     }, 0);
-    var shipping = subtotal === 0 ? 0 : computeShippingForMode(cart, shippingMode);
+    var shipping = subtotal === 0 ? 0 : computeShippingForMode(cart, shippingMode, postalZone);
     var promo = PROMO_CODES[promoCode];
     var discount = 0;
     if (promo) {
@@ -4349,24 +4680,49 @@
     }, 0);
   }
 
-  function computeShippingByWeight(cart) {
-    var totalWeight = computeCartWeightGrams(cart);
-    if (totalWeight <= 0) return 0;
-    for (var i = 0; i < SHIPPING_WEIGHT_TIERS.length; i += 1) {
-      if (totalWeight <= SHIPPING_WEIGHT_TIERS[i].maxWeightG) {
-        return SHIPPING_WEIGHT_TIERS[i].amountEur;
-      }
+  function getShippingPostalTiersForZone(zone) {
+    var normalizedZone = normalizePostalZoneKey(zone);
+    if (!SHIPPING_POSTAL_ZONE_TIERS[normalizedZone]) {
+      normalizedZone = "dom_martinique_near";
     }
-    var lastTier = SHIPPING_WEIGHT_TIERS[SHIPPING_WEIGHT_TIERS.length - 1];
-    var overflow = totalWeight - lastTier.maxWeightG;
-    var extraSteps = Math.ceil(overflow / SHIPPING_EXTRA_STEP_G);
-    return lastTier.amountEur + extraSteps * SHIPPING_EXTRA_STEP_EUR;
+    var fallbackTiers = SHIPPING_POSTAL_ZONE_TIERS[normalizedZone];
+    var contentRates = SITE_CONTENT && SITE_CONTENT.ecommerce && SITE_CONTENT.ecommerce.postal_rates;
+    var candidate = contentRates && contentRates[normalizedZone];
+    if (!candidate && contentRates && contentRates[zone]) {
+      candidate = contentRates[zone];
+    }
+    if (!Array.isArray(candidate) || candidate.length === 0) return fallbackTiers;
+    var sanitized = candidate
+      .map(function (row) {
+        if (!row || typeof row !== "object") return null;
+        var maxWeightG = parseInt(String(row.max_weight_g || ""), 10);
+        var amountEur = Number(String(row.amount_eur || "").replace(",", "."));
+        if (!Number.isFinite(maxWeightG) || maxWeightG <= 0 || !Number.isFinite(amountEur) || amountEur < 0) return null;
+        return { maxWeightG: maxWeightG, amountEur: Math.round(amountEur * 100) / 100 };
+      })
+      .filter(Boolean)
+      .sort(function (a, b) {
+        return a.maxWeightG - b.maxWeightG;
+      });
+    return sanitized.length > 0 ? sanitized : fallbackTiers;
   }
 
-  function computeShippingForMode(cart, shippingMode) {
+  function computeShippingByWeight(cart, postalZone) {
+    var totalWeight = computeCartWeightGrams(cart);
+    if (totalWeight <= 0) return 0;
+    var tiers = getShippingPostalTiersForZone(postalZone);
+    for (var i = 0; i < tiers.length; i += 1) {
+      if (totalWeight <= tiers[i].maxWeightG) {
+        return tiers[i].amountEur;
+      }
+    }
+    return tiers[tiers.length - 1].amountEur;
+  }
+
+  function computeShippingForMode(cart, shippingMode, postalZone) {
     if (shippingMode === "pickup_siege") return 0;
     if (shippingMode === "local_personal") return SHIPPING_LOCAL_PERSONAL_EUR;
-    if (shippingMode === "postal") return computeShippingByWeight(cart);
+    if (shippingMode === "postal") return computeShippingByWeight(cart, postalZone);
     return 0;
   }
 
@@ -5961,6 +6317,7 @@
       icons.appendChild(child);
     });
     menu.parentNode && menu.parentNode.removeChild(menu);
+    updateHeaderAuthState();
   }
 
   function initHeaderDropdownMenu() {
@@ -6020,6 +6377,8 @@
           }, 80);
         });
       });
+
+      updateHeaderAuthState();
     }
 
     applyHeaderLayout();
@@ -6191,6 +6550,7 @@
               escapeCatalogHtml(a.postal || "") +
               " " +
               escapeCatalogHtml(a.city || "") +
+              (a.country ? " (" + escapeCatalogHtml(a.country) + ")" : "") +
               "</div><button type=\"button\" class=\"btn-outline\" data-remove-address=\"" +
               String(idx) +
               "\">" +
@@ -6306,20 +6666,36 @@
     });
     var addrForm = dashboardRoot.querySelector("[data-account-address-form]");
     if (addrForm) {
+      var addrLine1Input = addrForm.querySelector('input[name="addr_line1"]');
+      var addrPostalInput = addrForm.querySelector('input[name="addr_postal"]');
+      var addrCityInput = addrForm.querySelector('input[name="addr_city"]');
+      var addrSuggestions = addrForm.querySelector("#account-address-suggestions");
+      var addrFeedback = addrForm.querySelector("[data-account-address-feedback]");
+      attachAddressAutocomplete(addrLine1Input, addrSuggestions, function (picked) {
+        if (addrLine1Input && picked.line1) addrLine1Input.value = picked.line1;
+        if (addrPostalInput && picked.postal) addrPostalInput.value = picked.postal;
+        if (addrCityInput && picked.city) addrCityInput.value = picked.city;
+      });
       addrForm.addEventListener("submit", function (e) {
         e.preventDefault();
-        var label = String((addrForm.querySelector('input[name="addr_label"]') || {}).value || "").trim();
-        var line1 = String((addrForm.querySelector('input[name="addr_line1"]') || {}).value || "").trim();
-        var line2 = String((addrForm.querySelector('input[name="addr_line2"]') || {}).value || "").trim();
-        var postal = String((addrForm.querySelector('input[name="addr_postal"]') || {}).value || "").trim();
-        var city = String((addrForm.querySelector('input[name="addr_city"]') || {}).value || "").trim();
-        if (!line1 || !city) {
+        var address = normalizeAddressPayload({
+          label: (addrForm.querySelector('input[name="addr_label"]') || {}).value || "",
+          line1: (addrForm.querySelector('input[name="addr_line1"]') || {}).value || "",
+          line2: (addrForm.querySelector('input[name="addr_line2"]') || {}).value || "",
+          postal: (addrForm.querySelector('input[name="addr_postal"]') || {}).value || "",
+          city: (addrForm.querySelector('input[name="addr_city"]') || {}).value || "",
+          country: (addrForm.querySelector('select[name="addr_country"]') || {}).value || "MQ",
+        });
+        var addressError = validateShippingAddress(address);
+        if (addressError) {
+          if (addrFeedback) addrFeedback.textContent = addressError;
           return;
         }
         var list = getShippingAddresses();
-        list.push({ label: label || t("ui.accountAddressDefaultLabel", "Adresse"), line1: line1, line2: line2, postal: postal, city: city });
+        list.push(address);
         saveShippingAddresses(list);
         addrForm.reset();
+        if (addrFeedback) addrFeedback.textContent = t("messages.accountAddressSaved", "Adresse enregistrée.");
         syncAccountDashboardVisibility();
       });
     }
@@ -6966,9 +7342,31 @@
     var promoFeedback = document.querySelector("[data-promo-feedback]");
     var deliveryForm = document.querySelector("[data-delivery-form]");
     var deliveryModeSelect = document.getElementById("delivery-mode");
+    var postalCountrySelect = document.querySelector("[data-delivery-postal-country]");
+    var postalCountryLabel = document.querySelector("[data-delivery-postal-country-label]");
+    var identityChoiceSelect = document.querySelector("[data-delivery-identity-choice]");
+    var identityChoiceLabel = document.querySelector("[data-delivery-identity-choice-label]");
+    var accountCta = document.querySelector("[data-delivery-account-cta]");
+    var savedAddressSelect = document.querySelector("[data-delivery-saved-address]");
+    var savedAddressLabel = document.querySelector("[data-delivery-saved-address-label]");
+    var manageAddressesCta = document.querySelector("[data-delivery-manage-addresses]");
+    var pickupBlock = document.querySelector("[data-delivery-pickup-block]");
     var deliveryNoteInput = document.querySelector("[data-delivery-note]");
     var deliveryNoteLabel = document.querySelector("[data-delivery-note-label]");
     var deliveryFeedback = document.querySelector("[data-delivery-feedback]");
+    var contactRoot = document.querySelector("[data-delivery-contact]");
+    var addressFieldsRoot = document.querySelector("[data-delivery-address-fields]");
+    var customerFirstNameInput = document.getElementById("delivery-firstname");
+    var customerLastNameInput = document.getElementById("delivery-lastname");
+    var customerEmailInput = document.getElementById("delivery-email");
+    var customerPhoneInput = document.getElementById("delivery-phone");
+    var deliveryLabelInput = document.getElementById("delivery-label");
+    var deliveryLine1Input = document.getElementById("delivery-line1");
+    var deliveryLine2Input = document.getElementById("delivery-line2");
+    var deliveryPostalInput = document.getElementById("delivery-postal");
+    var deliveryCityInput = document.getElementById("delivery-city");
+    var deliveryCountryInput = document.getElementById("delivery-country");
+    var deliveryAddressSuggestions = document.getElementById("delivery-address-suggestions");
     var checkoutFeedback = document.querySelector("[data-checkout-feedback]");
     var checkoutButton = document.querySelector('[data-action="checkout"]');
     var clearCartButton = document.querySelector('[data-action="clear-cart"]');
@@ -6988,14 +7386,148 @@
       /* no-op */
     }
     var shippingMode = getShippingMode();
+    var shippingPostalCountry = getShippingPostalCountry();
+    var shippingPostalZone = resolvePostalZoneFromCountry(shippingPostalCountry);
     var shippingNote = getShippingNote();
-    var totals = computeCartTotals(cart, promoCode, shippingMode);
+    var totals = computeCartTotals(cart, promoCode, shippingMode, shippingPostalZone);
+    var session = getClientAuthSession();
+    var isAuthed = isClientAuthenticated();
+
+    function readCheckoutCustomer() {
+      return normalizeCustomerPayload({
+        firstName: customerFirstNameInput ? customerFirstNameInput.value : "",
+        lastName: customerLastNameInput ? customerLastNameInput.value : "",
+        email: customerEmailInput ? customerEmailInput.value : "",
+        phone: customerPhoneInput ? customerPhoneInput.value : "",
+      });
+    }
+
+    function readCheckoutAddress() {
+      if (isAuthed && savedAddressSelect) {
+        var selectedValue = String(savedAddressSelect.value || "");
+        var idx = parseInt(selectedValue, 10);
+        var addresses = getShippingAddresses().map(normalizeAddressPayload);
+        if (Number.isFinite(idx) && idx >= 0 && idx < addresses.length) {
+          return addresses[idx];
+        }
+      }
+      return normalizeAddressPayload({
+        label: deliveryLabelInput ? deliveryLabelInput.value : "",
+        line1: deliveryLine1Input ? deliveryLine1Input.value : "",
+        line2: deliveryLine2Input ? deliveryLine2Input.value : "",
+        postal: deliveryPostalInput ? deliveryPostalInput.value : "",
+        city: deliveryCityInput ? deliveryCityInput.value : "",
+        country: deliveryCountryInput ? deliveryCountryInput.value : "MQ",
+      });
+    }
+
+    function fillCheckoutAddress(address) {
+      var normalized = normalizeAddressPayload(address || {});
+      if (deliveryLabelInput) deliveryLabelInput.value = normalized.label || "";
+      if (deliveryLine1Input) deliveryLine1Input.value = normalized.line1 || "";
+      if (deliveryLine2Input) deliveryLine2Input.value = normalized.line2 || "";
+      if (deliveryPostalInput) deliveryPostalInput.value = normalized.postal || "";
+      if (deliveryCityInput) deliveryCityInput.value = normalized.city || "";
+      if (deliveryCountryInput) deliveryCountryInput.value = normalized.country || "MQ";
+    }
+
+    function syncDeliveryBlocksVisibility() {
+      var shippingModeValue = String((deliveryModeSelect && deliveryModeSelect.value) || "").trim();
+      var isPickup = shippingModeValue === "pickup_siege";
+      var guestChoice = String((identityChoiceSelect && identityChoiceSelect.value) || "");
+      var savedChoice = savedAddressSelect ? String(savedAddressSelect.value || "") : "";
+      var hasSavedAddress = !!(savedAddressSelect && !savedAddressSelect.hidden && savedChoice !== "__manual__" && savedChoice !== "");
+      var isPostal = shippingModeValue === "postal";
+      var showGuestIdentityChoice = !isAuthed && !isPickup && !!shippingModeValue;
+      var showGuestFields = !isAuthed && guestChoice === "guest" && !isPickup;
+      var showManualAuthedFields = isAuthed && savedChoice === "__manual__" && !isPickup;
+      var showAddressAndContact = showGuestFields || showManualAuthedFields;
+      var manualHint = document.querySelector("[data-delivery-manual-hint]");
+
+      if (contactRoot) contactRoot.hidden = !showAddressAndContact;
+      if (addressFieldsRoot) addressFieldsRoot.hidden = !showAddressAndContact;
+      if (manualHint) manualHint.hidden = !showManualAuthedFields;
+      if (identityChoiceSelect) identityChoiceSelect.hidden = !showGuestIdentityChoice;
+      if (identityChoiceLabel) identityChoiceLabel.hidden = !showGuestIdentityChoice;
+      if (postalCountrySelect) postalCountrySelect.hidden = !isPostal;
+      if (postalCountryLabel) postalCountryLabel.hidden = !isPostal;
+      if (accountCta) accountCta.hidden = !(showGuestIdentityChoice && guestChoice === "create_account");
+      if (pickupBlock) pickupBlock.hidden = !isPickup;
+      if (manageAddressesCta) {
+        manageAddressesCta.hidden = !(isAuthed && (!hasSavedAddress || (savedAddressSelect && savedAddressSelect.value === "__manual__")));
+      }
+      if (savedAddressSelect && savedAddressLabel) {
+        var hasOptions = Array.isArray(getShippingAddresses()) && getShippingAddresses().length > 0;
+        savedAddressSelect.hidden = !(isAuthed && hasOptions && !isPickup);
+        savedAddressLabel.hidden = savedAddressSelect.hidden;
+      }
+
+      if (deliveryNoteInput && deliveryNoteLabel) {
+        var noteForLocal = shippingModeValue === "local_personal";
+        var noteForPickup = shippingModeValue === "pickup_siege";
+        deliveryNoteInput.hidden = !(noteForLocal || noteForPickup);
+        deliveryNoteLabel.hidden = deliveryNoteInput.hidden;
+        deliveryNoteLabel.textContent = noteForPickup
+          ? t("ui.pickupCoordinationRequired", "Message obligatoire pour organiser le retrait")
+          : t("ui.deliveryLocalNoteLabel", "Précisions livraison locale");
+      }
+    }
     list.innerHTML = "";
     if (countNode) {
       countNode.textContent =
         cart.length +
         " " +
         (cart.length > 1 ? t("ui.cartItemPlural", "articles") : t("ui.cartItemSingular", "article"));
+    }
+
+    if (customerEmailInput && !customerEmailInput.value && session && session.email) {
+      customerEmailInput.value = String(session.email || "");
+    }
+    if (customerFirstNameInput && !customerFirstNameInput.value && session && session.fullName) {
+      var names = String(session.fullName || "").trim().split(/\s+/);
+      if (names.length > 1) customerFirstNameInput.value = names.slice(0, -1).join(" ");
+      if (customerLastNameInput && !customerLastNameInput.value) customerLastNameInput.value = names[names.length - 1] || "";
+    }
+
+    if (savedAddressSelect && savedAddressLabel) {
+      var savedAddresses = getShippingAddresses().map(normalizeAddressPayload);
+      if (isAuthed && savedAddresses.length > 0) {
+        var currentValue = savedAddressSelect.value;
+        savedAddressSelect.innerHTML = "";
+        var defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = t("ui.selectSavedAddress", "Choisir une adresse enregistrée");
+        savedAddressSelect.appendChild(defaultOption);
+        savedAddresses.forEach(function (addr, idx) {
+          var option = document.createElement("option");
+          option.value = String(idx);
+          option.textContent = makeAddressSummaryLabel(addr);
+          savedAddressSelect.appendChild(option);
+        });
+        var manualOption = document.createElement("option");
+        manualOption.value = "__manual__";
+        manualOption.textContent = t("ui.enterAnotherAddress", "Saisir une autre adresse");
+        savedAddressSelect.appendChild(manualOption);
+        if (currentValue && savedAddressSelect.querySelector('option[value="' + currentValue + '"]')) {
+          savedAddressSelect.value = currentValue;
+        } else if (savedAddresses.length > 0) {
+          savedAddressSelect.value = "0";
+          fillCheckoutAddress(savedAddresses[0]);
+          setShippingPostalCountry(savedAddresses[0].country || "MQ");
+          if (postalCountrySelect) postalCountrySelect.value = savedAddresses[0].country || "MQ";
+        }
+      } else {
+        savedAddressSelect.innerHTML = '<option value="">Choisir une adresse enregistrée</option><option value="__manual__">Saisir une autre adresse</option>';
+        savedAddressSelect.value = "";
+      }
+    }
+
+    if (deliveryLine1Input && deliveryAddressSuggestions) {
+      attachAddressAutocomplete(deliveryLine1Input, deliveryAddressSuggestions, function (picked) {
+        if (deliveryLine1Input && picked.line1) deliveryLine1Input.value = picked.line1;
+        if (deliveryPostalInput && picked.postal) deliveryPostalInput.value = picked.postal;
+        if (deliveryCityInput && picked.city) deliveryCityInput.value = picked.city;
+      });
     }
 
     if (cart.length === 0) {
@@ -7020,9 +7552,8 @@
       if (deliveryModeSelect) deliveryModeSelect.value = "";
       if (deliveryNoteInput) {
         deliveryNoteInput.value = "";
-        deliveryNoteInput.hidden = true;
       }
-      if (deliveryNoteLabel) deliveryNoteLabel.hidden = true;
+      syncDeliveryBlocksVisibility();
       if (deliveryFeedback) deliveryFeedback.textContent = "";
       updateHeaderBadges();
       return;
@@ -7046,7 +7577,7 @@
       article.innerHTML =
         '<img src="' +
         item.image +
-        '" alt="" class="cart-item-cover">' +
+        '" alt="" class="cart-item-cover" width="180" height="240" decoding="async" loading="lazy">' +
         '<div class="cart-item-info"><h3>' +
         item.title +
         '</h3><p class="cart-item-meta">' +
@@ -7103,13 +7634,12 @@
 
     if (promoInput) promoInput.value = promoCode;
     if (deliveryModeSelect) deliveryModeSelect.value = shippingMode;
+    if (postalCountrySelect) postalCountrySelect.value = shippingPostalCountry;
+    if (deliveryCountryInput && !deliveryCountryInput.value) deliveryCountryInput.value = shippingPostalCountry;
     if (deliveryNoteInput) {
       deliveryNoteInput.value = shippingNote;
-      deliveryNoteInput.hidden = shippingMode !== "local_personal";
     }
-    if (deliveryNoteLabel) {
-      deliveryNoteLabel.hidden = shippingMode !== "local_personal";
-    }
+    syncDeliveryBlocksVisibility();
     if (promoFeedback) {
       promoFeedback.textContent = totals.promo
         ? getPromoLabel(totals.promo)
@@ -7119,8 +7649,36 @@
           );
     }
     if (deliveryFeedback) {
+      var currentPostalZone = resolvePostalZoneFromCountry(getShippingPostalCountry());
+      var deliveryCustomerError = !isAuthed && shippingMode !== "pickup_siege" ? validateCheckoutCustomer(readCheckoutCustomer()) : "";
+      var requiresSavedAddress = isAuthed && shippingMode !== "pickup_siege";
+      var hasSavedAddressSelection =
+        !!savedAddressSelect &&
+        !savedAddressSelect.hidden &&
+        String(savedAddressSelect.value || "") !== "" &&
+        String(savedAddressSelect.value || "") !== "__manual__";
+      var deliveryAddressError =
+        shippingMode !== "pickup_siege" &&
+        (!isAuthed || (savedAddressSelect && !savedAddressSelect.hidden))
+          ? validateShippingAddress(readCheckoutAddress())
+          : "";
+      var identityChoice = String((identityChoiceSelect && identityChoiceSelect.value) || "");
       if (!shippingMode) {
         deliveryFeedback.textContent = t("ui.deliveryModeRequired", "Choisissez un mode avant le paiement.");
+      } else if (shippingMode === "postal" && !currentPostalZone) {
+        deliveryFeedback.textContent = t("messages.postalDestinationRequired", "Choisissez le pays de destination postale.");
+      } else if (!isAuthed && shippingMode !== "pickup_siege" && !identityChoice) {
+        deliveryFeedback.textContent = t("messages.checkoutIdentityChoiceRequired", "Choisissez si vous continuez avec ou sans compte.");
+      } else if (!isAuthed && identityChoice === "create_account") {
+        deliveryFeedback.textContent = t("messages.checkoutCreateAccountFirst", "Créez votre compte puis ajoutez votre adresse dans votre espace.");
+      } else if (requiresSavedAddress && !hasSavedAddressSelection) {
+        deliveryFeedback.textContent = t("messages.checkoutSavedAddressRequired", "Sélectionnez une adresse enregistrée ou ajoutez-en une dans votre espace.");
+      } else if (shippingMode === "pickup_siege" && !shippingNote) {
+        deliveryFeedback.textContent = t("messages.pickupMessageRequired", "Le message d'organisation du retrait est obligatoire.");
+      } else if (deliveryCustomerError) {
+        deliveryFeedback.textContent = deliveryCustomerError;
+      } else if (deliveryAddressError) {
+        deliveryFeedback.textContent = deliveryAddressError;
       } else if (shippingMode === "local_personal" && !shippingNote) {
         deliveryFeedback.textContent = t(
           "ui.deliveryNoteRequired",
@@ -7184,19 +7742,76 @@
       deliveryModeSelect.onchange = function () {
         var mode = String(deliveryModeSelect.value || "").trim();
         setShippingMode(mode);
+        if (mode === "postal") {
+          setShippingPostalCountry((postalCountrySelect && postalCountrySelect.value) || getShippingPostalCountry());
+        }
         if (mode !== "local_personal") {
           setShippingNote("");
         } else {
           setShippingNote((deliveryNoteInput && deliveryNoteInput.value) || "");
         }
+        syncDeliveryBlocksVisibility();
         renderCartPage();
       };
     }
 
+    if (postalCountrySelect) {
+      postalCountrySelect.onchange = function () {
+        setShippingPostalCountry(postalCountrySelect.value || "MQ");
+        if (deliveryCountryInput) deliveryCountryInput.value = postalCountrySelect.value || "MQ";
+        renderCartPage();
+      };
+    }
+
+    if (identityChoiceSelect) {
+      identityChoiceSelect.onchange = function () {
+        syncDeliveryBlocksVisibility();
+        if (deliveryFeedback) deliveryFeedback.textContent = "";
+      };
+    }
+
+    if (savedAddressSelect) {
+      savedAddressSelect.onchange = function () {
+        var value = String(savedAddressSelect.value || "");
+        if (value === "__manual__") {
+          fillCheckoutAddress({});
+          if (deliveryCountryInput && postalCountrySelect) {
+            deliveryCountryInput.value = postalCountrySelect.value || "MQ";
+          }
+          syncDeliveryBlocksVisibility();
+          if (deliveryFeedback) deliveryFeedback.textContent = "";
+          if (addressFieldsRoot && typeof addressFieldsRoot.scrollIntoView === "function") {
+            addressFieldsRoot.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+          return;
+        }
+        if (value === "") {
+          syncDeliveryBlocksVisibility();
+          return;
+        }
+        var idx = parseInt(value, 10);
+        var addresses = getShippingAddresses().map(normalizeAddressPayload);
+        if (Number.isFinite(idx) && idx >= 0 && idx < addresses.length) {
+          fillCheckoutAddress(addresses[idx]);
+          setShippingPostalCountry(addresses[idx].country || "MQ");
+          if (postalCountrySelect) postalCountrySelect.value = addresses[idx].country || "MQ";
+        }
+        syncDeliveryBlocksVisibility();
+      };
+    }
+
+    [customerFirstNameInput, customerLastNameInput, customerEmailInput, customerPhoneInput, deliveryLabelInput, deliveryLine1Input, deliveryPostalInput, deliveryCityInput, deliveryCountryInput].forEach(function (input) {
+      if (!input) return;
+      input.addEventListener("input", function () {
+        if (!deliveryFeedback) return;
+        deliveryFeedback.textContent = "";
+      });
+    });
+
     if (deliveryNoteInput) {
       deliveryNoteInput.oninput = function () {
         var mode = String((deliveryModeSelect && deliveryModeSelect.value) || "").trim();
-        if (mode !== "local_personal") return;
+        if (mode !== "local_personal" && mode !== "pickup_siege") return;
         setShippingNote(deliveryNoteInput.value || "");
       };
     }
@@ -7206,6 +7821,7 @@
         setCart([]);
         setPromoCode("");
         setShippingMode("");
+        setShippingPostalCountry("MQ");
         setShippingNote("");
         renderCartPage();
         renderDisplayPrices();
@@ -7215,28 +7831,101 @@
     if (checkoutButton) {
       checkoutButton.onclick = function () {
         var activeShippingMode = getShippingMode();
+        var activePostalCountry = getShippingPostalCountry();
+        var activePostalZone = resolvePostalZoneFromCountry(activePostalCountry);
         var activeShippingNote = getShippingNote();
+        var identityChoice = String((identityChoiceSelect && identityChoiceSelect.value) || "");
+        var savedChoice = savedAddressSelect ? String(savedAddressSelect.value || "") : "";
+        var useManualAddress = isAuthed && savedChoice === "__manual__";
+        var customerPayload = readCheckoutCustomer();
+        var addressPayload = readCheckoutAddress();
+        var customerMode = !isAuthed ? "guest" : useManualAddress ? "guest" : "account_saved";
+        if (useManualAddress && session) {
+          if (!customerPayload.email && session.email) customerPayload.email = String(session.email || "");
+          if ((!customerPayload.firstName || !customerPayload.lastName) && session.fullName) {
+            var sessionNames = String(session.fullName || "").trim().split(/\s+/);
+            if (!customerPayload.firstName && sessionNames.length > 1) {
+              customerPayload.firstName = sessionNames.slice(0, -1).join(" ");
+            }
+            if (!customerPayload.lastName && sessionNames.length) {
+              customerPayload.lastName = sessionNames[sessionNames.length - 1] || "";
+            }
+          }
+        }
         if (!activeShippingMode) {
           if (deliveryFeedback) {
             deliveryFeedback.textContent = t("ui.deliveryModeRequired", "Choisissez un mode avant le paiement.");
           }
           return;
         }
-        if (activeShippingMode === "local_personal" && !activeShippingNote) {
+        if (activeShippingMode === "postal" && !activePostalZone) {
+          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.postalDestinationRequired", "Choisissez le pays de destination postale.");
+          return;
+        }
+        if (!isAuthed && activeShippingMode !== "pickup_siege" && !identityChoice) {
+          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.checkoutIdentityChoiceRequired", "Choisissez si vous continuez avec ou sans compte.");
+          return;
+        }
+        if (!isAuthed && identityChoice === "create_account") {
+          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.checkoutCreateAccountFirst", "Créez votre compte puis ajoutez votre adresse dans votre espace.");
+          return;
+        }
+        if (
+          isAuthed &&
+          activeShippingMode !== "pickup_siege" &&
+          !useManualAddress &&
+          (!savedAddressSelect || savedAddressSelect.hidden || savedChoice === "")
+        ) {
+          if (deliveryFeedback) deliveryFeedback.textContent = t("messages.checkoutSavedAddressRequired", "Sélectionnez une adresse enregistrée ou saisissez une autre adresse ci-dessous.");
+          return;
+        }
+        if (isAuthed && useManualAddress) {
+          customerMode = "guest";
+        }
+        if (activeShippingMode !== "pickup_siege" && (!isAuthed || useManualAddress)) {
+          var customerError = validateCheckoutCustomer(customerPayload);
+          if (customerError) {
+            if (deliveryFeedback) deliveryFeedback.textContent = customerError;
+            return;
+          }
+        }
+        if (activeShippingMode !== "pickup_siege") {
+          var addressError = validateShippingAddress(addressPayload);
+          if (addressError) {
+            if (deliveryFeedback) deliveryFeedback.textContent = addressError;
+            return;
+          }
+        }
+        if ((activeShippingMode === "local_personal" || activeShippingMode === "pickup_siege") && !activeShippingNote) {
           if (deliveryFeedback) {
             deliveryFeedback.textContent = t(
-              "ui.deliveryNoteRequired",
-              "Ajoutez vos precisions pour la remise/livraison locale."
+              activeShippingMode === "pickup_siege" ? "messages.pickupMessageRequired" : "ui.deliveryNoteRequired",
+              activeShippingMode === "pickup_siege"
+                ? "Le message d'organisation du retrait est obligatoire."
+                : "Ajoutez vos precisions pour la remise/livraison locale."
             );
           }
           return;
+        }
+        if (activeShippingMode === "pickup_siege") {
+          customerMode = "pickup";
+          customerPayload = { firstName: "", lastName: "", email: "", phone: "" };
+          addressPayload = { label: "Retrait au siege", line1: "", line2: "", postal: "", city: "" };
         }
         checkoutButton.disabled = true;
         var initialLabel = checkoutButton.textContent;
         checkoutButton.textContent = t("ui.redirecting", "Redirection...");
         if (checkoutFeedback) checkoutFeedback.textContent = "";
 
-        createCheckoutSession(cart, activeShippingMode, activeShippingNote)
+        createCheckoutSession(
+          cart,
+          activeShippingMode,
+          activeShippingNote,
+          customerPayload,
+          addressPayload,
+          activePostalZone,
+          customerMode
+        )
           .then(function (result) {
             if (!result || !result.url) {
               throw new Error(t("ui.noCheckoutUrl", "Aucune URL de paiement reçue."));

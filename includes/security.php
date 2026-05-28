@@ -41,6 +41,11 @@ function sucrier_is_dev_host(): bool
         || str_starts_with($host, '127.0.0.1');
 }
 
+function sucrier_is_production_host(): bool
+{
+    return !sucrier_is_dev_host();
+}
+
 /**
  * Renvoie la Content-Security-Policy à appliquer. Stricte par défaut.
  * Si vous ajoutez un nouveau domaine externe (CDN, image, font), ajustez ici.
@@ -59,7 +64,7 @@ function sucrier_content_security_policy(): string
         // 'unsafe-inline' nécessaire tant que le front utilise des handlers
         // inline et data-bindings ; à durcir vers des nonces ultérieurement.
         "script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com",
-        "connect-src 'self' https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com https://api.sumup.com",
+        "connect-src 'self' https://accounts.google.com https://oauth2.googleapis.com https://www.googleapis.com https://api.sumup.com https://api-adresse.data.gouv.fr",
         "frame-src https://accounts.google.com https://pay.sumup.com",
     ];
     // Safari applique strictement upgrade-insecure-requests : en dev HTTP
@@ -232,6 +237,28 @@ function sucrier_json_safe_error(int $status, string $userMessage, ?string $logC
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode(['ok' => false, 'error' => $userMessage], JSON_UNESCAPED_UNICODE);
     exit;
+}
+
+/**
+ * Vérifie qu'un chemin résolu reste sous la racine du site (anti path traversal).
+ */
+function sucrier_path_within_root(string $candidatePath, string $rootDir): bool
+{
+    $rootReal = realpath($rootDir);
+    if ($rootReal === false) {
+        return false;
+    }
+    $candidateReal = realpath($candidatePath);
+    if ($candidateReal !== false) {
+        return str_starts_with($candidateReal, $rootReal . DIRECTORY_SEPARATOR)
+            || hash_equals($rootReal, $candidateReal);
+    }
+    $parentReal = realpath(dirname($candidatePath));
+    if ($parentReal === false) {
+        return false;
+    }
+    return str_starts_with($parentReal, $rootReal . DIRECTORY_SEPARATOR)
+        || hash_equals($rootReal, $parentReal);
 }
 
 function sucrier_get_csrf_token(): string

@@ -44,3 +44,10 @@ Ce guide resume comment le backoffice est organise.
 - Modifier via backoffice (pas directement les JSON).
 - Toujours verifier en front apres enregistrement.
 - En cas de doute, sauvegarder/exporter les JSON avant gros changements.
+- Verifier periodiquement les tarifs officiels La Poste et mettre a jour le bareme postal dans la section e-commerce du backoffice.
+
+## Frais postaux (editable)
+
+- Le dashboard permet d'editer `ecommerce.postal_rates` par zone (`dom_martinique_near`, `dom_international`) — tarifs Colissimo au depart du siege (Martinique).
+- `save.php` enregistre ces valeurs dans `data/contenu.json`.
+- Le front et l'API checkout utilisent ensuite ce bareme pour le calcul des frais au poids.

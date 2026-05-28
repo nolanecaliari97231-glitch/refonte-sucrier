@@ -14,13 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $providedSecret = (string) ($_SERVER['HTTP_X_SUCRIER_WEBHOOK_SECRET'] ?? '');
-if (SUCRIER_WEBHOOK_SECRET_RUNTIME !== '') {
-    if ($providedSecret === '' || !hash_equals(SUCRIER_WEBHOOK_SECRET_RUNTIME, $providedSecret)) {
-        http_response_code(401);
+if (SUCRIER_WEBHOOK_SECRET_RUNTIME === '') {
+    if (sucrier_is_production_host()) {
+        error_log('[sucrier] Webhook SumUp refuse : SUCRIER_WEBHOOK_SECRET non configure en production.');
+        http_response_code(503);
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['ok' => false, 'status' => 'unauthorized']);
+        echo json_encode(['ok' => false, 'status' => 'misconfigured']);
         exit;
     }
+} elseif ($providedSecret === '' || !hash_equals(SUCRIER_WEBHOOK_SECRET_RUNTIME, $providedSecret)) {
+    http_response_code(401);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['ok' => false, 'status' => 'unauthorized']);
+    exit;
 }
 
 http_response_code(200);

@@ -22,7 +22,7 @@ Options -Indexes
 </IfModule>
 
 # Bloquer l'accès aux fichiers sensibles
-<FilesMatch "(^\.|^(composer|package|package-lock|playwright)\.json$|\.example$|\.bak$|\.backup$|\.sqlite$|\.sqlite-.*$|\.jsonl$|\.log$|\.lock$|\.gitignore$|\.gitattributes$|\.env.*|.*\.md$|.*\.py$|router\.php$)">
+<FilesMatch "(^\.|^(composer|package|package-lock|playwright)\.json$|\.example$|\.bak$|\.backup$|\.sqlite$|\.sqlite-.*$|\.jsonl$|\.log$|\.lock$|\.gitignore$|\.gitattributes$|\.env.*|.*\.md$|.*\.py$|router\.php$|sumup-config\.php$|config\.php$)">
     Require all denied
 </FilesMatch>
 

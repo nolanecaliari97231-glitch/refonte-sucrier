@@ -87,7 +87,15 @@ if (SUCRIER_SUMUP_API_KEY_RUNTIME === '' || SUCRIER_SUMUP_MERCHANT_CODE_RUNTIME 
     sucrier_status_json(false, false, 'misconfigured', 'Configuration SumUp manquante.', 500);
 }
 
-$payload = json_decode(file_get_contents('php://input') ?: '{}', true);
+$rawInput = file_get_contents('php://input');
+if (!is_string($rawInput) || strlen($rawInput) > 4096) {
+    sucrier_status_json(false, false, 'payload_too_large', 'Payload trop volumineux.', 413);
+}
+$contentType = strtolower((string) ($_SERVER['CONTENT_TYPE'] ?? ''));
+if ($contentType !== '' && strpos($contentType, 'application/json') !== 0) {
+    sucrier_status_json(false, false, 'invalid_content_type', 'Content-Type invalide.', 415);
+}
+$payload = json_decode($rawInput ?: '{}', true);
 $checkoutRef = is_array($payload) ? (string) ($payload['checkout_ref'] ?? '') : '';
 if ($checkoutRef === '' || !preg_match('/^[a-zA-Z0-9._:-]{8,120}$/', $checkoutRef)) {
     sucrier_status_json(false, false, 'invalid_reference', 'Reference checkout invalide.', 400);

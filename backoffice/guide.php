@@ -123,6 +123,18 @@ require __DIR__ . '/init.php';
     </div>
 
     <div class="card">
+      <h2>Frais postaux (important)</h2>
+      <p>Dans la section <strong>E-commerce et panier</strong> du tableau de bord, vous pouvez modifier manuellement le barème postal par zone et par poids.</p>
+      <ul>
+        <li><strong>Zone Martinique</strong></li>
+        <li><strong>Zone Caraïbes / USA</strong></li>
+        <li><strong>Zone internationale (autres pays)</strong></li>
+      </ul>
+      <p>Le site calcule ensuite automatiquement le montant au panier selon le poids total et le pays de livraison.</p>
+      <p class="admin-hint"><strong>Rappel équipe :</strong> vérifiez régulièrement (au moins quelques fois par an) les nouveaux tarifs officiels La Poste et mettez à jour le barème si nécessaire.</p>
+    </div>
+
+    <div class="card">
       <h2>Sécurité</h2>
       <ul>
         <li>Ne partagez pas le mot de passe administrateur (ni par e-mail, ni dans un chat).</li>

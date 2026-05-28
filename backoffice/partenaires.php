@@ -64,16 +64,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // upload eventuel
             if (!empty($_FILES['logo']['name']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
                 $ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
-                $allowed = ['png','jpg','jpeg','webp','gif','svg'];
-                if (!in_array($ext, $allowed, true)) {
-                    $message = 'Format de logo non support (' . htmlspecialchars($ext) . ').';
+                $allowed = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+                $mimeMap = [
+                    'image/png' => 'png',
+                    'image/jpeg' => 'jpg',
+                    'image/webp' => 'webp',
+                    'image/gif' => 'gif',
+                ];
+                $tmpPath = (string) ($_FILES['logo']['tmp_name'] ?? '');
+                $detectedMime = ($tmpPath !== '' && is_uploaded_file($tmpPath)) ? (mime_content_type($tmpPath) ?: '') : '';
+                if (!in_array($ext, $allowed, true) || !isset($mimeMap[$detectedMime])) {
+                    $message = 'Format de logo non support (PNG, JPG, WebP ou GIF uniquement).';
                     $messageType = 'error';
                 } else {
                     if (!is_dir($uploadDir)) @mkdir($uploadDir, 0775, true);
                     $slug = slugify($name) ?: ('partner-' . time());
-                    $filename = $slug . '.' . $ext;
+                    $safeExt = $mimeMap[$detectedMime];
+                    $filename = $slug . '.' . $safeExt;
                     $destFs = $uploadDir . '/' . $filename;
-                    if (move_uploaded_file($_FILES['logo']['tmp_name'], $destFs)) {
+                    if (move_uploaded_file($tmpPath, $destFs)) {
                         $logo = 'images/partners/' . $filename;
                     } else {
                         $message = 'Echec de l\'upload du logo.';
@@ -138,13 +147,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // logo upload
                     if (!empty($_FILES['logo']['name']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
                         $ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
-                        $allowed = ['png','jpg','jpeg','webp','gif','svg'];
-                        if (in_array($ext, $allowed, true)) {
-                            if (!is_dir($uploadDir)) @mkdir($uploadDir, 0775, true);
+                        $allowed = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+                        $mimeMap = [
+                            'image/png' => 'png',
+                            'image/jpeg' => 'jpg',
+                            'image/webp' => 'webp',
+                            'image/gif' => 'gif',
+                        ];
+                        $tmpPath = (string) ($_FILES['logo']['tmp_name'] ?? '');
+                        $detectedMime = ($tmpPath !== '' && is_uploaded_file($tmpPath)) ? (mime_content_type($tmpPath) ?: '') : '';
+                        if (in_array($ext, $allowed, true) && isset($mimeMap[$detectedMime])) {
+                            if (!is_dir($uploadDir)) {
+                                @mkdir($uploadDir, 0775, true);
+                            }
                             $slug = slugify($newName ?: $it['name']) ?: $itemId;
-                            $filename = $slug . '.' . $ext;
+                            $safeExt = $mimeMap[$detectedMime];
+                            $filename = $slug . '.' . $safeExt;
                             $destFs = $uploadDir . '/' . $filename;
-                            if (move_uploaded_file($_FILES['logo']['tmp_name'], $destFs)) {
+                            if (move_uploaded_file($tmpPath, $destFs)) {
                                 $it['logo'] = 'images/partners/' . $filename;
                             }
                         }

@@ -422,6 +422,49 @@ $newData['ecommerce']['cart_note'] = trim((string) ($_POST['ecom_cart_note'] ?? 
 $newData['ecommerce']['shipping_note'] = trim((string) ($_POST['ecom_shipping_note'] ?? ''));
 $newData['ecommerce']['support_email'] = trim((string) ($_POST['ecom_support_email'] ?? ''));
 $newData['ecommerce']['support_phone'] = trim((string) ($_POST['ecom_support_phone'] ?? ''));
+$postalRateDefaults = [
+    'dom_martinique_near' => [
+        ['max_weight_g' => 500, 'amount_eur' => 15.69],
+        ['max_weight_g' => 1000, 'amount_eur' => 19.69],
+        ['max_weight_g' => 2000, 'amount_eur' => 22.49],
+        ['max_weight_g' => 5000, 'amount_eur' => 28.59],
+        ['max_weight_g' => 10000, 'amount_eur' => 47.19],
+        ['max_weight_g' => 15000, 'amount_eur' => 69.39],
+        ['max_weight_g' => 20000, 'amount_eur' => 89.79],
+    ],
+    'dom_international' => [
+        ['max_weight_g' => 500, 'amount_eur' => 34.59],
+        ['max_weight_g' => 1000, 'amount_eur' => 38.69],
+        ['max_weight_g' => 2000, 'amount_eur' => 53.29],
+        ['max_weight_g' => 5000, 'amount_eur' => 77.89],
+        ['max_weight_g' => 10000, 'amount_eur' => 147.39],
+        ['max_weight_g' => 15000, 'amount_eur' => 209.29],
+        ['max_weight_g' => 20000, 'amount_eur' => 254.99],
+        ['max_weight_g' => 30000, 'amount_eur' => 254.99],
+    ],
+];
+$postalRatesOut = [];
+foreach ($postalRateDefaults as $zoneKey => $rows) {
+    $zoneOut = [];
+    foreach ($rows as $idx => $row) {
+        $weightRaw = $_POST['ecom_rate_weight_' . $zoneKey . '_' . $idx] ?? $row['max_weight_g'];
+        $amountRaw = $_POST['ecom_rate_' . $zoneKey . '_' . $idx] ?? $row['amount_eur'];
+        $maxWeightG = max(1, (int) $weightRaw);
+        $amountEur = (float) str_replace(',', '.', trim((string) $amountRaw));
+        if ($amountEur < 0) {
+            $amountEur = 0.0;
+        }
+        $zoneOut[] = [
+            'max_weight_g' => $maxWeightG,
+            'amount_eur' => round($amountEur, 2),
+        ];
+    }
+    usort($zoneOut, static function (array $a, array $b): int {
+        return (int) ($a['max_weight_g'] ?? 0) <=> (int) ($b['max_weight_g'] ?? 0);
+    });
+    $postalRatesOut[$zoneKey] = $zoneOut;
+}
+$newData['ecommerce']['postal_rates'] = $postalRatesOut;
 
 $newData['footer']['brand_name'] = trim((string) ($_POST['footer_brand_name'] ?? ''));
 $newData['footer']['brand_tagline'] = trim((string) ($_POST['footer_brand_tagline'] ?? ''));

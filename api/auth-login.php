@@ -31,8 +31,8 @@ if (!is_array($payload)) {
     sucrier_json_safe_error(400, 'Payload invalide.');
 }
 
-if (!sucrier_throttle_login_attempts(8, 600)) {
-    sucrier_json_safe_error(429, 'Trop de tentatives. Reessayez plus tard.');
+if (!sucrier_throttle_consume('auth_login', 20, 600)) {
+    sucrier_json_safe_error(429, 'Trop de tentatives. Reessayez plus tard.', 'auth-login: throttled');
 }
 
 try {
